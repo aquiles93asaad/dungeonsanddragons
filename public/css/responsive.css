@@ -1,0 +1,263 @@
+/* ── RESPONSIVE: mobile overrides para vistas de jugadores ──────────────────
+   Breakpoints:
+     768px  → tablet y teléfonos grandes (orientación landscape)
+     480px  → teléfonos en portrait
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── iOS: altura real del viewport (excluye barra de dirección) ── */
+@supports (-webkit-touch-callout: none) {
+  body { height: -webkit-fill-available; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   768px — TABLET / TELÉFONO GRANDE
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── TOP BAR ── */
+  .top-bar { height: auto; min-height: 48px; }
+
+  .site-title {
+    font-size: 0.85rem;
+    padding: 0 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-tab {
+    font-size: 0.62rem;
+    padding: 0 0.75rem;
+  }
+
+  .session-indicator {
+    font-size: 0.6rem;
+    padding: 0 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .save-indicator {
+    font-size: 0.58rem;
+    padding: 0 0.4rem;
+  }
+
+  /* ── LAYOUT: sidebar a strip horizontal ── */
+  .main-area { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+  }
+  .sidebar.show { display: flex; }
+
+  .sidebar-label { display: none; }
+
+  .sidebar-item {
+    padding: 0 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .sidebar-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── CONTENIDO ── */
+  .content { padding: 1rem; }
+
+  /* ── GATE ── */
+  .gate-box { padding: 2rem 1.2rem; gap: 0.85rem; }
+  .gate-title { font-size: 1.35rem; }
+  .gate-input { font-size: 0.9rem; padding: 0.75rem; }
+  .gate-btn { padding: 0.75rem; }
+
+  /* ── FICHAS DE PERSONAJE ── */
+  .char-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .char-portrait { width: 80px; height: 80px; }
+  .char-info { width: 100%; }
+  .char-tags { justify-content: center; }
+
+  /* Stats: 3 columnas en vez de 6 */
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .stat-score { font-size: 1.2rem; }
+
+  /* Vitales: apilar vertical */
+  .vitals-row { grid-template-columns: 1fr; gap: 0.6rem; }
+  .vital-btn { width: 36px; height: 36px; font-size: 1.15rem; }
+  .vital-val { font-size: 1.3rem; width: 54px; }
+
+  /* Tabla de armas: scroll horizontal */
+  .weapons-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .weapons-table th,
+  .weapons-table td { white-space: nowrap; }
+
+  /* Condiciones: targets más grandes */
+  .condition-btn {
+    font-size: 0.68rem;
+    padding: 0.38rem 0.65rem;
+    min-height: 36px;
+  }
+
+  /* ── ABILITIES ── */
+  .profs-grid { grid-template-columns: 1fr; }
+  .class-header-row { flex-wrap: wrap; gap: 0.5rem; }
+
+  /* Spell slots: targets más grandes */
+  .slot-row { grid-template-columns: 70px 1fr 42px; gap: 0.4rem; }
+  .slot-box { width: 32px; height: 32px; }
+
+  /* Resources */
+  .use-box { width: 32px; height: 32px; }
+
+  /* ── SESIÓN LIVE ── */
+
+  /* Header: apilar los campos */
+  .live-header-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  .live-meta-field { width: 100%; flex: none; }
+  .live-meta-field input,
+  .live-meta-field select { width: 100%; box-sizing: border-box; }
+  .live-meta-locdetail { flex: none; width: 100%; }
+  .live-meta-present { flex: none; width: 100%; }
+  .live-group-actions { padding-top: 0.5rem; }
+
+  /* Layout: columna única */
+  .live-layout { grid-template-columns: 1fr; gap: 1rem; }
+
+  /* Combat tracker: no sticky en mobile */
+  .live-combat {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  /* Tarjetas de presentes: 2 columnas */
+  .presents-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .present-card { padding: 0.5rem 0.6rem; }
+
+  /* Combatants: targets de toque mayores */
+  .combatant { padding: 0.65rem 0.7rem; }
+  .combatant-row1 { gap: 0.35rem; }
+  .combatant-row2 { flex-wrap: wrap; gap: 0.35rem; }
+  .combatant-act  { width: 34px; height: 34px; font-size: 1rem; }
+  .combatant-skip { width: 34px; height: 34px; font-size: 0.9rem; }
+  .combatant-del  { width: 30px; height: 30px; }
+  .combatant-loot { width: 30px; height: 30px; }
+  .vital-btn-sm   { width: 28px; height: 28px; }
+  .combatant-hp-val { width: 46px; }
+
+  /* Nombre del combatant: wrappable */
+  .combatant-name { font-size: 0.85rem; }
+
+  /* Nota stream: menos padding */
+  .note-card { padding: 0.6rem 0.8rem; }
+  .note-stream { gap: 0.5rem; }
+
+  /* Formulario de notas: columna única */
+  .form-grid { grid-template-columns: 1fr; }
+
+  /* Botones quick-add: ya tiene media query (2 cols en 640px) */
+
+  /* Monster picker */
+  .monster-pick-name { min-width: 140px; }
+
+  /* ── OVERVIEW ── */
+  .overview-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── ITEMS ── */
+  /* items-grid usa auto-fill con minmax(270px,1fr) → se adapta solo */
+
+  /* ── MONEDERO ── */
+  /* Ya tiene media query en money.css */
+
+  /* ── PÁGINA HISTORIA ── */
+  .timeline-act { padding-left: 1rem; }
+
+  /* ── NOTAS PRIVADAS ── */
+  .private-notes-section { margin-top: 0.5rem; }
+  .private-notes-ta { min-height: 80px; }
+
+  /* ── CARDS generales ── */
+  .card { padding: 0.9rem 1rem; }
+
+  /* ── HEADINGS ── */
+  h1.page-title { font-size: 1.4rem; }
+  h2.sec-head   { font-size: 0.9rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   480px — TELÉFONO EN PORTRAIT (iPhone SE, Pixel, etc.)
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  /* Site title: solo ícono */
+  .site-title { padding: 0 0.6rem; font-size: 0.8rem; }
+
+  /* Nav tabs: más pequeños aún */
+  .nav-tab { font-size: 0.6rem; padding: 0 0.6rem; }
+
+  /* Content: padding mínimo */
+  .content { padding: 0.75rem; }
+
+  /* Overview: 1 columna */
+  .overview-grid { grid-template-columns: 1fr; }
+
+  /* Stats: 3 columnas (mantener) */
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Char portrait: más pequeño */
+  .char-portrait { width: 70px; height: 70px; }
+  .char-name { font-size: 1.3rem; }
+
+  /* Combat presents: 1 columna si hay poco espacio */
+  .presents-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Vitales apiladas */
+  .vitals-row { grid-template-columns: 1fr; }
+
+  /* Items: 1 columna */
+  .items-grid { grid-template-columns: 1fr; }
+
+  /* Slot boxes: un poco más grandes para dedo gordo */
+  .slot-box { width: 34px; height: 34px; }
+  .use-box  { width: 34px; height: 34px; }
+
+  /* Slot row: más compacto */
+  .slot-row { grid-template-columns: 60px 1fr 38px; }
+
+  /* Loot form: ancho completo */
+  .loot-form .form-grid { grid-template-columns: 1fr; }
+
+  /* Cards aún más compactas */
+  .card { padding: 0.75rem; }
+
+  /* Page title más chico */
+  h1.page-title { font-size: 1.25rem; }
+
+  /* Char modal: full screen */
+  .char-modal { padding: 0; }
+  .char-modal-inner { border-radius: 0; padding: 0.8rem 0.75rem 1.5rem; }
+}
