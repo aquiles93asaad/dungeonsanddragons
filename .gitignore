@@ -2,5 +2,8 @@ node_modules/
 .env
 .DS_Store
 
-# Manuales oficiales D&D (copyright)
+# Documentos de campaña y manuales (no van al repo)
+documentos/
 Manual*.pdf
+*.md.bak
+mongodb-atlas-flex-pricing.md
