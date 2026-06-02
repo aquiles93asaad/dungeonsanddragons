@@ -1,0 +1,135 @@
+/* ── CHARACTERS: ficha de personaje, stats, vitals, condiciones, armas, inventario, marcas, notas, overview cards ── */
+
+/* ── CHARACTER SHEET ── */
+.char-header{
+  background:var(--bg2);border:1px solid var(--gold-dim);padding:1.5rem;
+  margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:flex-start;
+}
+.char-portrait{
+  width:120px;height:120px;flex-shrink:0;background:var(--bg3);
+  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;cursor:pointer;position:relative;
+}
+.char-portrait img{width:100%;height:100%;object-fit:cover}
+.char-portrait .portrait-placeholder{
+  font-family:var(--font-title);font-size:2rem;color:var(--gold-dim);
+  display:flex;flex-direction:column;align-items:center;gap:0.3rem;
+}
+.char-portrait .portrait-placeholder span{font-size:0.55rem;color:var(--muted);letter-spacing:0.1em}
+.char-portrait:hover .portrait-overlay{opacity:1}
+.portrait-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,0.7);display:flex;
+  align-items:center;justify-content:center;opacity:0;transition:0.2s;
+  font-family:var(--font-title);font-size:0.6rem;color:var(--gold);letter-spacing:0.1em;text-align:center;padding:0.5rem;
+}
+.char-info{flex:1}
+.char-name{font-family:var(--font-title);font-size:1.6rem;color:var(--gold);letter-spacing:0.06em}
+.char-class{color:var(--muted);font-style:italic;font-size:0.95rem;margin-bottom:0.8rem}
+.char-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
+.char-tag{
+  font-family:var(--font-title);font-size:0.62rem;letter-spacing:0.1em;
+  border:1px solid var(--gold-dim);color:var(--gold);padding:0.15rem 0.6rem;
+}
+
+/* ── STATS GRID ── */
+.stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.5rem}
+.stat-box{background:var(--bg2);padding:0.7rem 0.4rem;text-align:center}
+.stat-name{font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);display:block;margin-bottom:0.2rem}
+.stat-score{font-family:var(--font-title);font-size:1.4rem;color:var(--white);display:block;line-height:1}
+.stat-mod{font-size:0.85rem;color:var(--gold);display:block}
+
+/* ── HP BAR ── */
+.vitals-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.vital-box{background:var(--bg2);border:1px solid var(--border);padding:1rem}
+.vital-label{font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem;display:block}
+.vital-controls{display:flex;align-items:center;gap:0.5rem}
+.vital-btn{
+  width:28px;height:28px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--cream);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);transition:all 0.1s;
+}
+.vital-btn:hover{background:var(--border2);color:var(--gold)}
+.vital-val{
+  font-family:var(--font-title);font-size:1.5rem;color:var(--white);
+  width:48px;text-align:center;background:none;border:none;
+  border-bottom:1px solid var(--border2);color:var(--white);
+}
+.vital-val:focus{outline:none;border-bottom-color:var(--gold)}
+.vital-max{font-size:0.85rem;color:var(--muted)}
+.hp-bar-wrap{margin-top:0.5rem;height:6px;background:var(--bg3);border:1px solid var(--border)}
+.hp-bar{height:100%;background:var(--green-bright);transition:width 0.3s}
+.hp-bar.low{background:#e07020}
+.hp-bar.crit{background:var(--red-bright)}
+
+/* ── CONDITIONS ── */
+.conditions-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin:0.5rem 0 1rem}
+.condition-btn{
+  font-family:var(--font-title);font-size:0.62rem;letter-spacing:0.08em;
+  padding:0.25rem 0.7rem;border:1px solid var(--border2);
+  background:var(--bg3);color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.condition-btn.active{background:var(--red-dim);border-color:var(--red-bright);color:var(--red-bright)}
+.condition-btn.active.good{background:#1a3a2a;border-color:var(--green-bright);color:var(--green-bright)}
+
+/* ── INVENTORY ── */
+.inventory-list{list-style:none;margin:0.5rem 0}
+.inventory-list li{
+  display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.6rem;
+  border-bottom:1px solid var(--border);font-size:0.95rem;
+}
+.inventory-list li:last-child{border-bottom:none}
+.inv-del{
+  background:none;border:none;color:var(--red-dim);cursor:pointer;
+  font-size:1rem;padding:0 0.2rem;margin-left:auto;transition:color 0.15s;
+}
+.inv-del:hover{color:var(--red-bright)}
+.inv-add{display:flex;gap:0.5rem;margin-top:0.5rem}
+.inv-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--cream);font-family:var(--font-body);font-size:0.95rem;
+  padding:0.4rem 0.7rem;
+}
+.inv-input:focus{outline:none;border-color:var(--gold)}
+.btn-small{
+  font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;
+  padding:0.4rem 0.8rem;background:var(--gold-dark);border:1px solid var(--gold-dim);
+  color:var(--gold);cursor:pointer;transition:all 0.15s;
+}
+.btn-small:hover{background:var(--gold-dim);color:var(--white)}
+
+/* ── NOTES ── */
+.notes-area{
+  width:100%;min-height:120px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--cream);font-family:var(--font-body);font-size:0.95rem;
+  padding:0.8rem;line-height:1.6;resize:vertical;
+}
+.notes-area:focus{outline:none;border-color:var(--gold)}
+
+/* ── WEAPONS TABLE ── */
+.weapons-table{width:100%;border-collapse:collapse;font-size:0.95rem;margin-bottom:1rem}
+.weapons-table th{
+  font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);padding:0.4rem 0.7rem;text-align:left;border-bottom:1px solid var(--border);
+}
+.weapons-table td{padding:0.45rem 0.7rem;border-bottom:1px solid var(--border);color:var(--cream)}
+.weapons-table tr:last-child td{border-bottom:none}
+.weapons-table tr:nth-child(even) td{background:var(--bg3)}
+.weapons-table td:first-child{color:var(--gold);font-family:var(--font-title);font-size:0.9rem}
+
+/* ── MARKS ── */
+.mark-item{
+  display:flex;align-items:flex-start;gap:0.6rem;padding:0.5rem 0;
+  border-bottom:1px solid var(--border);font-size:0.95rem;color:var(--cream);
+}
+.mark-item:last-child{border-bottom:none}
+.mark-icon{color:var(--red-bright);flex-shrink:0;margin-top:0.2rem}
+
+/* ── OVERVIEW CARDS (estado del grupo en la página inicial) ── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2rem}
+.overview-card{background:var(--bg2);padding:1.2rem;cursor:pointer;transition:background 0.15s}
+.overview-card:hover{background:var(--bg3)}
+.ov-name{font-family:var(--font-title);font-size:1rem;color:var(--gold);margin-bottom:0.2rem}
+.ov-class{font-size:0.85rem;color:var(--muted);font-style:italic;margin-bottom:0.7rem}
+.ov-hp-bar{height:4px;background:var(--bg3);margin-bottom:0.4rem}
+.ov-hp-fill{height:100%;background:var(--green-bright);transition:width 0.3s}
+.ov-hp-text{font-size:0.8rem;color:var(--muted)}

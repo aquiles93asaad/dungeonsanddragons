@@ -1,0 +1,264 @@
+/* ── ITEMS: catálogo de armas y objetos ── */
+
+.items-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.items-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.45rem 0.75rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--cream);
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+}
+
+.items-filter {
+  padding: 0.35rem 0.75rem;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-title);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.items-filter.on,
+.items-filter:hover {
+  background: var(--gold-dark);
+  color: var(--gold);
+  border-color: var(--gold-dim);
+}
+
+.items-add-btn {
+  padding: 0.35rem 0.9rem;
+  background: var(--gold-dark);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  color: var(--gold);
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: var(--font-title);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-left: auto;
+  transition: all 0.15s;
+}
+.items-add-btn:hover { background: var(--gold); color: var(--bg-main); }
+
+/* ── ADD FORM ── */
+.item-form {
+  background: var(--bg2);
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.item-form-title {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.item-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.item-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.item-form-field label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: var(--font-title);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.item-form-field .form-input {
+  font-size: 0.85rem;
+}
+
+.if-checkbox-field {
+  justify-content: flex-end;
+  padding-bottom: 0.35rem;
+}
+.if-checkbox-field label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.82rem;
+  color: var(--cream);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.item-form-textarea {
+  min-height: 60px;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.item-form-btns {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+/* ── CATALOG ── */
+.items-group {
+  margin-bottom: 2rem;
+}
+
+.items-group-title {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 0.7rem;
+}
+
+.item-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-left-width: 3px;
+}
+
+.item-cat-weapon { border-left-color: var(--red-bright); }
+.item-cat-magic  { border-left-color: #a78bfa; }
+.item-cat-loot   { border-left-color: var(--gold); }
+.item-cat-quest  { border-left-color: #34d399; }
+.item-cat-misc   { border-left-color: var(--border2); }
+
+.item-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.item-name {
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.item-name-en {
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+}
+
+.item-cat-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-family: var(--font-title);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--bg3);
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.item-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.item-stat-pill {
+  font-size: 0.7rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--font-title);
+  letter-spacing: 0.04em;
+}
+
+.item-dice    { background: rgba(239,68,68,0.15);  color: #f87171; }
+.item-dmgtype { background: rgba(251,191,36,0.12); color: var(--gold); }
+.item-stat    { background: rgba(99,102,241,0.2);  color: #a5b4fc; }
+.item-range   { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.item-prop    { background: var(--bg3);             color: var(--muted); }
+
+.item-desc {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.item-carriers {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-top: 0.1rem;
+}
+
+.item-carrier-badge {
+  font-size: 0.66rem;
+  background: rgba(251,191,36,0.1);
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--font-title);
+  letter-spacing: 0.04em;
+}
+
+.items-empty {
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Badges usados en el stream de Sesión Live */
+.note-weapon-badge {
+  font-size: 0.7rem;
+  background: rgba(239,68,68,0.15);
+  color: #f87171;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--font-title);
+  letter-spacing: 0.04em;
+  margin-right: 0.25rem;
+}
+
+.note-dice {
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-family: var(--font-title);
+}

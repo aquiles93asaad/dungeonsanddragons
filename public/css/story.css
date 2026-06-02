@@ -1,0 +1,15 @@
+/* ── STORY TIMELINE ── */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border2)}
+.timeline-act{margin-bottom:2rem;position:relative}
+.timeline-dot{
+  position:absolute;left:-2.3rem;top:0.3rem;width:12px;height:12px;
+  background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold-dim);
+}
+.act-title{font-family:var(--font-title);font-size:1rem;color:var(--gold);margin-bottom:0.5rem;letter-spacing:0.06em}
+.act-body{font-size:0.95rem;color:var(--cream);line-height:1.7}
+.act-note{
+  background:var(--bg3);border-left:2px solid var(--gold-dim);
+  padding:0.6rem 0.9rem;margin:0.6rem 0;font-style:italic;
+  font-size:0.9rem;color:var(--muted);
+}

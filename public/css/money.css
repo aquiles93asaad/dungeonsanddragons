@@ -1,0 +1,52 @@
+/* ── MONEDERO: estilos para personal y grupo ── */
+
+.money-block{
+  background:var(--bg2);border:1px solid var(--border);
+  border-left:3px solid var(--gold-dim);padding:0.7rem 0.9rem;margin-bottom:1rem;
+}
+.money-block.group-money{border-left-color:var(--gold);background:var(--bg2)}
+.money-label-header{
+  font-family:var(--font-title);font-size:0.7rem;letter-spacing:0.1em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem;
+}
+
+.money-row{
+  display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;
+}
+.money-coin{
+  display:flex;flex-direction:column;align-items:center;gap:0.2rem;
+}
+.coin-label{
+  font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;
+  font-weight:bold;
+}
+.coin-controls{
+  display:flex;align-items:center;gap:0.2rem;
+}
+.coin-btn{
+  width:22px;height:24px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--cream);font-size:0.9rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.1s;line-height:1;
+}
+.coin-btn:hover{background:var(--border2);color:var(--gold)}
+.coin-val{
+  width:48px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--white);font-family:var(--font-title);font-size:0.95rem;
+  padding:0.2rem;text-align:center;
+}
+.coin-val:focus{outline:none;border-color:var(--gold)}
+.coin-val::-webkit-inner-spin-button{display:none}
+
+.money-total{
+  margin-left:auto;font-family:var(--font-body);font-size:0.85rem;
+  color:var(--muted);padding:0.3rem 0.6rem;background:var(--bg3);
+  border:1px solid var(--border2);
+}
+.money-total strong{color:var(--gold);font-family:var(--font-title);font-size:0.95rem}
+
+@media(max-width:640px){
+  .money-row{flex-direction:column;align-items:stretch}
+  .money-coin{flex-direction:row;justify-content:space-between}
+  .money-total{margin-left:0;margin-top:0.4rem;text-align:center}
+}

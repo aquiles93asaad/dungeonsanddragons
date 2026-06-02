@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Dados — Ardaetheros</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f0d0a;
+    --bg2:       #1a1610;
+    --bg3:       #221e17;
+    --border:    #3a3020;
+    --gold:      #c9a84c;
+    --gold-dim:  #7a6030;
+    --red:       #9b2c2c;
+    --red-dim:   #5a1a1a;
+    --cream:     #e8dfc8;
+    --muted:     #9a8f78;
+    --white:     #f5f0e8;
+    --font-title: 'Cinzel', serif;
+    --font-body:  'EB Garamond', serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    padding: 2.5rem 1.5rem 4rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    border: 1px solid var(--gold-dim);
+    padding: 2.5rem 2rem 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    background: var(--bg2);
+  }
+  .header::before, .header::after {
+    content: '';
+    position: absolute;
+    top: 6px; bottom: 6px; left: 6px; right: 6px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+  .header h1 {
+    font-family: var(--font-title);
+    font-size: 2.4rem;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .header p {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+  .die-row {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .die-badge {
+    font-family: var(--font-title);
+    font-size: 0.75rem;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 0.25rem 0.7rem;
+    letter-spacing: 0.08em;
+    background: var(--bg3);
+  }
+
+  /* ── SECTIONS ── */
+  section { margin-bottom: 2.8rem; }
+
+  .section-title {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--gold-dim);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-title .icon {
+    font-size: 0.9rem;
+  }
+
+  /* ── DICE GRID ── */
+  .dice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .die-card {
+    background: var(--bg2);
+    padding: 1.1rem 1.2rem;
+    transition: background 0.15s;
+  }
+  .die-card:hover { background: var(--bg3); }
+  .die-name {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .die-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    display: block;
+    margin-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+  }
+  .die-use {
+    font-size: 0.95rem;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+  }
+  .die-examples {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    border: 1px solid var(--gold);
+    background: linear-gradient(135deg, var(--bg2) 0%, #1e1a10 100%);
+    padding: 1.8rem 2rem;
+    text-align: center;
+    margin-bottom: 2.8rem;
+  }
+  .highlight .big-die {
+    font-family: var(--font-title);
+    font-size: 4rem;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .highlight p {
+    color: var(--cream);
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .tag {
+    font-family: var(--font-title);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ── FORMULA BLOCKS ── */
+  .formula-block {
+    background: var(--bg3);
+    border-left: 3px solid var(--gold);
+    padding: 1.2rem 1.5rem;
+    margin: 1rem 0;
+  }
+  .formula {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+  .formula .vs {
+    color: var(--muted);
+    font-size: 0.9rem;
+    display: block;
+    margin: 0.2rem 0;
+  }
+  .formula .result {
+    font-size: 0.95rem;
+    color: var(--gold);
+    margin-top: 0.5rem;
+    display: block;
+    font-style: italic;
+    font-family: var(--font-body);
+  }
+
+  .example-box {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 1rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+  .example-box .ex-label {
+    font-family: var(--font-title);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .example-box code {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    color: var(--gold);
+    display: block;
+    margin: 0.2rem 0;
+  }
+  .example-box p { color: var(--cream); font-size: 0.95rem; }
+
+  /* ── TWO COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .col-card {
+    background: var(--bg2);
+    padding: 1.2rem 1.4rem;
+  }
+  .col-title {
+    font-family: var(--font-title);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+
+  /* ── TABLES ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin: 0.8rem 0;
+  }
+  th {
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--cream);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--bg3); }
+  td:first-child { color: var(--gold); font-family: var(--font-title); font-size: 0.95rem; }
+
+  /* ── CRITICAL/PIFIA ── */
+  .special-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+  .crit-box {
+    padding: 1.3rem 1.5rem;
+    background: var(--bg2);
+  }
+  .crit-box.crit { border-top: 3px solid var(--gold); }
+  .crit-box.fail { border-top: 3px solid var(--red); }
+  .crit-label {
+    font-family: var(--font-title);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .crit .crit-label { color: var(--gold); }
+  .fail .crit-label { color: #c04040; }
+  .crit-num {
+    font-family: var(--font-title);
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .crit .crit-num { color: var(--gold); }
+  .fail .crit-num { color: #c04040; }
+  .crit-desc { font-size: 0.9rem; color: var(--cream); }
+  .crit-sub  { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-top: 0.4rem; }
+
+  /* ── CINEMATICO ── */
+  .quote-block {
+    border: 1px solid var(--border);
+    padding: 1.4rem 1.8rem;
+    background: var(--bg2);
+    position: relative;
+  }
+  .quote-block .bad {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .quote-block .bad::before { content: '✗  '; color: var(--red); }
+  .quote-block .good {
+    color: var(--cream);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .quote-block .good::before { content: '✓  '; color: var(--gold); }
+
+  /* ── SUMMARY TABLE ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .summary-cell {
+    background: var(--bg2);
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .summary-cell .sit {
+    font-size: 0.9rem;
+    color: var(--cream);
+  }
+  .summary-cell .die {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ── DM RULE ── */
+  .dm-rule {
+    border: 1px solid var(--gold-dim);
+    background: var(--bg2);
+    padding: 1.5rem 1.8rem;
+  }
+  .dm-rule .dm-tag {
+    font-family: var(--font-title);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  @media (max-width: 580px) {
+    .two-col, .special-row { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.7rem; }
+    .highlight .big-die { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <h1>Guía de Dados</h1>
+  <p>D&amp;D · Ardaetheros — Referencia del DM</p>
+  <div class="die-row">
+    <span class="die-badge">d4</span>
+    <span class="die-badge">d6</span>
+    <span class="die-badge">d8</span>
+    <span class="die-badge">d10</span>
+    <span class="die-badge">d12</span>
+    <span class="die-badge">d20</span>
+    <span class="die-badge">d100</span>
+  </div>
+</header>
+
+<!-- TODOS LOS DADOS -->
+<section>
+  <div class="section-title"><span class="icon">🎲</span> Los dados</div>
+  <div class="dice-grid">
+    <div class="die-card">
+      <span class="die-name">d4</span>
+      <span class="die-label">dado de 4 caras</span>
+      <div class="die-use">Daños pequeños, efectos menores, buffs</div>
+      <div class="die-examples">Daga, Magic Missile, curaciones pequeñas</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d6</span>
+      <span class="die-label">dado de 6 caras</span>
+      <div class="die-use">Armas ligeras, spells básicos, sneak attacks</div>
+      <div class="die-examples">Espada corta, Fireball, daño de rogue</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d8</span>
+      <span class="die-label">dado de 8 caras</span>
+      <div class="die-use">Armas balanceadas, curaciones medias</div>
+      <div class="die-examples">Longsword, quarterstaff, Cure Wounds</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d10</span>
+      <span class="die-label">dado de 10 caras</span>
+      <div class="die-use">Armas fuertes y magia poderosa</div>
+      <div class="die-examples">Fire Bolt, armas pesadas, daño brutal</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d12</span>
+      <span class="die-label">dado de 12 caras</span>
+      <div class="die-use">Daño salvaje, bárbaros</div>
+      <div class="die-examples">Greataxe de Rac</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d20</span>
+      <span class="die-label">dado principal del juego</span>
+      <div class="die-use">Tiradas importantes</div>
+      <div class="die-examples">Atacar, skill checks, saving throws</div>
+    </div>
+    <div class="die-card">
+      <span class="die-name">d100</span>
+      <span class="die-label">porcentaje</span>
+      <div class="die-use">Chances especiales / random</div>
+      <div class="die-examples">Loot raro, eventos especiales</div>
+    </div>
+  </div>
+</section>
+
+<!-- d20 HIGHLIGHT -->
+<div class="highlight">
+  <span class="big-die">d20</span>
+  <p>El dado más importante del juego. Se usa para prácticamente todo lo relevante.</p>
+  <div class="tag-list">
+    <span class="tag">Atacar</span>
+    <span class="tag">Persuadir</span>
+    <span class="tag">Investigar</span>
+    <span class="tag">Esquivar trampas</span>
+    <span class="tag">Resistir magia</span>
+  </div>
+</div>
+
+<!-- ATAQUES -->
+<section>
+  <div class="section-title"><span class="icon">⚔️</span> Ataques</div>
+
+  <div class="formula-block">
+    <div class="formula">
+      d20 + bonus de ataque
+      <span class="vs">vs. CA del enemigo</span>
+      <span class="result">Si el total iguala o supera la CA → impacta.</span>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <span class="ex-label">Ejemplo — Rac ataca</span>
+    <code>d20 + 5 &nbsp;&nbsp;vs.&nbsp;&nbsp; CA 14</code>
+    <p>Si el resultado total es 14 o más → impacta.</p>
+  </div>
+</section>
+
+<!-- DAÑO -->
+<section>
+  <div class="section-title"><span class="icon">❤️</span> Daño</div>
+  <p style="margin-bottom:1rem; color: var(--muted);">Después de impactar, tirás el dado de daño de tu arma o spell.</p>
+
+  <div class="example-box">
+    <span class="ex-label">Ejemplo — Greataxe de Rac</span>
+    <code>1d12 + 3</code>
+    <table style="margin-top:0.8rem;">
+      <tr><th>Parte</th><th>Significado</th></tr>
+      <tr><td>1</td><td>cantidad de dados</td></tr>
+      <tr><td>d12</td><td>tipo de dado</td></tr>
+      <tr><td>+3</td><td>modificador (STR de Rac)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- SKILL CHECKS -->
+<section>
+  <div class="section-title"><span class="icon">🎲</span> Skill Checks</div>
+
+  <div class="formula-block">
+    <div class="formula">d20 + modificador</div>
+  </div>
+
+  <table>
+    <thead><tr><th>Acción</th><th>Skill</th></tr></thead>
+    <tbody>
+      <tr><td>Escalar</td><td>Athletics</td></tr>
+      <tr><td>Esconderse</td><td>Stealth</td></tr>
+      <tr><td>Investigar</td><td>Investigation</td></tr>
+      <tr><td>Convencer</td><td>Persuasion</td></tr>
+      <tr><td>Detectar peligro</td><td>Perception</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- SAVING THROWS -->
+<section>
+  <div class="section-title"><span class="icon">⚡</span> Saving Throws</div>
+  <p style="margin-bottom:1rem; color: var(--muted);">Para resistir magia, evitar trampas, aguantar veneno, esquivar explosiones. También usan <strong style="color:var(--gold)">d20</strong>.</p>
+
+  <div class="example-box">
+    <span class="ex-label">Ejemplo — veneno de la Madre Araña</span>
+    <code>CON Save DC 12</code>
+    <p>El jugador tira <code>d20 + CON</code>. Si supera 12 → resiste.</p>
+  </div>
+</section>
+
+<!-- CRÍTICO & PIFIA -->
+<section>
+  <div class="section-title"><span class="icon">💥</span> Crítico &amp; Pifia</div>
+  <div class="special-row">
+    <div class="crit-box crit">
+      <div class="crit-label">Natural 20 — Crítico</div>
+      <div class="crit-num">20</div>
+      <div class="crit-desc">Impacta sí o sí. Se duplican los dados de daño.</div>
+      <div class="crit-sub">Greataxe: <strong>2d12 + 3</strong> en vez de 1d12 + 3</div>
+    </div>
+    <div class="crit-box fail">
+      <div class="crit-label">Natural 1 — Pifia</div>
+      <div class="crit-num">1</div>
+      <div class="crit-desc">Fallo automático, sin importar los bonuses.</div>
+      <div class="crit-sub">Divertido, tenso y narrativo — nunca "te matás solo".</div>
+    </div>
+  </div>
+</section>
+
+<!-- DADOS POR ARMA / SPELL -->
+<section>
+  <div class="section-title"><span class="icon">⚔️</span> Dados por arma y magia</div>
+  <div class="two-col">
+    <div class="col-card">
+      <div class="col-title">Armas comunes</div>
+      <table>
+        <thead><tr><th>Arma</th><th>Dado</th></tr></thead>
+        <tbody>
+          <tr><td>Daga</td><td>d4</td></tr>
+          <tr><td>Espada corta</td><td>d6</td></tr>
+          <tr><td>Espada larga</td><td>d8</td></tr>
+          <tr><td>Lanza larga</td><td>d10</td></tr>
+          <tr><td>Greataxe</td><td>d12</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-card">
+      <div class="col-title">Spells comunes</div>
+      <table>
+        <thead><tr><th>Spell</th><th>Dado</th></tr></thead>
+        <tbody>
+          <tr><td>Fire Bolt</td><td>d10</td></tr>
+          <tr><td>Magic Missile</td><td>d4</td></tr>
+          <tr><td>Fireball</td><td>d6</td></tr>
+          <tr><td>Cure Wounds</td><td>d8</td></tr>
+          <tr><td>Eldritch Blast</td><td>d10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- REGLA DM -->
+<section>
+  <div class="section-title"><span class="icon">🧠</span> Sensación de cada dado</div>
+  <div class="dm-rule">
+    <span class="dm-tag">Referencia del DM</span>
+    <table>
+      <thead><tr><th>Dado</th><th>Sensación narrativa</th></tr></thead>
+      <tbody>
+        <tr><td>d4</td><td>Pequeño / preciso</td></tr>
+        <tr><td>d6</td><td>Consistente</td></tr>
+        <tr><td>d8</td><td>Balanceado</td></tr>
+        <tr><td>d10</td><td>Fuerte</td></tr>
+        <tr><td>d12</td><td>Brutal</td></tr>
+        <tr><td>d20</td><td>Destino / suerte</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- RESUMEN RÁPIDO -->
+<section>
+  <div class="section-title"><span class="icon">📊</span> Resumen ultra rápido</div>
+  <div class="summary-grid">
+    <div class="summary-cell"><span class="sit">Atacar</span><span class="die">d20</span></div>
+    <div class="summary-cell"><span class="sit">Skill check</span><span class="die">d20</span></div>
+    <div class="summary-cell"><span class="sit">Saving throw</span><span class="die">d20</span></div>
+    <div class="summary-cell"><span class="sit">Daño de arma</span><span class="die">depende arma</span></div>
+    <div class="summary-cell"><span class="sit">Daño de spell</span><span class="die">depende spell</span></div>
+    <div class="summary-cell"><span class="sit">Curación</span><span class="die">depende spell</span></div>
+    <div class="summary-cell"><span class="sit">Loot aleatorio</span><span class="die">d100</span></div>
+  </div>
+</section>
+
+<!-- CINEMATIC -->
+<section>
+  <div class="section-title"><span class="icon">🎬</span> Cómo hacerlo cinematográfico</div>
+  <div class="quote-block">
+    <div class="bad">"Hace 7 de daño."</div>
+    <div class="good">La espada atraviesa el hombro de la criatura corrupta. La energía Fell explota alrededor de la herida.</div>
+  </div>
+  <p style="margin-top:1rem; color: var(--muted); font-style:italic;">Eso hace toda la diferencia en Ardaetheros.</p>
+</section>
+
+</body>
+</html>

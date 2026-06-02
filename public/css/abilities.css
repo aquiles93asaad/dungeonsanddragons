@@ -1,0 +1,269 @@
+/* ── ABILITIES, SAVES/SKILLS, RESOURCES, SPELLS ── */
+
+/* Saves & Skills */
+.profs-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:0.5rem;
+}
+@media(max-width:640px){ .profs-grid{grid-template-columns:1fr} }
+
+.saves-block, .skills-block{
+  background:var(--bg2);border:1px solid var(--border);padding:0.8rem 1rem;
+}
+
+.save-row, .skill-row{
+  display:grid;grid-template-columns:18px 1fr auto;gap:0.6rem;align-items:center;
+  padding:0.3rem 0;border-bottom:1px solid var(--border);
+  font-size:0.9rem;
+}
+.save-row:last-child, .skill-row:last-child{border-bottom:none}
+.save-dot{color:var(--gold-dim);font-size:0.7rem;text-align:center}
+.save-row.is-prof .save-dot{color:var(--gold)}
+.save-name{font-family:var(--font-title);font-size:0.72rem;letter-spacing:0.1em;color:var(--muted)}
+.save-row.is-prof .save-name{color:var(--cream)}
+.save-bonus{font-family:var(--font-title);color:var(--gold);font-size:0.95rem;text-align:right}
+
+.skill-row{grid-template-columns:1fr 50px auto}
+.skill-name{color:var(--cream);font-size:0.88rem}
+.skill-name em{color:var(--muted);font-size:0.78rem;font-style:italic;font-weight:normal}
+.skill-ability{font-family:var(--font-title);font-size:0.62rem;color:var(--muted);letter-spacing:0.08em}
+.skill-bonus{font-family:var(--font-title);color:var(--gold);font-size:0.95rem}
+
+/* Class header row con rest buttons */
+.class-header-row{
+  display:flex;align-items:center;gap:0.8rem;
+  margin:1.8rem 0 1rem;padding-bottom:0.4rem;
+  border-bottom:1px solid var(--gold-dim);
+}
+.rest-buttons{display:flex;gap:0.5rem;flex-shrink:0}
+.btn-rest{
+  font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;
+  padding:0.4rem 0.9rem;border:1px solid var(--gold-dim);
+  background:var(--gold-dark);color:var(--gold);cursor:pointer;
+  transition:all 0.15s;text-transform:uppercase;
+}
+.btn-rest:hover{background:var(--gold-dim);color:var(--white)}
+.btn-rest.btn-short{background:var(--bg3);color:var(--cream);border-color:var(--border2)}
+.btn-rest.btn-short:hover{background:var(--border2);color:var(--gold);border-color:var(--gold-dim)}
+.btn-rest.btn-levelup{background:#0d2a1a;color:var(--green-bright);border-color:var(--green-bright)}
+.btn-rest.btn-levelup:hover{background:var(--green);color:var(--white);border-color:var(--white)}
+
+/* Resources block */
+.resources-block{
+  display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem;
+}
+.resource-row{
+  background:var(--bg2);border:1px solid var(--border);
+  border-left:3px solid var(--gold);
+  padding:0.7rem 0.9rem;
+}
+.resource-meta{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:0.5rem;margin-bottom:0.4rem;
+}
+.resource-name{
+  font-family:var(--font-title);font-size:0.92rem;color:var(--gold);letter-spacing:0.04em;
+}
+.resource-name em{color:var(--muted);font-style:italic;font-size:0.78rem;font-weight:normal}
+.resource-tag{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;
+  padding:0.15rem 0.5rem;border:1px solid var(--border2);background:var(--bg3);
+  color:var(--muted);text-transform:uppercase;
+}
+.resource-tag.tag-short{color:var(--blue-bright);border-color:var(--blue-bright)}
+.resource-tag.tag-long{color:var(--gold);border-color:var(--gold-dim)}
+.resource-controls{
+  display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;
+}
+.use-boxes{display:flex;gap:0.3rem;flex-wrap:wrap}
+.use-box{
+  width:26px;height:26px;background:var(--bg3);border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:0.95rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);line-height:1;transition:all 0.1s;
+}
+.use-box:hover{background:var(--gold-dark);border-color:var(--gold)}
+.use-box.spent{background:var(--gold-dark);color:var(--gold-dim);border-color:var(--gold-dim)}
+.use-count{font-family:var(--font-title);font-size:0.9rem;color:var(--gold);margin-left:0.4rem}
+.pool-val{
+  font-family:var(--font-title);font-size:1.2rem;color:var(--white);
+  width:55px;text-align:center;background:none;border:none;
+  border-bottom:1px solid var(--border2);
+}
+.pool-val:focus{outline:none;border-bottom-color:var(--gold)}
+.pool-max{font-size:0.85rem;color:var(--muted);margin-left:0.2rem}
+.resource-desc{font-size:0.82rem;color:var(--muted);line-height:1.5;font-style:italic}
+
+/* Abilities */
+.abilities-list{display:flex;flex-direction:column;gap:0.5rem}
+.ability-item{
+  background:var(--bg2);border:1px solid var(--border);padding:0.7rem 0.9rem;
+  border-left:3px solid var(--gold-dim);transition:opacity 0.15s;
+}
+.ability-item.is-locked{opacity:0.4;border-left-color:var(--border2)}
+.ability-item.is-locked .ability-name{color:var(--muted)}
+.ability-header{
+  display:flex;align-items:baseline;
+  margin-bottom:0.3rem;flex-wrap:wrap;gap:0.5rem;
+}
+.level-badge{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;
+  padding:0.15rem 0.5rem;border:1px solid;flex-shrink:0;
+  text-transform:uppercase;
+}
+.level-badge.lvl-unlocked{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-dark)}
+.level-badge.lvl-locked{color:var(--muted);border-color:var(--border2);background:var(--bg3)}
+.ability-name{
+  font-family:var(--font-title);font-size:0.95rem;color:var(--gold);letter-spacing:0.04em;flex:1;
+}
+.ability-name em, .resource-name em, .cantrip-name em, .spell-name em{
+  color:var(--muted);font-style:italic;font-size:0.8rem;font-weight:normal;
+}
+.ability-uses{
+  font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.1em;
+  color:var(--muted);text-transform:uppercase;
+  padding:0.15rem 0.5rem;border:1px solid var(--border2);background:var(--bg3);
+}
+.ability-desc{font-size:0.88rem;color:var(--cream);line-height:1.55}
+
+/* Spell meta */
+.spell-meta{
+  display:flex;gap:1rem;flex-wrap:wrap;align-items:center;
+  background:var(--bg2);border:1px solid var(--gold-dim);
+  padding:0.6rem 0.9rem;margin-bottom:0.8rem;
+}
+.spell-meta .spell-dc, .spell-meta .spell-atk{
+  font-size:0.85rem;color:var(--cream);
+}
+.spell-meta strong{color:var(--gold);font-family:var(--font-title)}
+
+/* Slots */
+.slots-block{background:var(--bg2);border:1px solid var(--border);padding:0.6rem 0.9rem;margin-bottom:0.6rem}
+.slot-row{
+  display:grid;grid-template-columns:90px 1fr 50px;gap:0.5rem;align-items:center;
+  padding:0.3rem 0;
+}
+.slot-level{
+  font-family:var(--font-title);font-size:0.72rem;letter-spacing:0.08em;color:var(--muted);
+}
+.slot-boxes{display:flex;gap:0.3rem;flex-wrap:wrap}
+.slot-box{
+  width:26px;height:26px;background:var(--bg3);border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:0.95rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);line-height:1;transition:all 0.1s;
+}
+.slot-box:hover{background:var(--gold-dark);border-color:var(--gold)}
+.slot-box.spent{background:var(--gold-dark);color:var(--gold-dim);border-color:var(--gold-dim)}
+.slot-count{font-family:var(--font-title);font-size:0.85rem;color:var(--gold);text-align:right}
+
+/* Cantrips */
+.cantrips-list{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.6rem}
+.cantrip-item{
+  background:var(--bg2);border:1px solid var(--border);padding:0.6rem 0.9rem;
+  border-left:3px solid var(--blue-bright);transition:opacity 0.15s, border-color 0.15s;
+}
+.cantrip-item.is-inactive{
+  opacity:0.45;border-left-color:var(--border2);
+}
+.cantrip-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.3rem;flex-wrap:wrap}
+.cantrip-active-btn{
+  width:22px;height:22px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--muted);cursor:pointer;font-size:0.8rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);transition:all 0.1s;flex-shrink:0;
+}
+.cantrip-active-btn.on{background:#0d1f2a;border-color:var(--blue-bright);color:var(--blue-bright)}
+.cantrip-active-btn:hover{border-color:var(--blue-bright)}
+.cantrip-name{font-family:var(--font-title);font-size:0.9rem;color:var(--cream);flex:1}
+.cantrip-item.is-inactive .cantrip-name{color:var(--muted)}
+.cantrip-tag{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;
+  color:var(--blue-bright);border:1px solid var(--blue-bright);
+  padding:0.1rem 0.5rem;text-transform:uppercase;
+}
+.cantrip-item.is-inactive .cantrip-tag{
+  color:var(--muted);border-color:var(--border2);
+}
+.cantrip-desc{font-size:0.85rem;color:var(--cream);line-height:1.5}
+
+/* Spell shape tag */
+.spell-shape{
+  font-family:var(--font-body);font-size:0.72rem;color:var(--gold-dim);
+  padding:0.1rem 0.45rem;border:1px solid var(--border2);background:var(--bg3);
+  font-style:italic;
+}
+
+/* ── SCHOOL BADGES ── */
+.school-badge{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;
+  padding:0.15rem 0.5rem;text-transform:uppercase;
+  border:1px solid;display:inline-block;line-height:1.2;
+}
+.school-evocation    {color:#e07020;border-color:#c08020;background:#2a1a00}
+.school-abjuration   {color:var(--blue-bright);border-color:var(--blue-bright);background:var(--blue)}
+.school-conjuration  {color:var(--gold);border-color:var(--gold-dim);background:var(--gold-dark)}
+.school-divination   {color:var(--cream);border-color:var(--border2);background:var(--bg3)}
+.school-enchantment  {color:var(--purple-bright);border-color:var(--purple-bright);background:var(--purple)}
+.school-illusion     {color:#7ec8d6;border-color:#4a8a9c;background:#0d2530}
+.school-necromancy   {color:#8a7090;border-color:#5a4060;background:#1a1020}
+.school-transmutation{color:var(--green-bright);border-color:var(--green-bright);background:#0d2a1a}
+
+/* ── CAMPAIGN NOTE (house rules) ── */
+.campaign-note{
+  border:1px solid;border-left-width:4px;
+  padding:0.8rem 1rem;margin-bottom:1.5rem;
+  background:var(--bg2);
+}
+.campaign-note-warning{border-color:#c08020;border-left-color:#e0a030;background:#1a1200}
+.campaign-note-info{border-color:var(--blue-bright);border-left-color:var(--blue-bright);background:#0a1a2a}
+.campaign-note-title{
+  font-family:var(--font-title);font-size:0.78rem;letter-spacing:0.1em;
+  color:#e0a030;margin-bottom:0.5rem;text-transform:uppercase;
+}
+.campaign-note-info .campaign-note-title{color:var(--blue-bright)}
+.campaign-note-desc{
+  font-size:0.88rem;color:var(--cream);line-height:1.6;
+}
+
+/* Spell list */
+.spells-list{display:flex;flex-direction:column;gap:0.5rem}
+.spell-item{
+  background:var(--bg2);border:1px solid var(--border);padding:0.6rem 0.9rem;
+  border-left:3px solid var(--border2);transition:border-color 0.15s, opacity 0.15s;
+}
+.spell-item.is-prepared{border-left-color:var(--gold)}
+.spell-item.is-locked{opacity:0.4}
+.spell-item.is-locked .spell-name{color:var(--muted)}
+.spell-max-level{font-size:0.85rem;color:var(--cream)}
+.spell-max-level strong{color:var(--gold);font-family:var(--font-title)}
+
+/* Cantrip damage scaling */
+.cantrip-damage{
+  font-size:0.85rem;color:var(--cream);margin-bottom:0.3rem;
+  padding:0.3rem 0.5rem;background:var(--bg3);border-left:2px solid var(--blue-bright);
+}
+.cantrip-damage strong{color:var(--gold);font-family:var(--font-title)}
+.cantrip-scaling-hint{font-size:0.72rem;color:var(--muted);font-style:italic}
+.spell-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.3rem;flex-wrap:wrap}
+.spell-prep-btn{
+  width:22px;height:22px;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--muted);cursor:pointer;font-size:0.8rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-title);
+}
+.spell-prep-btn.on{background:var(--gold-dark);border-color:var(--gold);color:var(--gold)}
+.spell-prep-btn.always-prep{background:var(--gold-dark);border-color:var(--gold);color:var(--gold);cursor:default}
+.spell-item.is-always-prep{border-left-color:var(--gold)}
+.spell-item.is-always-prep .spell-name{color:var(--gold)}
+.circle-spell-badge{
+  font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.08em;
+  color:var(--gold);background:var(--gold-dark);border:1px solid var(--gold-dim);
+  padding:0.12rem 0.5rem;text-transform:uppercase;
+}
+.spell-name{font-family:var(--font-title);font-size:0.9rem;color:var(--cream);flex:1}
+.spell-item.is-prepared .spell-name{color:var(--gold)}
+.spell-level{
+  font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.08em;
+  color:var(--muted);padding:0.1rem 0.45rem;border:1px solid var(--border2);background:var(--bg3);
+}
+.spell-desc{font-size:0.85rem;color:var(--cream);line-height:1.5;padding-left:30px}

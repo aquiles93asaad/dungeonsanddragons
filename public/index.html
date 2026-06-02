@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ardaetheros — Campaña</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<!-- CSS modular por feature -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/characters.css">
+<link rel="stylesheet" href="css/abilities.css">
+<link rel="stylesheet" href="css/money.css">
+<link rel="stylesheet" href="css/npcs.css">
+<link rel="stylesheet" href="css/story.css">
+<link rel="stylesheet" href="css/bestiary.css">
+<link rel="stylesheet" href="css/campaign.css">
+<link rel="stylesheet" href="css/live.css">
+<link rel="stylesheet" href="css/items.css">
+<link rel="stylesheet" href="css/modal.css">
+<link rel="stylesheet" href="css/players.css">
+</head>
+<body class="app-locked">
+
+<!-- APP GATE — cubre todo hasta que el token sea validado -->
+<div id="app-gate">
+  <div class="gate-box">
+    <div class="gate-title">⚔ Ardaetheros</div>
+    <p class="gate-subtitle">Campaña de Aventuras</p>
+    <input id="gate-token-input" type="text" class="gate-input"
+           placeholder="Token de acceso" autocomplete="off" spellcheck="false" />
+    <div id="gate-token-error" class="gate-error"></div>
+    <button id="gate-submit-btn" class="gate-btn" onclick="submitGateToken()">Entrar</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="site-title">⚔ Ardaetheros</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('overview')">Inicio</button>
+    <button class="nav-tab" onclick="showPage('story')">Historia</button>
+    <button class="nav-tab" onclick="showPage('live')">Sesión Live</button>
+    <button class="nav-tab dm-only" onclick="showPage('campaign')">Campaña</button>
+    <button class="nav-tab" onclick="showPage('chars'); showSidebar('chars')">Personajes</button>
+    <button class="nav-tab dm-only" onclick="showPage('npcs')">NPCs</button>
+    <button class="nav-tab dm-only" onclick="showPage('bestiary')">Bestiario</button>
+    <button class="nav-tab" onclick="showPage('items')">Items</button>
+  </div>
+  <div class="save-indicator" id="saveIndicator">✓ Guardado</div>
+  <span id="session-indicator" class="session-indicator"></span>
+</div>
+
+<!-- MAIN -->
+<div class="main-area">
+
+  <!-- SIDEBAR (personajes) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-label">Personajes</div>
+    <button class="sidebar-item active" onclick="showChar('rac')">🪓 Rac</button>
+    <button class="sidebar-item" onclick="showChar('relyo')">🥋 Relyo</button>
+    <button class="sidebar-item" onclick="showChar('tyrell')">🛡 Tyrell</button>
+    <button class="sidebar-item" onclick="showChar('boyd')">🌿 Boyd</button>
+    <button class="sidebar-item" onclick="showChar('esdas')">🔥 Esdas</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent">
+
+    <!-- ═══════════ OVERVIEW ═══════════ -->
+    <div class="page active" id="page-overview">
+      <h1 class="page-title">Ardaetheros</h1>
+      <p class="page-subtitle">Campaña de D&D — Sesión 1 completada</p>
+
+      <h2 class="sec-head">Estado del grupo</h2>
+      <div class="overview-grid" id="overview-grid"></div>
+
+      <h2 class="sec-head">Dónde estamos</h2>
+      <div class="card card-gold">
+        <p>El grupo sigue a <strong style="color:var(--gold)">Nira</strong> hacia <strong style="color:var(--gold)">Aether Grove</strong>. La sesión terminó en el bosque, de noche, después de derrotar a la Madre Araña. Rac y Esdas fueron curados del veneno Fell por Nira.</p>
+        <p style="margin-top:0.5rem" class="muted">Próxima sesión: llegar al Grove, recibir las recompensas de Zyren con los materiales del lobo, resolver el loot de la Madre Araña.</p>
+      </div>
+
+      <h2 class="sec-head">El Fell</h2>
+      <div class="card">
+        <p>La corrupción Fell es una energía verde orgánica que puede <em>controlar, distorsionar y transformar</em> criaturas vivas sin destruir su esencia. No solo mata — transforma. Los animales corrompidos son víctimas, no monstruos por naturaleza.</p>
+        <p style="margin-top:0.5rem" class="muted">Signos: venas verdes, líquido verdoso en boca/colmillos, ojos alterados.</p>
+      </div>
+
+      <h2 class="sec-head">Monedero del grupo</h2>
+      <div class="money-block group-money" id="money-group"></div>
+      <p class="muted" style="font-size:0.82rem;margin-top:-0.5rem;margin-bottom:1.5rem">Botín compartido del grupo. Cada personaje también tiene su monedero personal en su hoja.</p>
+    </div>
+
+    <!-- ═══════════ STORY ═══════════ -->
+    <div class="page" id="page-story">
+      <h1 class="page-title">Crónica — Sesión 1</h1>
+      <p class="page-subtitle muted">Reconstruida a partir de lo jugado en mesa</p>
+
+      <div class="timeline">
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto I — Despertar en el barco y llegada a Mina Zafira</div>
+          <div class="act-body">
+            <p>El grupo despertó en un barco acercándose al puerto de Mina Zafira. Nadie sabía por qué estaba allí. Relyo, Tyrell y Esdas se mostraron desconfiados; Rac fue más directo e impulsivo; Boyd permaneció vigilante y observador.</p>
+            <p>En la taberna, Tyron el guardapuerta no los dejó entrar al verlos desarmados y sin dinero. Rac fue amable y honesto — Tyron les regaló pan. <em>Primer momento donde el mundo respondió a la conducta de los personajes.</em></p>
+            <p>Un gato blanco y negro los guió por callejones desde la taberna hasta el borde del pueblo, internándose en el bosque y desapareciendo entre los árboles.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto II — El Bosque y el Lobo Corrupto</div>
+          <div class="act-body">
+            <p>Boyd sintió una conexión especial con el bosque. La atmósfera se volvió densa e inquietante. Apareció el primer gran enemigo: un lobo corrupto con venas verdes y líquido Fell.</p>
+            <p>Rac corrió sin armas — esquivó una pata enorme y golpeó al lobo en la cara. El lobo lo derribó. Relyo intentó un ataque acrobático desde un árbol; el lobo esquivó. Relyo salvó a Esdas durante el caos. Boyd usó raíces para inmovilizar una pata. Esdas frenó mentalmente al lobo por un instante. Tyrell observó desde un árbol.</p>
+            <div class="act-note">Cuando el lobo iba a matar a Rac, Zyren apareció en forma híbrida (león/águila) y lo arrastró lejos. Luego volvió en forma élfica.</div>
+            <p>Zyren reveló el nombre del mundo, entregó 10 monedas de plata y cuestionó a Tyrell por no proteger al grupo. Boyd percibió el espíritu del lobo agradeciendo su liberación.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto III — Regreso a Mina Zafira</div>
+          <div class="act-body">
+            <p>Tyron los recibió recordando que habían alimentado al gato. Reynera, la innkeeper, los invitó a comer y a alojarse. Contó que su marido había sido aventurero.</p>
+            <p>Tyrell juró proteger la taberna y a Reynera. Cada personaje procesó la noche a su manera: Boyd reflexionó sobre el lobo, Relyo meditó, Rac habló con Ati, Tyrell sintió vergüenza y reconexión con la luz, Esdas sintió impotencia y deuda hacia Relyo.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto IV — Equipo en Mina Zafira</div>
+          <div class="act-body">
+            <p>Smith (herrero): le simpatizó Rac, prometió descuento futuro. Se enemistó con Esdas por falta de respeto. Farandon (armero): equipó a todo el grupo con ~8 monedas de plata.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto V — Entierro del lobo y promesa de Zyren</div>
+          <div class="act-body">
+            <p>El grupo volvió al lobo, retiró piel/pelo/colmillos y lo enterró para honrarlo. Tyrell oró. Zyren reapareció: llevará los materiales y los esperará en Aether Grove con algo útil.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto VI — Entrenamiento e introspección</div>
+          <div class="act-body">
+            <p>Boyd, Tyrell y Rac practicaron sinergia táctica (raíces + escudo + hacha). Relyo meditó. Esdas se conectó con el agua en una cascada como foco de magia. Fue el único en bañarse.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto VII — La Madre Araña</div>
+          <div class="act-body">
+            <p>El camino se perdió de noche. Apareció la Madre Araña corrupta con sus spiderlings. Rac atacó directo. Esdas sintió fuego en sus manos — la araña lo apuntó con veneno. Tyrell se interpuso con su escudo.</p>
+            <p>Un spiderling saltó al pecho de Rac; otro al hombro/cuello de Esdas. Tyrell tiró crítico: golpeó el escudo contra el suelo y despertó un <strong style="color:var(--gold)">aura de luz</strong> que repelió las arañas y destruyó varios spiderlings.</p>
+            <p>Esdas lanzó Firebolt — <strong style="color:var(--gold)">20 natural</strong>. La araña quedó girando. Relyo, desde el árbol, sintió el punto vulnerable y ejecutó su golpe de monje aéreo, arrancando el corazón de la Madre Araña.</p>
+          </div>
+        </div>
+
+        <div class="timeline-act">
+          <div class="timeline-dot"></div>
+          <div class="act-title">Acto VIII — Veneno Fell y aparición de Nira</div>
+          <div class="act-body">
+            <p>Rac y Esdas cayeron intoxicados por veneno Fell. Boyd y Tyrell no pudieron purgarlo. Una pantera negra se acercó — se transformó en <strong style="color:var(--gold)">Nira</strong>: elfa de piel oscura, elegante y sigilosa.</p>
+            <p>Nira purgó el veneno con magia de naturaleza. En Rac llegaba hasta el brazo izquierdo; en Esdas subía por el hombro/cuello. Quedaron cicatrices. Nira dijo que Zyren la envió y que sin él "ya no serían los mismos".</p>
+            <div class="act-note">El Fell no solo mata — transforma.</div>
+            <p>Nira los invitó a seguirla hacia Aether Grove. <em>Fin de la Sesión 1.</em></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════ SESIÓN LIVE ═══════════ -->
+    <div class="page" id="page-live">
+      <div class="live-header">
+        <h1 class="page-title">Sesión Live</h1>
+        <div class="live-header-meta" id="live-header-meta"></div>
+      </div>
+
+      <div class="live-layout">
+        <!-- COMBAT TRACKER (sidebar izquierdo) -->
+        <aside class="live-combat">
+          <div class="live-combat-header">
+            <h3>Combat tracker</h3>
+          </div>
+
+          <div class="combat-state" id="combat-state"></div>
+
+          <div class="combat-actions dm-only">
+            <button class="btn-add-all-players" onclick="addAllPlayersToCombat()">+ Todos los jugadores</button>
+            <button onclick="openPlayerPicker()">+ Un jugador</button>
+            <button onclick="openMonsterPicker()">+ Monstruo del Bestiario</button>
+            <button onclick="addAdhocMonster()">+ Monstruo ad-hoc</button>
+          </div>
+
+          <div id="combat-list"></div>
+          <div id="monster-picker"></div>
+        </aside>
+
+        <!-- STREAM (main) -->
+        <main class="live-stream-wrap">
+          <div class="quick-add-bar dm-only">
+            <button class="quick-btn" onclick="openNoteForm('action')">+ Acción jugador</button>
+            <button class="quick-btn" onclick="openNoteForm('conversation')">+ Conversación</button>
+            <button class="quick-btn" onclick="openNoteForm('combat')">+ Combate</button>
+            <button class="quick-btn" onclick="openNoteForm('narrative')">+ Narrativa</button>
+          </div>
+
+          <div class="note-form-container" id="note-form-container"></div>
+
+          <div class="notes-stream" id="notes-stream"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ═══════════ CAMPAÑA PRINCIPAL ═══════════ -->
+    <div class="page" id="page-campaign">
+      <h1 class="page-title">Campaña Principal</h1>
+      <p class="page-subtitle muted">Guía maestra · hilos narrativos · eventos reordenables · lugares · ideas libres</p>
+
+      <div class="campaign-tabs">
+        <button class="campaign-tab active" data-tab="events" onclick="switchCampaignTab('events')">Eventos</button>
+        <button class="campaign-tab" data-tab="threads" onclick="switchCampaignTab('threads')">Hilos narrativos</button>
+        <button class="campaign-tab" data-tab="locations" onclick="switchCampaignTab('locations')">Lugares</button>
+        <button class="campaign-tab" data-tab="ideas" onclick="switchCampaignTab('ideas')">Ideas libres</button>
+        <button class="campaign-tab" data-tab="players" onclick="switchCampaignTab('players');renderPlayersPanel()">Jugadores</button>
+      </div>
+
+      <!-- EVENTOS -->
+      <div class="campaign-tab-content active" id="cmp-events">
+        <div class="campaign-actions">
+          <button class="btn-primary" onclick="addCampaignEvent()">+ Nuevo evento</button>
+        </div>
+        <p class="muted" style="font-size:0.85rem;margin-bottom:0.8rem">Arrastrá por el handle <strong style="color:var(--gold-dim)">≡</strong> para reordenar, o usá los botones ↑↓. Edita cualquier campo y se guarda solo.</p>
+        <div class="event-list" id="event-list"></div>
+      </div>
+
+      <!-- HILOS -->
+      <div class="campaign-tab-content" id="cmp-threads">
+        <div class="campaign-actions">
+          <button class="btn-primary" onclick="addCampaignThread()">+ Nuevo hilo</button>
+        </div>
+        <p class="muted" style="font-size:0.85rem;margin-bottom:0.8rem">Hilos narrativos que atraviesan toda la campaña. Marcalos como activos / emergiendo / dormidos / resueltos según vayan evolucionando.</p>
+        <div class="thread-list" id="thread-list"></div>
+      </div>
+
+      <!-- LUGARES -->
+      <div class="campaign-tab-content" id="cmp-locations">
+        <div class="campaign-actions">
+          <button class="btn-primary" onclick="addCampaignLocation()">+ Nuevo lugar</button>
+        </div>
+        <p class="muted" style="font-size:0.85rem;margin-bottom:0.8rem">Lugares conocidos del mundo. Anotá descripción, estado actual y quiénes están ahí.</p>
+        <div class="location-list" id="location-list"></div>
+      </div>
+
+      <!-- IDEAS -->
+      <div class="campaign-tab-content" id="cmp-ideas">
+        <p class="muted" style="font-size:0.85rem;margin-bottom:0.8rem">Espacio libre para ideas, posibles giros, NPCs futuros, frases sueltas, recordatorios para la próxima sesión.</p>
+        <textarea class="notes-area" id="campaign-ideas" style="min-height:300px" placeholder="Ideas y notas de planificación..." oninput="saveCampaignIdeas()"></textarea>
+      </div>
+
+      <!-- JUGADORES -->
+      <div class="campaign-tab-content" id="cmp-players">
+        <!-- renderPlayersPanel() lo puebla dinámicamente -->
+      </div>
+    </div>
+
+    <!-- ═══════════ PERSONAJES ═══════════ -->
+    <div class="page" id="page-chars">
+      <div id="char-rac">
+        <div class="char-header">
+          <div class="char-portrait" onclick="openImageModal('rac')" title="Click para agregar imagen">
+            <div class="char-portrait-ph portrait-placeholder" id="portrait-ph-rac">
+              <span style="font-size:2rem">🪓</span>
+              <span>AGREGAR</span>
+            </div>
+            <img id="portrait-img-rac" src="" style="display:none">
+            <div class="portrait-overlay">📷 Cambiar imagen</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">Rac</div>
+            <div class="char-class">Humano · Bárbaro · Nivel 2</div>
+            <div class="char-tags">
+              <span class="char-tag">Frontline</span>
+              <span class="char-tag">Tank DPS</span>
+              <span class="char-tag">Caótico Bueno</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-name">STR</span><span class="stat-score">17</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">DEX</span><span class="stat-score">13</span><span class="stat-mod">+1</span></div>
+          <div class="stat-box"><span class="stat-name">CON</span><span class="stat-score">16</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">INT</span><span class="stat-score">8</span><span class="stat-mod">-1</span></div>
+          <div class="stat-box"><span class="stat-name">WIS</span><span class="stat-score">10</span><span class="stat-mod">+0</span></div>
+          <div class="stat-box"><span class="stat-name">CHA</span><span class="stat-score">11</span><span class="stat-mod">+0</span></div>
+        </div>
+
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">HP — Vida</span>
+            <div class="vital-controls">
+              <button class="vital-btn" onclick="changeVital('rac','hp',-1)">−</button>
+              <input class="vital-val" type="number" id="rac-hp" value="15" min="0" max="15" onchange="updateHP('rac')">
+              <span class="vital-max">/ <span id="rac-hp-max">15</span></span>
+              <button class="vital-btn" onclick="changeVital('rac','hp',1)">+</button>
+            </div>
+            <div class="hp-bar-wrap"><div class="hp-bar" id="rac-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="vital-box">
+            <span class="vital-label">AC — Armadura</span>
+            <div class="vital-controls">
+              <span style="font-family:var(--font-title);font-size:2rem;color:var(--white)">14</span>
+            </div>
+          </div>
+          <div class="vital-box">
+            <span class="vital-label">Iniciativa · Velocidad</span>
+            <div class="vital-controls">
+              <span style="font-family:var(--font-title);font-size:1.4rem;color:var(--white)">+1 · 30ft</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="char-abilities-container" id="abilities-rac"></div>
+
+        <h2 class="sec-head">Condiciones</h2>
+        <div class="conditions-grid" id="rac-conditions">
+          <button class="condition-btn" onclick="toggleCondition('rac','Envenenado')">Envenenado</button>
+          <button class="condition-btn" onclick="toggleCondition('rac','Aturdido')">Aturdido</button>
+          <button class="condition-btn" onclick="toggleCondition('rac','Derribado')">Derribado</button>
+          <button class="condition-btn" onclick="toggleCondition('rac','Asustado')">Asustado</button>
+          <button class="condition-btn" onclick="toggleCondition('rac','Paralizado')">Paralizado</button>
+          <button class="condition-btn good" onclick="toggleCondition('rac','Furia Ancestral')">Furia Ancestral</button>
+          <button class="condition-btn good" onclick="toggleCondition('rac','Concentración')">Concentración</button>
+        </div>
+
+        <h2 class="sec-head">Armas</h2>
+        <table class="weapons-table">
+          <thead><tr><th>Arma</th><th>Atk</th><th>Daño</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td>Greataxe / Hacha dos manos</td><td>+5</td><td>1d12+3 slashing</td><td>—</td></tr>
+            <tr><td>Furia Ancestral (activa)</td><td>+5</td><td>1d12+5 slashing</td><td>Bonus Action. +2 daño STR. Resistencia física. 3 turnos. 1/día.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="sec-head">Monedero</h2>
+        <div class="money-block" id="money-rac"></div>
+
+        <h2 class="sec-head">Equipo</h2>
+        <ul class="inventory-list" id="rac-inventory"></ul>
+        <div class="inv-add">
+          <input class="inv-input" id="rac-inv-input" placeholder="Agregar objeto..." onkeydown="if(event.key==='Enter')addItem('rac')">
+          <button class="btn-small" onclick="addItem('rac')">+ Agregar</button>
+        </div>
+
+        <h2 class="sec-head">Marcas de sesión</h2>
+        <div>
+          <div class="mark-item"><span class="mark-icon">⚔</span><span>Cicatriz en el pecho por mordidas de spiderlings. Veneno Fell purgado por Nira.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Ati — smiley face tatuada en la mano. Le dijo que no confíe demasiado en el mago ni en el paladín.</span></div>
+        </div>
+
+        <h2 class="sec-head">Notas libres</h2>
+        <textarea class="notes-area" id="rac-notes" placeholder="Notas del personaje..." oninput="saveNotes('rac')"></textarea>
+
+        <div class="private-notes-section" id="private-notes-rac">
+          <div class="private-notes-title">🔒 Notas privadas</div>
+          <textarea class="private-notes-ta" id="private-notes-ta-rac" placeholder="Solo vos podés ver esto..." oninput="onPrivateNoteInput('rac')"></textarea>
+          <p class="private-notes-hint">Solo visible para vos. Ni el DM puede leerlas.</p>
+        </div>
+      </div>
+
+      <!-- RELYO -->
+      <div id="char-relyo" style="display:none">
+        <div class="char-header">
+          <div class="char-portrait" onclick="openImageModal('relyo')">
+            <div class="char-portrait-ph portrait-placeholder" id="portrait-ph-relyo"><span style="font-size:2rem">🥋</span><span>AGREGAR</span></div>
+            <img id="portrait-img-relyo" src="" style="display:none">
+            <div class="portrait-overlay">📷 Cambiar imagen</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">Relyo</div>
+            <div class="char-class">Elfo · Monje · Nivel 2</div>
+            <div class="char-tags"><span class="char-tag">Skirmisher</span><span class="char-tag">Movilidad</span><span class="char-tag">Precisión</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-name">STR</span><span class="stat-score">10</span><span class="stat-mod">+0</span></div>
+          <div class="stat-box"><span class="stat-name">DEX</span><span class="stat-score">17</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">CON</span><span class="stat-score">13</span><span class="stat-mod">+1</span></div>
+          <div class="stat-box"><span class="stat-name">INT</span><span class="stat-score">10</span><span class="stat-mod">+0</span></div>
+          <div class="stat-box"><span class="stat-name">WIS</span><span class="stat-score">15</span><span class="stat-mod">+2</span></div>
+          <div class="stat-box"><span class="stat-name">CHA</span><span class="stat-score">9</span><span class="stat-mod">-1</span></div>
+        </div>
+
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">HP — Vida</span>
+            <div class="vital-controls">
+              <button class="vital-btn" onclick="changeVital('relyo','hp',-1)">−</button>
+              <input class="vital-val" type="number" id="relyo-hp" value="10" min="0" max="10" onchange="updateHP('relyo')">
+              <span class="vital-max">/ <span id="relyo-hp-max">10</span></span>
+              <button class="vital-btn" onclick="changeVital('relyo','hp',1)">+</button>
+            </div>
+            <div class="hp-bar-wrap"><div class="hp-bar" id="relyo-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="vital-box"><span class="vital-label">AC</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:2rem;color:var(--white)">15</span></div></div>
+          <div class="vital-box"><span class="vital-label">Iniciativa · Velocidad</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:1.4rem;color:var(--white)">+3 · 30ft</span></div></div>
+        </div>
+
+        <div class="char-abilities-container" id="abilities-relyo"></div>
+
+        <h2 class="sec-head">Condiciones</h2>
+        <div class="conditions-grid" id="relyo-conditions">
+          <button class="condition-btn" onclick="toggleCondition('relyo','Envenenado')">Envenenado</button>
+          <button class="condition-btn" onclick="toggleCondition('relyo','Aturdido')">Aturdido</button>
+          <button class="condition-btn" onclick="toggleCondition('relyo','Derribado')">Derribado</button>
+          <button class="condition-btn" onclick="toggleCondition('relyo','Asustado')">Asustado</button>
+          <button class="condition-btn" onclick="toggleCondition('relyo','Paralizado')">Paralizado</button>
+          <button class="condition-btn good" onclick="toggleCondition('relyo','Concentración')">Concentración</button>
+        </div>
+
+        <h2 class="sec-head">Armas</h2>
+        <table class="weapons-table">
+          <thead><tr><th>Arma</th><th>Atk</th><th>Daño</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td>Quarterstaff / Palo</td><td>+5</td><td>1d8+3 bludgeoning</td><td>Regalo de Farandon.</td></tr>
+            <tr><td>Unarmed Strike</td><td>+5</td><td>1d4+3 bludgeoning</td><td>Ataque bonus por Martial Arts.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="sec-head">Monedero</h2>
+        <div class="money-block" id="money-relyo"></div>
+
+        <h2 class="sec-head">Equipo</h2>
+        <ul class="inventory-list" id="relyo-inventory"></ul>
+        <div class="inv-add">
+          <input class="inv-input" id="relyo-inv-input" placeholder="Agregar objeto..." onkeydown="if(event.key==='Enter')addItem('relyo')">
+          <button class="btn-small" onclick="addItem('relyo')">+ Agregar</button>
+        </div>
+
+        <h2 class="sec-head">Marcas de sesión</h2>
+        <div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Salvó a Esdas durante el primer combate. Deuda emocional pendiente.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Cerró el combate de la Madre Araña con un golpe de monje aéreo.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Primer indicio de Ki: percibió el punto vulnerable de la araña antes del golpe.</span></div>
+        </div>
+
+        <h2 class="sec-head">Notas libres</h2>
+        <textarea class="notes-area" id="relyo-notes" placeholder="Notas del personaje..." oninput="saveNotes('relyo')"></textarea>
+
+        <div class="private-notes-section" id="private-notes-relyo">
+          <div class="private-notes-title">🔒 Notas privadas</div>
+          <textarea class="private-notes-ta" id="private-notes-ta-relyo" placeholder="Solo vos podés ver esto..." oninput="onPrivateNoteInput('relyo')"></textarea>
+          <p class="private-notes-hint">Solo visible para vos. Ni el DM puede leerlas.</p>
+        </div>
+      </div>
+
+      <!-- TYRELL -->
+      <div id="char-tyrell" style="display:none">
+        <div class="char-header">
+          <div class="char-portrait" onclick="openImageModal('tyrell')">
+            <div class="char-portrait-ph portrait-placeholder" id="portrait-ph-tyrell"><span style="font-size:2rem">🛡</span><span>AGREGAR</span></div>
+            <img id="portrait-img-tyrell" src="" style="display:none">
+            <div class="portrait-overlay">📷 Cambiar imagen</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">Tyrell</div>
+            <div class="char-class">Draconide · Paladín · Nivel 2</div>
+            <div class="char-tags"><span class="char-tag">Protector</span><span class="char-tag">Frontline</span><span class="char-tag">Guardián</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-name">STR</span><span class="stat-score">17</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">DEX</span><span class="stat-score">10</span><span class="stat-mod">+0</span></div>
+          <div class="stat-box"><span class="stat-name">CON</span><span class="stat-score">14</span><span class="stat-mod">+2</span></div>
+          <div class="stat-box"><span class="stat-name">INT</span><span class="stat-score">8</span><span class="stat-mod">-1</span></div>
+          <div class="stat-box"><span class="stat-name">WIS</span><span class="stat-score">16</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">CHA</span><span class="stat-score">10</span><span class="stat-mod">+0</span></div>
+        </div>
+
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">HP — Vida</span>
+            <div class="vital-controls">
+              <button class="vital-btn" onclick="changeVital('tyrell','hp',-1)">−</button>
+              <input class="vital-val" type="number" id="tyrell-hp" value="13" min="0" max="13" onchange="updateHP('tyrell')">
+              <span class="vital-max">/ <span id="tyrell-hp-max">13</span></span>
+              <button class="vital-btn" onclick="changeVital('tyrell','hp',1)">+</button>
+            </div>
+            <div class="hp-bar-wrap"><div class="hp-bar" id="tyrell-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="vital-box"><span class="vital-label">AC</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:2rem;color:var(--white)">18</span></div></div>
+          <div class="vital-box"><span class="vital-label">Iniciativa · Velocidad</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:1.4rem;color:var(--white)">+0 · 30ft</span></div></div>
+        </div>
+
+        <div class="char-abilities-container" id="abilities-tyrell"></div>
+
+        <h2 class="sec-head">Condiciones</h2>
+        <div class="conditions-grid" id="tyrell-conditions">
+          <button class="condition-btn" onclick="toggleCondition('tyrell','Envenenado')">Envenenado</button>
+          <button class="condition-btn" onclick="toggleCondition('tyrell','Aturdido')">Aturdido</button>
+          <button class="condition-btn" onclick="toggleCondition('tyrell','Derribado')">Derribado</button>
+          <button class="condition-btn" onclick="toggleCondition('tyrell','Asustado')">Asustado</button>
+          <button class="condition-btn good" onclick="toggleCondition('tyrell','Aura de Luz')">Aura de Luz</button>
+          <button class="condition-btn good" onclick="toggleCondition('tyrell','Concentración')">Concentración</button>
+        </div>
+
+        <h2 class="sec-head">Armas</h2>
+        <table class="weapons-table">
+          <thead><tr><th>Arma</th><th>Atk</th><th>Daño</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td>Shortsword / Espada corta</td><td>+5</td><td>1d6+3 piercing</td><td>—</td></tr>
+            <tr><td>Shield Bash (narrativo)</td><td>—</td><td>Sin daño fijo</td><td>Despierte aura de luz. No es ataque estándar aún.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="sec-head">Monedero</h2>
+        <div class="money-block" id="money-tyrell"></div>
+
+        <h2 class="sec-head">Equipo</h2>
+        <ul class="inventory-list" id="tyrell-inventory"></ul>
+        <div class="inv-add">
+          <input class="inv-input" id="tyrell-inv-input" placeholder="Agregar objeto..." onkeydown="if(event.key==='Enter')addItem('tyrell')">
+          <button class="btn-small" onclick="addItem('tyrell')">+ Agregar</button>
+        </div>
+
+        <h2 class="sec-head">Marcas de sesión</h2>
+        <div>
+          <div class="mark-item"><span class="mark-icon">⚔</span><span>Juramento a Reynera: prometió proteger la taberna y a ella con todo lo que esté a su alcance.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Primer despertar de luz: aura que repelió spiderlings y protegió a todo el grupo.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Zyren lo cuestionó por no proteger al grupo durante el primer combate.</span></div>
+        </div>
+
+        <h2 class="sec-head">Notas libres</h2>
+        <textarea class="notes-area" id="tyrell-notes" placeholder="Notas del personaje..." oninput="saveNotes('tyrell')"></textarea>
+
+        <div class="private-notes-section" id="private-notes-tyrell">
+          <div class="private-notes-title">🔒 Notas privadas</div>
+          <textarea class="private-notes-ta" id="private-notes-ta-tyrell" placeholder="Solo vos podés ver esto..." oninput="onPrivateNoteInput('tyrell')"></textarea>
+          <p class="private-notes-hint">Solo visible para vos. Ni el DM puede leerlas.</p>
+        </div>
+      </div>
+
+      <!-- BOYD -->
+      <div id="char-boyd" style="display:none">
+        <div class="char-header">
+          <div class="char-portrait" onclick="openImageModal('boyd')">
+            <div class="char-portrait-ph portrait-placeholder" id="portrait-ph-boyd"><span style="font-size:2rem">🌿</span><span>AGREGAR</span></div>
+            <img id="portrait-img-boyd" src="" style="display:none">
+            <div class="portrait-overlay">📷 Cambiar imagen</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">Boyd</div>
+            <div class="char-class">Owlin · Druida · Nivel 2</div>
+            <div class="char-tags"><span class="char-tag">Soporte</span><span class="char-tag">Control</span><span class="char-tag">Espiritualidad</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-name">STR</span><span class="stat-score">8</span><span class="stat-mod">-1</span></div>
+          <div class="stat-box"><span class="stat-name">DEX</span><span class="stat-score">13</span><span class="stat-mod">+1</span></div>
+          <div class="stat-box"><span class="stat-name">CON</span><span class="stat-score">12</span><span class="stat-mod">+1</span></div>
+          <div class="stat-box"><span class="stat-name">INT</span><span class="stat-score">14</span><span class="stat-mod">+2</span></div>
+          <div class="stat-box"><span class="stat-name">WIS</span><span class="stat-score">16</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">CHA</span><span class="stat-score">12</span><span class="stat-mod">+1</span></div>
+        </div>
+
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">HP — Vida</span>
+            <div class="vital-controls">
+              <button class="vital-btn" onclick="changeVital('boyd','hp',-1)">−</button>
+              <input class="vital-val" type="number" id="boyd-hp" value="9" min="0" max="9" onchange="updateHP('boyd')">
+              <span class="vital-max">/ <span id="boyd-hp-max">9</span></span>
+              <button class="vital-btn" onclick="changeVital('boyd','hp',1)">+</button>
+            </div>
+            <div class="hp-bar-wrap"><div class="hp-bar" id="boyd-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="vital-box"><span class="vital-label">AC</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:2rem;color:var(--white)">14</span></div></div>
+          <div class="vital-box"><span class="vital-label">Iniciativa · Velocidad</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:1.2rem;color:var(--white)">+1 · 30 ft · <span style="color:var(--gold)">30 ft vuelo</span></span></div></div>
+        </div>
+
+        <div class="char-abilities-container" id="abilities-boyd"></div>
+
+        <h2 class="sec-head">Condiciones</h2>
+        <div class="conditions-grid" id="boyd-conditions">
+          <button class="condition-btn" onclick="toggleCondition('boyd','Envenenado')">Envenenado</button>
+          <button class="condition-btn" onclick="toggleCondition('boyd','Aturdido')">Aturdido</button>
+          <button class="condition-btn" onclick="toggleCondition('boyd','Derribado')">Derribado</button>
+          <button class="condition-btn" onclick="toggleCondition('boyd','Asustado')">Asustado</button>
+          <button class="condition-btn good" onclick="toggleCondition('boyd','Concentración')">Concentración</button>
+          <button class="condition-btn good" onclick="toggleCondition('boyd','Wild Shape')">Wild Shape</button>
+        </div>
+
+        <h2 class="sec-head">Armas</h2>
+        <table class="weapons-table">
+          <thead><tr><th>Arma</th><th>Atk</th><th>Daño</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td>Dagger / Cuchillo simple</td><td>+3</td><td>1d4+1 piercing</td><td>Farandon. Defensa básica.</td></tr>
+            <tr><td>Raíces / Control natural</td><td>Spell</td><td>Restricción narrativa</td><td>Entangle-like. Inmoviliza enemigos.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="sec-head">Monedero</h2>
+        <div class="money-block" id="money-boyd"></div>
+
+        <h2 class="sec-head">Equipo</h2>
+        <ul class="inventory-list" id="boyd-inventory"></ul>
+        <div class="inv-add">
+          <input class="inv-input" id="boyd-inv-input" placeholder="Agregar objeto..." onkeydown="if(event.key==='Enter')addItem('boyd')">
+          <button class="btn-small" onclick="addItem('boyd')">+ Agregar</button>
+        </div>
+
+        <h2 class="sec-head">Marcas de sesión</h2>
+        <div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Percibió el espíritu del lobo liberado y su agradecimiento.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Zyren y Nira señalaron que puede sentir el camino hacia Aether Grove mejor que los demás.</span></div>
+        </div>
+
+        <h2 class="sec-head">Notas libres</h2>
+        <textarea class="notes-area" id="boyd-notes" placeholder="Notas del personaje..." oninput="saveNotes('boyd')"></textarea>
+
+        <div class="private-notes-section" id="private-notes-boyd">
+          <div class="private-notes-title">🔒 Notas privadas</div>
+          <textarea class="private-notes-ta" id="private-notes-ta-boyd" placeholder="Solo vos podés ver esto..." oninput="onPrivateNoteInput('boyd')"></textarea>
+          <p class="private-notes-hint">Solo visible para vos. Ni el DM puede leerlas.</p>
+        </div>
+      </div>
+
+      <!-- ESDAS -->
+      <div id="char-esdas" style="display:none">
+        <div class="char-header">
+          <div class="char-portrait" onclick="openImageModal('esdas')">
+            <div class="char-portrait-ph portrait-placeholder" id="portrait-ph-esdas"><span style="font-size:2rem">🔥</span><span>AGREGAR</span></div>
+            <img id="portrait-img-esdas" src="" style="display:none">
+            <div class="portrait-overlay">📷 Cambiar imagen</div>
+          </div>
+          <div class="char-info">
+            <div class="char-name">Esdas</div>
+            <div class="char-class">Elfo · Wizard · Nivel 2</div>
+            <div class="char-tags"><span class="char-tag">Mago</span><span class="char-tag">Misterio Arcano</span><span class="char-tag">DPS</span></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-name">STR</span><span class="stat-score">8</span><span class="stat-mod">-1</span></div>
+          <div class="stat-box"><span class="stat-name">DEX</span><span class="stat-score">14</span><span class="stat-mod">+2</span></div>
+          <div class="stat-box"><span class="stat-name">CON</span><span class="stat-score">13</span><span class="stat-mod">+1</span></div>
+          <div class="stat-box"><span class="stat-name">INT</span><span class="stat-score">17</span><span class="stat-mod">+3</span></div>
+          <div class="stat-box"><span class="stat-name">WIS</span><span class="stat-score">11</span><span class="stat-mod">+0</span></div>
+          <div class="stat-box"><span class="stat-name">CHA</span><span class="stat-score">12</span><span class="stat-mod">+1</span></div>
+        </div>
+
+        <div class="vitals-row">
+          <div class="vital-box">
+            <span class="vital-label">HP — Vida</span>
+            <div class="vital-controls">
+              <button class="vital-btn" onclick="changeVital('esdas','hp',-1)">−</button>
+              <input class="vital-val" type="number" id="esdas-hp" value="7" min="0" max="7" onchange="updateHP('esdas')">
+              <span class="vital-max">/ <span id="esdas-hp-max">7</span></span>
+              <button class="vital-btn" onclick="changeVital('esdas','hp',1)">+</button>
+            </div>
+            <div class="hp-bar-wrap"><div class="hp-bar" id="esdas-hp-bar" style="width:100%"></div></div>
+          </div>
+          <div class="vital-box"><span class="vital-label">AC</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:2rem;color:var(--white)">15</span></div></div>
+          <div class="vital-box"><span class="vital-label">Iniciativa · Velocidad</span><div class="vital-controls"><span style="font-family:var(--font-title);font-size:1.4rem;color:var(--white)">+2 · 30ft</span></div></div>
+        </div>
+
+        <div class="char-abilities-container" id="abilities-esdas"></div>
+
+        <h2 class="sec-head">Condiciones</h2>
+        <div class="conditions-grid" id="esdas-conditions">
+          <button class="condition-btn" onclick="toggleCondition('esdas','Envenenado')">Envenenado</button>
+          <button class="condition-btn" onclick="toggleCondition('esdas','Aturdido')">Aturdido</button>
+          <button class="condition-btn" onclick="toggleCondition('esdas','Derribado')">Derribado</button>
+          <button class="condition-btn" onclick="toggleCondition('esdas','Asustado')">Asustado</button>
+          <button class="condition-btn" onclick="toggleCondition('esdas','Paralizado')">Paralizado</button>
+          <button class="condition-btn good" onclick="toggleCondition('esdas','Concentración')">Concentración</button>
+        </div>
+
+        <h2 class="sec-head">Armas / Cantrips</h2>
+        <table class="weapons-table">
+          <thead><tr><th>Arma / Cantrip</th><th>Atk</th><th>Daño</th><th>Nota</th></tr></thead>
+          <tbody>
+            <tr><td>Firebolt</td><td>+5</td><td>1d10 fire</td><td>20 natural contra la Madre Araña.</td></tr>
+            <tr><td>Dagger / Cuchillo simple</td><td>+4</td><td>1d4+2 piercing</td><td>Farandon. Defensa básica.</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="sec-head">Monedero</h2>
+        <div class="money-block" id="money-esdas"></div>
+
+        <h2 class="sec-head">Equipo</h2>
+        <ul class="inventory-list" id="esdas-inventory"></ul>
+        <div class="inv-add">
+          <input class="inv-input" id="esdas-inv-input" placeholder="Agregar objeto..." onkeydown="if(event.key==='Enter')addItem('esdas')">
+          <button class="btn-small" onclick="addItem('esdas')">+ Agregar</button>
+        </div>
+
+        <h2 class="sec-head">Marcas de sesión</h2>
+        <div>
+          <div class="mark-item"><span class="mark-icon">⚔</span><span>Cicatriz en hombro/cuello por mordida de spiderling. Veneno Fell purgado por Nira.</span></div>
+          <div class="mark-item"><span class="mark-icon">⚔</span><span>Siente enojo inexplicable al ver la piel dracónica de Tyrell.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Relyo lo salvó durante el primer combate. Deuda emocional.</span></div>
+          <div class="mark-item"><span class="mark-icon">✦</span><span>Smith se negó a hacerle una daga de colmillo por falta de respeto.</span></div>
+        </div>
+
+        <h2 class="sec-head">Notas libres</h2>
+        <textarea class="notes-area" id="esdas-notes" placeholder="Notas del personaje..." oninput="saveNotes('esdas')"></textarea>
+
+        <div class="private-notes-section" id="private-notes-esdas">
+          <div class="private-notes-title">🔒 Notas privadas</div>
+          <textarea class="private-notes-ta" id="private-notes-ta-esdas" placeholder="Solo vos podés ver esto..." oninput="onPrivateNoteInput('esdas')"></textarea>
+          <p class="private-notes-hint">Solo visible para vos. Ni el DM puede leerlas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ NPCs ═══════════ -->
+    <div class="page" id="page-npcs">
+      <h1 class="page-title">NPCs</h1>
+      <p class="page-subtitle muted">Click en cada tarjeta para expandir. Click en el retrato para agregar imagen.</p>
+
+      <div class="npc-grid" id="npc-grid"></div>
+    </div>
+
+    <!-- ═══════════ BESTIARIO ═══════════ -->
+    <div class="page" id="page-bestiary">
+      <h1 class="page-title">Bestiario</h1>
+      <p class="page-subtitle muted">Criaturas y enemigos de Ardaetheros. Click en una fila para ver detalles. El HP se puede modificar en vivo durante el combate.</p>
+
+      <div class="bst-toolbar">
+        <input class="bst-search" id="bst-search" placeholder="Buscar criatura..." oninput="filterMonsters()">
+        <button class="bst-filter on" id="filt-all" onclick="setFilter('all')">Todos</button>
+        <button class="bst-filter" id="filt-bestia" onclick="setFilter('Bestia')">Bestias</button>
+        <button class="bst-filter" id="filt-monstruo" onclick="setFilter('Monstruosidad')">Monstruosidades</button>
+        <button class="bst-filter" id="filt-humanoide" onclick="setFilter('Humanoide')">Humanoides</button>
+        <button class="bst-add-btn" onclick="toggleMonsterForm()">+ Agregar criatura</button>
+      </div>
+
+      <!-- ADD FORM -->
+      <div class="monster-form" id="monsterForm">
+        <h3 style="font-family:var(--font-title);font-size:0.9rem;color:var(--gold);margin-bottom:1rem;letter-spacing:0.08em">Nueva Criatura</h3>
+        <div class="form-grid">
+          <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="fn-name" placeholder="Nombre"></div>
+          <div class="form-field"><label class="form-label">Tipo</label>
+            <select class="form-input" id="fn-type">
+              <option>Bestia</option><option>Monstruosidad</option><option>Humanoide</option><option>No-muerto</option><option>Elemental</option><option>Dragón</option><option>Aberración</option><option>Otro</option>
+            </select>
+          </div>
+          <div class="form-field"><label class="form-label">Tamaño</label>
+            <select class="form-input" id="fn-size">
+              <option>Pequeño</option><option selected>Mediano</option><option>Grande</option><option>Enorme</option><option>Gargantuesco</option>
+            </select>
+          </div>
+          <div class="form-field"><label class="form-label">CR</label><input class="form-input" id="fn-cr" placeholder="1/2, 1, 2..."></div>
+          <div class="form-field"><label class="form-label">CA</label><input class="form-input" id="fn-ac" type="number" placeholder="13"></div>
+          <div class="form-field"><label class="form-label">HP Máx</label><input class="form-input" id="fn-hp" type="number" placeholder="30"></div>
+          <div class="form-field"><label class="form-label">Velocidad</label><input class="form-input" id="fn-speed" placeholder="30 ft"></div>
+          <div class="form-field"><label class="form-label">Bono ataque</label><input class="form-input" id="fn-atk" placeholder="+5"></div>
+        </div>
+        <div class="form-grid" style="grid-template-columns:repeat(6,1fr)">
+          <div class="form-field"><label class="form-label">STR</label><input class="form-input" id="fn-str" type="number" placeholder="10"></div>
+          <div class="form-field"><label class="form-label">DEX</label><input class="form-input" id="fn-dex" type="number" placeholder="10"></div>
+          <div class="form-field"><label class="form-label">CON</label><input class="form-input" id="fn-con" type="number" placeholder="10"></div>
+          <div class="form-field"><label class="form-label">INT</label><input class="form-input" id="fn-int" type="number" placeholder="10"></div>
+          <div class="form-field"><label class="form-label">WIS</label><input class="form-input" id="fn-wis" type="number" placeholder="10"></div>
+          <div class="form-field"><label class="form-label">CHA</label><input class="form-input" id="fn-cha" type="number" placeholder="10"></div>
+        </div>
+        <div class="form-section-title">Descripción visual</div>
+        <textarea class="form-textarea" id="fn-desc" placeholder="Descripción de la criatura..."></textarea>
+        <div class="form-section-title">Ataques (uno por línea: Nombre | +bono | daño | nota)</div>
+        <textarea class="form-textarea" id="fn-attacks" placeholder="Mordida corrupta | +5 | 1d10+3 perforante | El objetivo debe tirar CON CD 12 o recibe 1d4 veneno"></textarea>
+        <div class="form-section-title">Habilidades especiales</div>
+        <textarea class="form-textarea" id="fn-abilities" placeholder="Aura Fell: cuando baja de 15 HP, todos los cercanos tiran CON CD 11 o reciben 1d4 necrótico..."></textarea>
+        <div class="form-section-title">Fases cinematográficas (una por línea: Nombre | descripción)</div>
+        <textarea class="form-textarea" id="fn-phases" placeholder="Fase 1 — Terror | Ramas rompiéndose, ojos verdes entre la oscuridad..."></textarea>
+        <div class="form-section-title">Notas DM</div>
+        <textarea class="form-textarea" id="fn-notes" placeholder="Notas privadas del DM..."></textarea>
+        <div class="form-btns">
+          <button class="btn-cancel" onclick="toggleMonsterForm()">Cancelar</button>
+          <button class="btn-primary" onclick="saveNewMonster()">Guardar criatura</button>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="monster-list" id="monsterList">
+        <div class="monster-row header-row">
+          <span>Criatura</span><span style="text-align:center">CA</span><span style="text-align:center">HP</span><span style="text-align:center">Vel.</span><span style="text-align:center">CR</span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: ITEMS -->
+    <div class="page" id="page-items">
+      <h1 class="page-title">Items</h1>
+      <p class="page-subtitle muted">Catálogo de armas, items mágicos, loot y objetos de campaña.</p>
+      <div class="items-toolbar">
+        <input class="items-search" id="items-search" placeholder="Buscar item..." oninput="filterItems()">
+        <button class="items-filter on" id="items-filt-all"     onclick="setItemFilter('all')">All</button>
+        <button class="items-filter"    id="items-filt-weapon"  onclick="setItemFilter('weapon')">Weapons</button>
+        <button class="items-filter"    id="items-filt-magic"   onclick="setItemFilter('magic')">Magic</button>
+        <button class="items-filter"    id="items-filt-loot"    onclick="setItemFilter('loot')">Loot</button>
+        <button class="items-filter"    id="items-filt-quest"   onclick="setItemFilter('quest')">Quest</button>
+        <button class="items-filter"    id="items-filt-misc"    onclick="setItemFilter('misc')">Misc</button>
+        <button class="items-add-btn" onclick="toggleItemForm()">+ Add item</button>
+      </div>
+
+      <!-- ADD ITEM FORM -->
+      <div class="item-form" id="itemForm" style="display:none">
+        <h3 class="item-form-title">New Item</h3>
+        <div class="item-form-grid">
+          <div class="item-form-field">
+            <label>Name (EN)</label>
+            <input class="form-input" id="if-name" placeholder="Longsword">
+          </div>
+          <div class="item-form-field">
+            <label>Name (ES)</label>
+            <input class="form-input" id="if-name-es" placeholder="Espada larga">
+          </div>
+          <div class="item-form-field">
+            <label>Category</label>
+            <select class="form-input" id="if-category" onchange="toggleWeaponFields()">
+              <option value="weapon">Weapon</option>
+              <option value="magic">Magic</option>
+              <option value="loot">Loot</option>
+              <option value="quest">Quest</option>
+              <option value="misc">Misc</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Weapon-only fields -->
+        <div id="if-weapon-fields">
+          <div class="item-form-grid">
+            <div class="item-form-field">
+              <label>Damage die</label>
+              <input class="form-input" id="if-damage" placeholder="1d8">
+            </div>
+            <div class="item-form-field">
+              <label>Damage type</label>
+              <select class="form-input" id="if-dmgtype">
+                <option value="slashing">Slashing</option>
+                <option value="piercing">Piercing</option>
+                <option value="bludgeoning">Bludgeoning</option>
+                <option value="fire">Fire</option>
+                <option value="cold">Cold</option>
+                <option value="lightning">Lightning</option>
+                <option value="thunder">Thunder</option>
+                <option value="acid">Acid</option>
+                <option value="poison">Poison</option>
+                <option value="psychic">Psychic</option>
+                <option value="necrotic">Necrotic</option>
+                <option value="radiant">Radiant</option>
+                <option value="force">Force</option>
+              </select>
+            </div>
+            <div class="item-form-field">
+              <label>Attack stat</label>
+              <select class="form-input" id="if-atkstat">
+                <option value="str">STR</option>
+                <option value="dex">DEX</option>
+                <option value="con">CON</option>
+                <option value="int">INT</option>
+                <option value="wis">WIS</option>
+                <option value="cha">CHA</option>
+              </select>
+            </div>
+            <div class="item-form-field">
+              <label>Damage stat</label>
+              <select class="form-input" id="if-dmgstat">
+                <option value="str">STR</option>
+                <option value="dex">DEX</option>
+                <option value="con">CON</option>
+                <option value="int">INT</option>
+                <option value="wis">WIS</option>
+                <option value="cha">CHA</option>
+              </select>
+            </div>
+            <div class="item-form-field">
+              <label>Range</label>
+              <input class="form-input" id="if-range" placeholder="melee / 80/320 ft">
+            </div>
+            <div class="item-form-field if-checkbox-field">
+              <label><input type="checkbox" id="if-proficient" checked> Proficient</label>
+            </div>
+          </div>
+          <div class="item-form-field">
+            <label>Properties (comma separated)</label>
+            <input class="form-input" id="if-properties" placeholder="finesse, light, thrown">
+          </div>
+        </div>
+
+        <div class="item-form-field">
+          <label>Description</label>
+          <textarea class="form-input item-form-textarea" id="if-desc" placeholder="Descripción del item..."></textarea>
+        </div>
+
+        <div class="item-form-btns">
+          <button class="btn-cancel" onclick="toggleItemForm()">Cancel</button>
+          <button class="btn-primary" onclick="saveNewItem()">Save item</button>
+        </div>
+      </div>
+
+      <div id="items-list"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main-area -->
+
+<!-- CHARACTER SHEET MODAL (reusa el nodo real moviéndolo dentro/fuera) -->
+<div class="char-modal" id="charModal" onclick="if(event.target===this)closeCharSheetModal()">
+  <div class="char-modal-inner">
+    <button class="char-modal-close" onclick="closeCharSheetModal()" title="Cerrar">✕</button>
+    <div class="char-modal-body" id="charModalBody"></div>
+  </div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="url-modal" id="imageModal">
+  <div class="url-modal-box">
+    <div class="url-modal-title">Agregar imagen</div>
+    <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem">Pegá la URL de cualquier imagen de internet, o hacé click en "Desde archivo" para subir una imagen local.</p>
+    <input class="url-input" id="imageUrlInput" placeholder="https://... URL de la imagen" onkeydown="if(event.key==='Enter')applyImage()">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeImageModal()">Cancelar</button>
+      <label class="btn-cancel" style="cursor:pointer">Desde archivo<input type="file" accept="image/*" onchange="loadFromFile(event)"></label>
+      <button class="btn-primary" onclick="applyImage()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- JS modular — el orden importa: data → storage → módulos → init -->
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/characters.js"></script>
+<script src="js/abilities.js"></script>
+<script src="js/money.js"></script>
+<script src="js/npcs.js"></script>
+<script src="js/images.js"></script>
+<script src="js/overview.js"></script>
+<script src="js/bestiary.js"></script>
+<script src="js/campaign.js"></script>
+<script src="js/live.js"></script>
+<script src="js/items.js"></script>
+<script src="js/dm-auth.js"></script>
+<script src="js/players.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/socket-client.js"></script>
+<script src="js/init.js"></script>
+</body>
+</html>
