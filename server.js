@@ -15,6 +15,9 @@ connectDB();
 
 app.use(express.json());
 
+// Render (y cualquier reverse proxy) — necesario para cookies secure y req.ip correctos
+app.set('trust proxy', 1);
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'dev_secret_change_me',
   resave: false,

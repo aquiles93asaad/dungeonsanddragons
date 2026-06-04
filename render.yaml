@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ardaetheros
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: DM_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: DM_TOKEN
+        sync: false
