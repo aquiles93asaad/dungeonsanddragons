@@ -267,6 +267,35 @@ const PRESET_MONSTERS = [
       { name:'Cuero corrupto', minRoll:10, qty:'1', note:'PLACEHOLDER. Material para armaduras leves.' }
     ],
     notes:'⚠ PLACEHOLDER — stats y loot a desarrollar cuando se confirme el Encuentro 4 (Ataque a Solmira). Forma parte de la fuerza Fell que ataca la ciudad junto con guerreros y un comandante inferior.'
+  },
+  {
+    id:'zyren-entrenamiento',
+    name:'Zyren (Entrenamiento)',
+    type:'Élfico / Cambiaformas',
+    size:'Mediano–Grande',
+    cr:'—',
+    ac:17,
+    hpMax:110,
+    speed:'40 ft (élfica/felina) · 40 ft + vuelo 30 ft (híbrida)',
+    atk:'+9',
+    str:20,dex:20,con:18,int:16,wis:20,cha:14,
+    desc:'Zyren en modo entrenamiento — contiene su poder pero no su precisión. Cambia de forma según el desempeño del grupo: élfica para evaluar, pantera para presionar, híbrida (león/águila) cuando quiere que entiendan la escala real de lo que existe en el mundo.',
+    attacks:[
+      {name:'Golpe élfico (forma élfica)',bonus:'+9',dmg:'1d8+5 contundente',note:'Ataque desarmado de precisión. No busca dañar, busca enseñar. Si pega, el objetivo entiende exactamente por qué falló.'},
+      {name:'Zarpazo de pantera (forma felina)',bonus:'+9',dmg:'1d10+5 cortante',note:'Rápido y silencioso. Cambia de objetivo cada turno para obligar a que todos estén en alerta.'},
+      {name:'Garra de León (forma híbrida)',bonus:'+9',dmg:'2d6+5 cortante',note:'Reach 10 ft. Zyren no suaviza este daño — es el recordatorio de qué pasa cuando el grupo pierde la concentración.'},
+      {name:'Zarpazo de Águila (forma híbrida)',bonus:'+9',dmg:'1d8+5 perforante',note:'DEX CD 15 o empujado 10 ft. Lo usa específicamente para mostrar la importancia del posicionamiento.'}
+    ],
+    abilities:'Cambiaformas (Bonus Action): puede cambiar entre forma élfica, pantera e híbrida sin costo de acción. Cada forma tiene movilidad diferente.\n\nVisión del Guardián: no puede ser sorprendido. Ventaja en Perception e Insight.\n\nContención deliberada: solo hace UN ataque por turno durante el entrenamiento. Si el grupo va muy mal, reduce el daño a la mitad sin aviso. Si van excepcionalmente bien, puede subir la intensidad.\n\nCortar el entrenamiento: si algún personaje llega a 0 HP, Zyren detiene el combate inmediatamente, los estabiliza con magia de naturaleza. "Hasta acá."',
+    phases:[
+      {name:'Fase 1 — Evaluación (forma élfica)',desc:'Pelea desarmado, en silencio. No ataca primero — espera que ellos inicien. Observa cómo se posicionan, si coordinan o cada uno hace lo suyo. Sus golpes son limpios y precisos. No duele tanto como enseña.'},
+      {name:'Fase 2 — Presión (forma pantera)',desc:'Cuando el grupo se acomodó, cambia de forma sin aviso. Más veloz, más silencioso. Nunca presiona al mismo objetivo dos veces seguidas — obliga a que todos tengan que estar atentos.'},
+      {name:'Fase 3 — Forma híbrida',desc:'Solo si el grupo está coordinando bien. Zyren les muestra por qué es el guardián del Velo Elmyra. Mayor alcance, más daño, presencia imponente. No es para asustarlos — es para que tengan un benchmark real de lo que existe en el mundo.'},
+      {name:'Fin del entrenamiento',desc:'Zyren detiene el combate cuando decidió que aprendieron lo suficiente — no cuando el grupo lo derrota. "Suficiente." Vuelve a forma élfica, los observa en silencio unos segundos. Entonces habla.'}
+    ],
+    rewards:'Sin XP mecánica. Recompensa narrativa: cada jugador nombra UNA cosa que aprendió sobre su personaje en el combate. Eso se convierte en una ventaja narrativa para el próximo encuentro real.',
+    loot:[],
+    notes:'ENTRENAMIENTO — no es un encuentro de combate real. El objetivo es revelar el nivel de poder de Zyren de forma experiencial, no solo narrativa. El grupo lo ve en acción por primera vez.\n\nDM: Zyren sabe lo que el grupo hará antes de que lo hagan — usá eso para hacer comentarios precisos durante la pelea, no para humillarlos sino para enseñarles. Si el grupo pregunta después cuánto de su poder usó: "Menos de la mitad."'
   }
 ];
 
