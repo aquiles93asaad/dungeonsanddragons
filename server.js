@@ -56,6 +56,21 @@ io.on('connection', socket => {
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
+
+// Diagnóstico temporal — remover después de confirmar deploy
+app.get('/debug-fs', (req, res) => {
+  const fs = require('fs');
+  const pub = path.join(__dirname, 'public');
+  const js  = path.join(pub, 'js');
+  res.json({
+    dirname: __dirname,
+    cwd: process.cwd(),
+    publicExists: fs.existsSync(pub),
+    jsExists: fs.existsSync(js),
+    jsFiles: fs.existsSync(js) ? fs.readdirSync(js) : 'N/A',
+  });
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => {
