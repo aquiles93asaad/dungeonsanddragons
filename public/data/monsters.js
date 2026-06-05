@@ -274,7 +274,7 @@ const PRESET_MONSTERS = [
     type:'Élfico / Cambiaformas',
     size:'Mediano–Grande',
     cr:'—',
-    ac:17,
+    ac:12,
     hpMax:110,
     speed:'40 ft (élfica/felina) · 40 ft + vuelo 30 ft (híbrida)',
     atk:'+9',
