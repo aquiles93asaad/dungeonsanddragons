@@ -55,24 +55,6 @@ io.on('connection', socket => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
-// Diagnóstico — remover después de confirmar deploy
-app.get('/debug-fs', (req, res) => {
-  const fs = require('fs');
-  const pub  = path.join(__dirname, 'public');
-  const js   = path.join(pub, 'js');
-  const test = path.join(js, 'init.js');
-  let readable = false;
-  try { fs.accessSync(test, fs.constants.R_OK); readable = true; } catch {}
-  res.json({
-    dirname: __dirname,
-    publicExists: fs.existsSync(pub),
-    jsExists: fs.existsSync(js),
-    initJsExists: fs.existsSync(test),
-    initJsReadable: readable,
-    jsFiles: fs.existsSync(js) ? fs.readdirSync(js) : 'N/A',
-  });
-});
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
