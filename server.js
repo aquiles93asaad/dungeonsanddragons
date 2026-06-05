@@ -13,6 +13,9 @@ const PORT   = process.env.PORT || 3000;
 
 connectDB();
 
+// Archivos estáticos — van antes del session middleware (no necesitan sesión)
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
 
 // Render (y cualquier reverse proxy) — necesario para cookies secure y req.ip correctos
@@ -34,19 +37,14 @@ app.use(session({
 const liveCache = { session: null, hp: {} };
 
 io.on('connection', socket => {
-  // DM transmite estado completo de la sesión live
   socket.on('live:sync', data => {
     liveCache.session = data;
     socket.broadcast.emit('live:sync', data);
   });
-
-  // DM transmite cambio de HP de un personaje
   socket.on('hp:update', ({ charId, hp }) => {
     liveCache.hp[charId] = hp;
     socket.broadcast.emit('hp:update', { charId, hp });
   });
-
-  // Jugador pide el estado actual (al cargar o reconectar)
   socket.on('live:request', () => {
     if (liveCache.session || Object.keys(liveCache.hp).length) {
       socket.emit('live:welcome', liveCache);
@@ -57,21 +55,23 @@ io.on('connection', socket => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
-// Diagnóstico temporal — remover después de confirmar deploy
+// Diagnóstico — remover después de confirmar deploy
 app.get('/debug-fs', (req, res) => {
   const fs = require('fs');
-  const pub = path.join(__dirname, 'public');
-  const js  = path.join(pub, 'js');
+  const pub  = path.join(__dirname, 'public');
+  const js   = path.join(pub, 'js');
+  const test = path.join(js, 'init.js');
+  let readable = false;
+  try { fs.accessSync(test, fs.constants.R_OK); readable = true; } catch {}
   res.json({
     dirname: __dirname,
-    cwd: process.cwd(),
     publicExists: fs.existsSync(pub),
     jsExists: fs.existsSync(js),
+    initJsExists: fs.existsSync(test),
+    initJsReadable: readable,
     jsFiles: fs.existsSync(js) ? fs.readdirSync(js) : 'N/A',
   });
 });
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
