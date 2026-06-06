@@ -511,7 +511,10 @@ function deleteNote(id){
       const e = CAMPAIGN.events.find(x => x.id === noteToDelete.eventId);
       if(e && e.status === 'in-progress'){
         e.status = 'planned';
-        saveCampaign();
+        fetch(`/api/events/${noteToDelete.eventId}`, {
+          method:'PUT', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({status:'planned'})
+        }).catch(err => console.error(err));
         if(typeof renderEvents === 'function') renderEvents();
       }
     }
@@ -2184,7 +2187,10 @@ function saveNarrativeNote(){
       e.title = d.title || e.title;
       e.description = d.text || e.description;
       e.status = 'in-progress';
-      saveCampaign();
+      fetch(`/api/events/${d.eventId}`, {
+        method:'PUT', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ title:e.title, description:e.description, status:'in-progress' })
+      }).catch(err => console.error(err));
       if(typeof renderEvents === 'function') renderEvents();
     }
   }
@@ -3095,19 +3101,17 @@ function renderActionNoteBody(n){
    • Notas "No planificadas" con título/texto → crear evento nuevo con status "Hecho"
      y session = número de sesión actual
 */
-function finalizeSession(){
+async function finalizeSession(){
   const narrativeNotes = (LIVE_SESSION.notes || []).filter(n => n.type === 'narrative');
-  const linkedNotes = narrativeNotes.filter(n => n.eventId);
-  const unlinkedNotes = narrativeNotes.filter(n => !n.eventId && (n.title || n.text));
-
-  // IDs únicos de eventos vinculados (por si hay varias notas para el mismo evento)
+  const linkedNotes    = narrativeNotes.filter(n => n.eventId);
+  const unlinkedNotes  = narrativeNotes.filter(n => !n.eventId && (n.title || n.text));
   const linkedEventIds = [...new Set(linkedNotes.map(n => n.eventId))];
 
   const confirmMsg = [
     `¿Finalizar la sesión #${LIVE_SESSION.meta.number}?`,
     ``,
     `Esto va a:`,
-    `• Marcar ${linkedEventIds.length} evento(s) planificado(s) como "Hecho" en Campaña`,
+    `• Marcar ${linkedEventIds.length} evento(s) vinculado(s) como "Hecho" en Campaña`,
     `• Crear ${unlinkedNotes.length} evento(s) nuevo(s) (no planificados) como "Hecho"`,
     `• Cerrar la sesión live actual (queda inactiva pero los datos persisten)`,
     ``,
@@ -3119,19 +3123,24 @@ function finalizeSession(){
   let eventsUpdated = 0, eventsCreated = 0;
 
   if(typeof CAMPAIGN !== 'undefined'){
-    // Procesar eventos vinculados → Hecho
-    linkedEventIds.forEach(eventId => {
+    // Marcar eventos vinculados como "Hecho" en MongoDB
+    for(const eventId of linkedEventIds){
       const e = CAMPAIGN.events.find(x => x.id === eventId);
       if(e){
         e.status = 'done';
         eventsUpdated++;
+        await fetch(`/api/events/${eventId}`, {
+          method:'PUT', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({status:'done'})
+        }).catch(err => console.error('finalizeSession PUT error:', err));
       }
-    });
+    }
 
-    // Crear eventos nuevos para las notas no planificadas
-    unlinkedNotes.forEach(note => {
+    // Crear eventos nuevos para notas no planificadas
+    for(let i = 0; i < unlinkedNotes.length; i++){
+      const note = unlinkedNotes[i];
       const newEvent = {
-        id: 'evt-live-' + Date.now() + '-' + Math.floor(Math.random()*10000),
+        id: `evt-live-${Date.now()}-${i}`,
         title: note.title || 'Evento sin título',
         description: note.text || '',
         status: 'done',
@@ -3139,9 +3148,12 @@ function finalizeSession(){
       };
       CAMPAIGN.events.push(newEvent);
       eventsCreated++;
-    });
+      await fetch('/api/events', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(newEvent)
+      }).catch(err => console.error('finalizeSession POST error:', err));
+    }
 
-    saveCampaign();
     if(typeof renderEvents === 'function') renderEvents();
   }
 
@@ -3152,11 +3164,11 @@ function finalizeSession(){
   alert([
     `✓ Sesión #${LIVE_SESSION.meta.number} finalizada.`,
     ``,
-    `• ${eventsUpdated} evento(s) planificado(s) marcados como "Hecho"`,
-    `• ${eventsCreated} evento(s) nuevo(s) (no planificados) agregados como "Hecho"`,
+    `• ${eventsUpdated} evento(s) marcados como "Hecho"`,
+    `• ${eventsCreated} evento(s) nuevo(s) creados como "Hecho"`,
     ``,
     `Mirá la pestaña Campaña → Eventos para ver todo en orden cronológico.`,
-    `La sesión live queda visible (inactiva) hasta que vacíes el state o arranques una nueva sesión.`
+    `La sesión live queda visible (inactiva) hasta que arranques una nueva sesión.`
   ].join('\n'));
 }
 

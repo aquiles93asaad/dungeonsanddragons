@@ -3,57 +3,39 @@
 let CAMPAIGN = { events: [], threads: [], locations: [] };
 let currentCampaignTab = 'events';
 
-function loadCampaign(){
-  const stored = load('campaign', null);
-  if(stored && stored.events && stored.threads && stored.locations){
-    CAMPAIGN = stored;
-    // ── Migración: mergear nuevas entradas de los presets que no existen
-    // en la versión cacheada (por id). NO pisa lo que el usuario editó.
-    let migrated = false;
-
-    DEFAULT_CAMPAIGN_EVENTS.forEach(preset => {
-      if(!CAMPAIGN.events.find(e => e.id === preset.id)){
-        CAMPAIGN.events.push(JSON.parse(JSON.stringify(preset)));
-        migrated = true;
-      }
-    });
-
-    DEFAULT_CAMPAIGN_THREADS.forEach(preset => {
-      if(!CAMPAIGN.threads.find(t => t.id === preset.id)){
-        CAMPAIGN.threads.push(JSON.parse(JSON.stringify(preset)));
-        migrated = true;
-      }
-    });
-
-    DEFAULT_CAMPAIGN_LOCATIONS.forEach(preset => {
-      if(!CAMPAIGN.locations.find(l => l.id === preset.id)){
-        CAMPAIGN.locations.push(JSON.parse(JSON.stringify(preset)));
-        migrated = true;
-      }
-    });
-
-    // Manejar rename: si existe loc-bosque (id viejo) y NO existe loc-bosque-eldenmyr,
-    // actualizar el id del viejo en lugar de duplicar.
-    const oldBosque = CAMPAIGN.locations.find(l => l.id === 'loc-bosque');
-    const newBosque = CAMPAIGN.locations.find(l => l.id === 'loc-bosque-eldenmyr');
-    if(oldBosque && newBosque){
-      // Si ambos existen tras la migración, eliminar el viejo
-      CAMPAIGN.locations = CAMPAIGN.locations.filter(l => l.id !== 'loc-bosque');
-      migrated = true;
-    }
-
-    if(migrated) saveCampaign();
+// ── Helpers para persistir a MongoDB ──────────────────────────────────────
+const _apiDebounce = {};
+function _campaignPut(path, data, immediate){
+  if(immediate){
+    fetch(path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+      .catch(e => console.error('Campaign PUT error:', e.message));
   } else {
-    CAMPAIGN = {
-      events: JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_EVENTS)),
-      threads: JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_THREADS)),
-      locations: JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_LOCATIONS))
-    };
-    saveCampaign();
+    clearTimeout(_apiDebounce[path]);
+    _apiDebounce[path] = setTimeout(() => {
+      fetch(path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+        .catch(e => console.error('Campaign PUT error:', e.message));
+    }, 600);
   }
 }
+function _campaignPost(path, data){
+  return fetch(path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+    .catch(e => console.error('Campaign POST error:', e.message));
+}
+function _campaignDelete(path){
+  fetch(path, { method:'DELETE' }).catch(e => console.error('Campaign DELETE error:', e.message));
+}
 
-function saveCampaign(){ save('campaign', CAMPAIGN); }
+function loadCampaign(){
+  // La fuente de verdad es MongoDB — DEFAULT_CAMPAIGN_* ya fue cargado desde la API en init.js
+  CAMPAIGN = {
+    events:    JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_EVENTS)),
+    threads:   JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_THREADS)),
+    locations: JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_LOCATIONS))
+  };
+}
+
+// No-op — se mantiene por compatibilidad, las mutaciones llaman a la API directamente
+function saveCampaign(){}
 
 function escapeAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
@@ -105,7 +87,7 @@ function updateEvent(id, field, value){
   const e = CAMPAIGN.events.find(x=>x.id===id);
   if(!e) return;
   e[field] = value;
-  saveCampaign();
+  _campaignPut(`/api/events/${id}`, {[field]:value}, field==='status'||field==='session');
   if(field==='status'){
     const card = document.querySelector(`.event-card[data-id="${id}"]`);
     if(card){
@@ -116,14 +98,9 @@ function updateEvent(id, field, value){
 }
 
 function addCampaignEvent(){
-  CAMPAIGN.events.push({
-    id: 'evt-'+Date.now(),
-    title: 'Nuevo evento',
-    description: '',
-    status: 'idea',
-    session: ''
-  });
-  saveCampaign();
+  const newEvent = { id:'evt-'+Date.now(), title:'Nuevo evento', description:'', status:'idea', session:'' };
+  CAMPAIGN.events.push(newEvent);
+  _campaignPost('/api/events', newEvent);
   renderEvents();
 }
 
@@ -167,7 +144,7 @@ function updateThread(id, field, value){
   const t = CAMPAIGN.threads.find(x=>x.id===id);
   if(!t) return;
   t[field] = value;
-  saveCampaign();
+  _campaignPut(`/api/threads/${id}`, {[field]:value}, field==='status');
   if(field==='status'){
     const card = document.querySelector(`.thread-card[data-id="${id}"]`);
     if(card){
@@ -181,18 +158,13 @@ function updateThreadChars(id, value){
   const t = CAMPAIGN.threads.find(x=>x.id===id);
   if(!t) return;
   t.characters = value.split(',').map(s=>s.trim()).filter(Boolean);
-  saveCampaign();
+  _campaignPut(`/api/threads/${id}`, {characters:t.characters});
 }
 
 function addCampaignThread(){
-  CAMPAIGN.threads.push({
-    id: 'thread-'+Date.now(),
-    name: 'Nuevo hilo',
-    status: 'active',
-    description: '',
-    characters: []
-  });
-  saveCampaign();
+  const newThread = { id:'thread-'+Date.now(), name:'Nuevo hilo', status:'active', description:'', characters:[] };
+  CAMPAIGN.threads.push(newThread);
+  _campaignPost('/api/threads', newThread);
   renderThreads();
 }
 
@@ -228,17 +200,13 @@ function updateLocation(id, field, value){
   const l = CAMPAIGN.locations.find(x=>x.id===id);
   if(!l) return;
   l[field] = value;
-  saveCampaign();
+  _campaignPut(`/api/locations/${id}`, {[field]:value});
 }
 
 function addCampaignLocation(){
-  CAMPAIGN.locations.push({
-    id: 'loc-'+Date.now(),
-    name: 'Nuevo lugar',
-    description: '',
-    state: ''
-  });
-  saveCampaign();
+  const newLoc = { id:'loc-'+Date.now(), name:'Nuevo lugar', description:'', state:'' };
+  CAMPAIGN.locations.push(newLoc);
+  _campaignPost('/api/locations', newLoc);
   renderLocations();
 }
 
@@ -250,7 +218,7 @@ function moveItem(kind, id, delta){
   if(idx<0 || newIdx<0 || newIdx>=arr.length) return;
   const [item] = arr.splice(idx,1);
   arr.splice(newIdx,0,item);
-  saveCampaign();
+  // Orden local — no hay campo order en el schema, se resetea al recargar
   if(kind==='events') renderEvents();
   else if(kind==='threads') renderThreads();
   else if(kind==='locations') renderLocations();
@@ -259,7 +227,8 @@ function moveItem(kind, id, delta){
 function deleteItem(kind, id){
   if(!confirm('¿Eliminar este elemento?')) return;
   CAMPAIGN[kind] = CAMPAIGN[kind].filter(x=>x.id!==id);
-  saveCampaign();
+  const apiPaths = { events:'/api/events', threads:'/api/threads', locations:'/api/locations' };
+  _campaignDelete(apiPaths[kind]+'/'+id);
   if(kind==='events') renderEvents();
   else if(kind==='threads') renderThreads();
   else if(kind==='locations') renderLocations();
@@ -277,7 +246,7 @@ function attachDragHandlers(list, kind){
       const newOrder = Array.from(list.querySelectorAll('.draggable')).map(x=>x.dataset.id);
       const collection = CAMPAIGN[kind];
       CAMPAIGN[kind] = newOrder.map(id=>collection.find(x=>x.id===id)).filter(Boolean);
-      saveCampaign();
+      // Orden local — no hay campo order en el schema, se resetea al recargar
     });
     el.addEventListener('dragover', e=>{
       e.preventDefault();
