@@ -3157,15 +3157,43 @@ async function finalizeSession(){
     if(typeof renderEvents === 'function') renderEvents();
   }
 
+  // ── Guardar sesión completa en MongoDB (colección Sessions) ──────────────
+  const sessionPayload = {
+    number: Number(LIVE_SESSION.meta.number) || 0,
+    date:   LIVE_SESSION.meta.date ? new Date(LIVE_SESSION.meta.date) : new Date(),
+    title:  LIVE_SESSION.meta.title || `Sesión ${LIVE_SESSION.meta.number}`,
+    notes:  (LIVE_SESSION.notes || []).map(n => ({
+      ts:   n.ts   ? new Date(n.ts) : new Date(),
+      type: n.type || 'note',
+      text: n.title || n.text || '',
+      data: n   // nota completa en el campo Mixed para fidelidad total
+    }))
+  };
+
+  // Intentar crear; si ya existe (sesión finalizada antes), actualizar
+  const saveRes = await fetch('/api/sessions', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(sessionPayload)
+  }).catch(err => ({ ok:false, _err: err }));
+
+  if(saveRes && !saveRes.ok){
+    // Ya existe — actualizar con PUT
+    await fetch(`/api/sessions/${sessionPayload.number}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(sessionPayload)
+    }).catch(err => console.error('Session archive PUT error:', err));
+  }
+
   LIVE_SESSION.meta.active = false;
   saveLiveSession();
   renderLive();
 
   alert([
-    `✓ Sesión #${LIVE_SESSION.meta.number} finalizada.`,
+    `✓ Sesión #${LIVE_SESSION.meta.number} finalizada y archivada.`,
     ``,
     `• ${eventsUpdated} evento(s) marcados como "Hecho"`,
     `• ${eventsCreated} evento(s) nuevo(s) creados como "Hecho"`,
+    `• Stream completo guardado en la colección Sessions`,
     ``,
     `Mirá la pestaña Campaña → Eventos para ver todo en orden cronológico.`,
     `La sesión live queda visible (inactiva) hasta que arranques una nueva sesión.`
