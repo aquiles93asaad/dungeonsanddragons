@@ -269,6 +269,61 @@ const PRESET_MONSTERS = [
     notes:'⚠ PLACEHOLDER — stats y loot a desarrollar cuando se confirme el Encuentro 4 (Ataque a Solmira). Forma parte de la fuerza Fell que ataca la ciudad junto con guerreros y un comandante inferior.'
   },
   {
+    id:'guerrero-madera',
+    name:'Guerrero de Madera',
+    type:'Constructo',
+    size:'Mediano',
+    cr:'1',
+    ac:14,
+    hpMax:32,
+    speed:'30 ft',
+    atk:'+4',
+    str:15,dex:8,con:14,int:3,wis:8,cha:1,
+    desc:'Figura humanoide tallada en roble antiguo del Grove. Las articulaciones crujen con cada movimiento. No tiene rostro — solo una superficie lisa de madera con líneas de savia verde brillante que pulsan como venas. No piensa, no habla, no siente. Ejecuta.',
+    attacks:[
+      {name:'Estacazo',bonus:'+4',dmg:'1d8+3 contundente',note:'Golpe directo con el brazo de madera. Lento pero predecible — ideal para que los jugadores practiquen reacciones.'},
+      {name:'Embestida',bonus:'+4',dmg:'1d6+3 contundente',note:'Se lanza hacia adelante. Si pega, DEX CD 12 o el objetivo es empujado 5 ft y pierde la acción bonus de su próximo turno.'}
+    ],
+    abilities:'Vulnerable al fuego: recibe el doble de daño de fuego. Una antorcha que pegue hace 1d4 extra.\n\nInmunidades de constructo: inmune a veneno, daño psíquico, encanto, miedo, parálisis y el estado inconsciente.\n\nSin reacción: no hace ataques de oportunidad — se mueve en línea recta hacia su objetivo sin esquivar.',
+    phases:[
+      {name:'Patrón de ataque',desc:'Avanza directo hacia el objetivo más cercano. Nunca cambia de objetivo voluntariamente — el DM puede usarlo para enseñar al grupo la importancia de controlar el aggro.'},
+      {name:'Al llegar a 0 HP',desc:'Se fragmenta en astillas. No hay agonía, no hay caída dramática. Solo madera rota en el suelo. La savia verde se apaga.'}
+    ],
+    rewards:'Sin XP real — son constructos de entrenamiento creados por Zyren.',
+    loot:[
+      {name:'Astillas de roble del Grove',minRoll:0,qty:'un puñado',note:'NARRATIVO. Boyd puede percibir que la madera está imbuida de magia natural. Sin valor de crafting aún.'}
+    ],
+    notes:'Entrenamiento — creado por Zyren con magia del Grove. Se usa en grupos de 2-3 contra el equipo. Son predecibles por diseño: Zyren los hace así para que los jugadores aprendan a leer patrones. Si el grupo los domina fácil, el DM puede activar el Bruto de Madera.'
+  },
+  {
+    id:'bruto-madera',
+    name:'Bruto de Madera',
+    type:'Constructo',
+    size:'Grande',
+    cr:'4',
+    ac:16,
+    hpMax:68,
+    speed:'25 ft',
+    atk:'+6',
+    str:20,dex:6,con:18,int:3,wis:8,cha:1,
+    desc:'Versión mayor del Guerrero de Madera — casi dos metros y medio, tronco en lugar de torso, ramas gruesas como brazos. El suelo tiembla levemente con cada paso. Las líneas de savia verde en su cuerpo son más anchas y brillan con más intensidad. Está hecho para que Zyren lo rompa.',
+    attacks:[
+      {name:'Manotazo',bonus:'+6',dmg:'2d8+5 contundente',note:'Reach 10 ft por tamaño. Un golpe directo que puede tirar al suelo a cualquier personaje de nivel 2.'},
+      {name:'Pisotón',bonus:'+6',dmg:'2d6+5 contundente',note:'Objetivo en el suelo (prone) o adyacente. CON CD 14 o queda aturdido hasta el final de su próximo turno.'},
+      {name:'Barrido de tronco (Recarga 5-6)',bonus:'+6',dmg:'1d10+5 contundente a todos en 10 ft',note:'DEX CD 14 o tumbado (prone). Zyren lo esquiva sin esfuerzo para mostrarlo.'}
+    ],
+    abilities:'Corteza endurecida: reduce todo daño físico no-mágico en 3 (mínimo 1).\n\nVulnerable al fuego: doble daño de fuego. Zyren usa esto para terminarlo rápido si quiere ser eficiente.\n\nInmunidades de constructo: igual que el Guerrero — veneno, psíquico, encanto, miedo, parálisis.\n\nPresencia intimidante: criatura que lo vea por primera vez tira WIS CD 12 o tiene desventaja en su primer ataque contra él.',
+    phases:[
+      {name:'Fase 1 — Amenaza lenta',desc:'Avanza sin apuro. Cada paso es un crujido. El grupo lo ve y entiende que los Guerreros eran el calentamiento.'},
+      {name:'Fase 2 — Zyren entra',desc:'Zyren lo enfrenta solo. Lo que tarda el grupo en derrotar 3 Guerreros de Madera, Zyren lo resuelve en 2 turnos. El Bruto queda en astillas grandes.'}
+    ],
+    rewards:'Sin XP — constructo de demostración.',
+    loot:[
+      {name:'Fragmento de tronco imbuido',minRoll:0,qty:'1',note:'NARRATIVO. Un trozo del núcleo del Bruto — Boyd puede sentir la magia condensada dentro. Zyren podría explicar cómo se crea uno si alguien pregunta.'}
+    ],
+    notes:'SOLO para la demostración de Zyren. No lo manden contra el grupo de nivel 2 — uno solo puede derribar a cualquier personaje en un turno. Su propósito es ser el dummy que Zyren destruye para que el grupo entienda la diferencia de escala. DM: hacé que la pelea de Zyren dure exactamente 2 turnos y sea quirúrgica.'
+  },
+  {
     id:'zyren-entrenamiento',
     name:'Zyren (Entrenamiento)',
     type:'Élfico / Cambiaformas',
