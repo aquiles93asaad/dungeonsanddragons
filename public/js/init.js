@@ -97,8 +97,41 @@ function initApp() {
   updateOverview();
 }
 
+// ── Carga de estado de personajes desde MongoDB ────────────────────────────
+async function loadCharState() {
+  try {
+    const state = await fetchAPI('/api/state');
+    if(!state) return;
+    if(state.characters){
+      CHARS.forEach(c => {
+        const cs = state.characters[c];
+        if(!cs) return;
+        if(cs.level            !== undefined) save('char_level_'+c,       cs.level);
+        if(cs.hpMax            !== undefined) save('hp_max_'+c,           cs.hpMax);
+        if(cs.hp               !== undefined) save('hp_'+c,               cs.hp);
+        if(cs.conditions)                     save('cond_'+c,             cs.conditions);
+        if(cs.inventory)                      save('inv_'+c,              cs.inventory);
+        if(cs.notes            !== undefined && cs.notes !== null)
+                                              save('notes_'+c,            cs.notes);
+        if(cs.prepared)                       save('prepared_'+c,         cs.prepared);
+        if(cs.activeCantrips)                 save('active_cantrips_'+c,  cs.activeCantrips);
+        if(cs.committedSchool)                save('committed_school_'+c, cs.committedSchool);
+        if(cs.slots)     Object.entries(cs.slots).forEach(([lvl,v])  => save('slots_'+c+'_'+lvl, v));
+        if(cs.resources) Object.entries(cs.resources).forEach(([k,v]) => save('resource_'+c+'_'+k, v));
+      });
+    }
+    if(state.money){
+      Object.entries(state.money).forEach(([owner, m]) => save('money_'+owner, m));
+    }
+  } catch(e){
+    // Degradación graceful: si falla la API, usa los valores de localStorage
+    console.warn('loadCharState: usando localStorage como fallback.', e.message);
+  }
+}
+
 // ── Arranque ───────────────────────────────────────────────────────────────
 checkDMSession().then(() => loadReferenceData())
+  .then(() => loadCharState())         // cargar estado de personajes desde MongoDB
   .then(() => {
     loadMonsters();
     renderMonsters();
@@ -112,6 +145,7 @@ checkDMSession().then(() => loadReferenceData())
       });
 
     initApp();
+    _apiSyncEnabled = true;            // habilitar sync DESPUÉS del render inicial
   })
   .catch(err => {
     console.error('Error cargando datos de referencia:', err);
