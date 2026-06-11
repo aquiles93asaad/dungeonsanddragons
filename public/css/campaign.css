@@ -104,3 +104,41 @@
   .cmp-row1{grid-template-columns:1fr;gap:0.4rem}
   .cmp-row1.thread-row{grid-template-columns:1fr}
 }
+
+/* ── FORMAS SALVAJES ── */
+.ws-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1rem;margin-bottom:1.5rem;
+}
+.ws-card{
+  background:var(--bg2);border:1px solid var(--border-light);
+  border-radius:8px;padding:0.85rem 1rem;
+}
+.ws-card.ws-locked{opacity:0.55;border-style:dashed}
+.ws-card-header{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem}
+.ws-card-name{font-weight:700;font-size:1rem;color:var(--cream);flex:1}
+.ws-card-cr{background:rgba(167,139,250,0.15);color:#c4b5fd;border-radius:4px;padding:0.1rem 0.45rem;font-size:0.75rem;font-weight:600}
+.ws-avail-badge{font-size:0.72rem;color:#6ee7b7}
+.ws-lock-badge{font-size:0.72rem;color:var(--muted)}
+.ws-base-badge{font-size:0.7rem;color:var(--muted);background:var(--bg3);border-radius:3px;padding:0.1rem 0.35rem}
+.ws-del-btn{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.85rem;padding:0 0.3rem}
+.ws-del-btn:hover{color:var(--red-bright)}
+.ws-card-stats{display:flex;gap:1rem;flex-wrap:wrap;font-size:0.8rem;color:var(--cream-muted);margin-bottom:0.4rem}
+.ws-card-stats strong{color:var(--cream)}
+.ws-card-attacks{font-size:0.8rem;color:var(--cream);line-height:1.7}
+.ws-attack-row em{color:var(--muted)}
+.ws-card-notes{font-size:0.75rem;color:var(--muted);margin-top:0.3rem;font-style:italic}
+
+.ws-add-form{
+  background:var(--bg2);border:1px solid var(--border-light);
+  border-radius:8px;padding:1rem 1.2rem;margin-top:0.5rem;
+}
+
+/* Stats de forma en el form de live */
+.ws-form-stats{
+  background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);
+  border-radius:6px;padding:0.6rem 0.8rem;margin:0.4rem 0;
+}
+.ws-stat-row{display:flex;gap:1rem;flex-wrap:wrap;font-size:0.8rem;color:var(--cream-muted);margin-bottom:0.35rem}
+.ws-stat-row strong{color:#6ee7b7}
+.ws-attacks{font-size:0.8rem;color:var(--cream);line-height:1.7}

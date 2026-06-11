@@ -210,12 +210,13 @@
         <main class="live-stream-wrap">
           <div class="quick-add-bar dm-only">
             <button class="quick-btn" onclick="openNoteForm('action')">+ Acción jugador</button>
+            <button class="quick-btn quick-btn-ability" onclick="openNoteForm('class-ability')">⚡ Habilidad</button>
             <button class="quick-btn" onclick="openNoteForm('conversation')">+ Conversación</button>
             <button class="quick-btn" onclick="openNoteForm('combat')">+ Combate</button>
             <button class="quick-btn" onclick="openNoteForm('narrative')">+ Narrativa</button>
           </div>
 
-          <div class="note-form-container" id="note-form-container"></div>
+          <div class="note-form-container dm-only" id="note-form-container"></div>
 
           <div class="notes-stream" id="notes-stream"></div>
         </main>
@@ -233,6 +234,7 @@
         <button class="campaign-tab" data-tab="locations" onclick="switchCampaignTab('locations')">Lugares</button>
         <button class="campaign-tab" data-tab="ideas" onclick="switchCampaignTab('ideas')">Ideas libres</button>
         <button class="campaign-tab" data-tab="players" onclick="switchCampaignTab('players');renderPlayersPanel()">Jugadores</button>
+        <button class="campaign-tab" data-tab="wildshape" onclick="switchCampaignTab('wildshape');renderWildShapeTab()">🐺 Formas Salvajes</button>
       </div>
 
       <!-- EVENTOS -->
@@ -271,6 +273,11 @@
       <!-- JUGADORES -->
       <div class="campaign-tab-content" id="cmp-players">
         <!-- renderPlayersPanel() lo puebla dinámicamente -->
+      </div>
+
+      <!-- FORMAS SALVAJES -->
+      <div class="campaign-tab-content" id="cmp-wildshape">
+        <!-- renderWildShapeTab() lo puebla dinámicamente -->
       </div>
     </div>
 

@@ -8,6 +8,42 @@ hojas de personaje, NPCs, bestiario con loot, sesión en vivo, historia, campañ
 
 ---
 
+## Grafo de conocimiento (graphify-out/)
+
+El directorio `graphify-out/` contiene un grafo de conocimiento del codebase completo.
+**Usarlo siempre antes de leer archivos individuales** — es más rápido para entender
+conexiones, dependencias y arquitectura.
+
+### Archivos clave
+| Archivo | Uso |
+|---------|-----|
+| `graphify-out/GRAPH_REPORT.md` | Resumen: god nodes, comunidades, conexiones sorpresivas |
+| `graphify-out/graph.json` | Grafo completo: nodos + aristas + metadatos |
+| `graphify-out/graph.html` | Visualización interactiva (abrir en browser) |
+| `graphify-out/manifest.json` | Hashes por archivo — detecta qué cambió desde el último build |
+
+### Comunidades principales (navegación rápida)
+- **Live Session & Combat** — `live.js`, combat tracker, notas, loot
+- **Character Abilities & Persistence** — `abilities.js`, slots, recursos, rest
+- **DM Auth & Role System** — `dm-auth.js`, gate, tokens, `body.dm-mode`
+- **REST API Routes** — `routes/api.js`, `crudFactory.js`, endpoints
+- **Campaign Narrative World** — eventos, hilos, lugares, lore
+- **Game Data (Presets & Items)** — `data.js`, `class-presets.js`, items
+
+### God nodes (más conectados — tocarlos con cuidado)
+`save()` (34 edges) · `saveLiveSession()` (33) · `renderNoteForm()` (31) · `load()` (29) · `renderActionForm()` (26)
+
+### Regla de actualización del grafo
+**Después de cualquier cambio al codebase** (archivo nuevo, función nueva, o modificación
+significativa de lógica existente), regenerar el grafo con:
+```bash
+/graphify
+```
+Esto actualiza `graphify-out/` para que el grafo refleje el estado actual del código.
+Si el cambio es menor (CSS cosmético, texto), la regeneración es opcional.
+
+---
+
 ## Cómo correrlo
 
 ```bash

@@ -28,9 +28,10 @@ function _campaignDelete(path){
 function loadCampaign(){
   // La fuente de verdad es MongoDB — DEFAULT_CAMPAIGN_* ya fue cargado desde la API en init.js
   CAMPAIGN = {
-    events:    JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_EVENTS)),
-    threads:   JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_THREADS)),
-    locations: JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_LOCATIONS))
+    events:         JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_EVENTS)),
+    threads:        JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_THREADS)),
+    locations:      JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_LOCATIONS)),
+    wildShapeForms: CAMPAIGN.wildShapeForms || []   // preservar custom forms ya cargadas
   };
 }
 
@@ -289,4 +290,140 @@ function initCampaign(){
   const ta = document.getElementById('campaign-ideas');
   if(ta) ta.value = ideas;
   bindDragFromHandleOnly();
+}
+
+/* ══════════════════════════════════════════════════════
+   FORMAS SALVAJES DE BOYD — gestión DM
+   ══════════════════════════════════════════════════════ */
+
+function getWildShapeForms(){
+  const all = CAMPAIGN.wildShapeForms || [];
+  return { base: [], custom: all, all };
+}
+
+function saveWildShapeForms(){
+  fetch('/api/state', {
+    method:'PUT', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ wildShapeForms: CAMPAIGN.wildShapeForms || [] })
+  }).catch(e => console.error('saveWildShapeForms error:', e));
+}
+
+function renderWildShapeTab(){
+  const el = document.getElementById('cmp-wildshape');
+  if(!el) return;
+  if(!CAMPAIGN){ el.innerHTML = '<div class="muted" style="padding:1rem">Cargando...</div>'; return; }
+  if(!Array.isArray(CAMPAIGN.wildShapeForms)) CAMPAIGN.wildShapeForms = [];
+  const { all } = getWildShapeForms();
+  const boydLvl = (typeof getCharLevel !== 'undefined') ? getCharLevel('boyd') : 2;
+
+  function formCard(f){
+    const locked = boydLvl < (f.minLevel || 2);
+    const lockBadge = locked ? `<span class="ws-lock-badge">🔒 Requiere Nv ${f.minLevel}</span>` : `<span class="ws-avail-badge">✓ Disponible (Nv ${f.minLevel}+)</span>`;
+    const attacksHTML = (f.attacks||[]).map(a =>
+      `<div class="ws-attack-row">⚔ <strong>${a.name}</strong> +${a.bonus} · ${a.dmg} ${a.dmgType}${a.note?' <em>('+a.note+')</em>':''}</div>`
+    ).join('');
+    return `
+      <div class="ws-card ${locked?'ws-locked':''}">
+        <div class="ws-card-header">
+          <span class="ws-card-name">${f.name}</span>
+          <span class="ws-card-cr">CR ${f.cr}</span>
+          ${lockBadge}
+          <button class="ws-del-btn" onclick="deleteWildShapeForm('${f.id}')">✕</button>
+        </div>
+        <div class="ws-card-stats">
+          <span>HP <strong>${f.hpMax}</strong></span>
+          <span>CA <strong>${f.ac}</strong></span>
+          <span>Vel <strong>${f.speed}</strong></span>
+          <span>STR ${f.str} DEX ${f.dex} CON ${f.con}</span>
+        </div>
+        <div class="ws-card-attacks">${attacksHTML}</div>
+        ${f.notes ? `<div class="ws-card-notes">${f.notes}</div>` : ''}
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <p class="muted" style="font-size:0.85rem;margin-bottom:1rem">
+      Formas disponibles para Boyd según su nivel. Agregá formas nuevas cuando el grupo se cruce con animales nuevos.
+    </p>
+
+    <div class="ws-grid">
+      ${all.map(f => formCard(f)).join('')}
+    </div>
+
+    <div class="ws-add-form" id="ws-add-form">
+      <div class="form-title" style="margin-bottom:0.75rem">+ Agregar forma nueva</div>
+      <div class="form-grid-halves">
+        <div class="form-row"><label>Nombre</label><input class="form-input" id="wsf-name" placeholder="ej: Oso Pardo"></div>
+        <div class="form-row"><label>CR</label><input class="form-input" id="wsf-cr" placeholder="ej: 1/2"></div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="form-row"><label>HP máx</label><input type="number" class="form-input" id="wsf-hp" placeholder="11"></div>
+        <div class="form-row"><label>CA</label><input type="number" class="form-input" id="wsf-ac" placeholder="13"></div>
+        <div class="form-row"><label>Velocidad</label><input class="form-input" id="wsf-speed" placeholder="40 ft"></div>
+        <div class="form-row"><label>Nv mínimo</label><input type="number" class="form-input" id="wsf-minlvl" placeholder="2" min="2" max="20"></div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="form-row"><label>STR</label><input type="number" class="form-input" id="wsf-str" placeholder="12"></div>
+        <div class="form-row"><label>DEX</label><input type="number" class="form-input" id="wsf-dex" placeholder="15"></div>
+        <div class="form-row"><label>CON</label><input type="number" class="form-input" id="wsf-con" placeholder="12"></div>
+      </div>
+      <div class="form-row"><label>Ataques (uno por línea: Nombre | +bono | daño | nota)</label>
+        <textarea class="form-input" id="wsf-attacks" rows="3" placeholder="Mordida | +4 | 2d6+2 | DC 11 STR o cae derribado&#10;Zarpazo | +4 | 1d6+2 |"></textarea>
+      </div>
+      <div class="form-row"><label>Notas / habilidades especiales</label>
+        <input class="form-input" id="wsf-notes" placeholder="Pack Tactics, Pounce, etc.">
+      </div>
+      <div class="form-btns" style="margin-top:0.5rem">
+        <button class="btn-primary" onclick="addWildShapeForm()">Agregar forma</button>
+      </div>
+    </div>
+  `;
+}
+
+function addWildShapeForm(){
+  const name    = document.getElementById('wsf-name').value.trim();
+  const cr      = document.getElementById('wsf-cr').value.trim();
+  const hp      = parseInt(document.getElementById('wsf-hp').value) || 0;
+  const ac      = parseInt(document.getElementById('wsf-ac').value) || 10;
+  const speed   = document.getElementById('wsf-speed').value.trim() || '30 ft';
+  const minLvl  = parseInt(document.getElementById('wsf-minlvl').value) || 2;
+  const str     = parseInt(document.getElementById('wsf-str').value) || 10;
+  const dex     = parseInt(document.getElementById('wsf-dex').value) || 10;
+  const con     = parseInt(document.getElementById('wsf-con').value) || 10;
+  const rawAtks = document.getElementById('wsf-attacks').value.trim();
+  const notes   = document.getElementById('wsf-notes').value.trim();
+
+  if(!name){ alert('Ingresá el nombre de la forma.'); return; }
+  if(hp <= 0){ alert('Ingresá los HP máx.'); return; }
+
+  const newForm = {
+    id: 'custom_' + Date.now(),
+    name, cr: cr || '?', minLevel: minLvl,
+    hp, hpMax: hp, ac, speed,
+    str, dex, con,
+    attacks: rawAtks ? rawAtks.split('\n').filter(Boolean).map(line => {
+      const parts = line.split('|').map(s => s.trim());
+      const bonusRaw = parts[1] || '+0';
+      return {
+        name:    parts[0] || 'Ataque',
+        bonus:   parseInt(bonusRaw.replace('+','')) || 0,
+        dmg:     parts[2] || '1',
+        dmgType: 'physical',
+        note:    parts[3] || ''
+      };
+    }) : [],
+    notes
+  };
+
+  if(!CAMPAIGN.wildShapeForms) CAMPAIGN.wildShapeForms = [];
+  CAMPAIGN.wildShapeForms.push(newForm);
+  saveWildShapeForms();
+  renderWildShapeTab();
+}
+
+function deleteWildShapeForm(id){
+  if(!confirm('¿Borrar esta forma?')) return;
+  CAMPAIGN.wildShapeForms = (CAMPAIGN.wildShapeForms||[]).filter(f=>f.id!==id);
+  saveWildShapeForms();
+  renderWildShapeTab();
 }

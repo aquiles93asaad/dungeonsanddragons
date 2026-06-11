@@ -16,6 +16,60 @@ let combatStartNotes = '';
 let currentForm = null;            // {type, data} cuando hay un form abierto
 let currentMonsterPickerOpen = false;
 
+/* ── HABILIDADES DE CLASE ───────────────────────────────────────────────────
+   Mapa de habilidades disponibles por personaje (en nivel actual).
+   Se expande automáticamente al agregar features en class-presets.js.       */
+const CHAR_CLASS_ABILITIES = {
+  rac:   ['rage'],
+  relyo: ['flurry-of-blows', 'patient-defense', 'step-of-the-wind'],
+  tyrell:['divine-smite', 'lay-on-hands', 'divine-sense'],
+  boyd:  ['wild-shape'],
+  esdas: []
+};
+
+const ABILITY_META = {
+  'rage': {
+    name:'Furia', nameEn:'Rage', action:'Bonus Action', isAction:false,
+    resource:'rage', cost:1,
+    desc:'Entrás en Furia por 10 rounds (1 min). Resistencia a daño físico, +daño en ataques STR melee, ventaja en STR checks/saves. No podés lanzar ni concentrarte en hechizos.'
+  },
+  'flurry-of-blows': {
+    name:'Lluvia de Golpes', nameEn:'Flurry of Blows', action:'Bonus Action', isAction:false,
+    resource:'ki', cost:1,
+    desc:'Después de hacer Attack con Action: 2 golpes sin arma adicionales como Bonus Action. Cada uno requiere tirada de ataque.'
+  },
+  'patient-defense': {
+    name:'Defensa Paciente', nameEn:'Patient Defense', action:'Bonus Action', isAction:false,
+    resource:'ki', cost:1,
+    desc:'Tomás Dodge hasta tu próximo turno: ataques contra vos con desventaja, tus DEX saves con ventaja.'
+  },
+  'step-of-the-wind': {
+    name:'Paso del Viento', nameEn:'Step of the Wind', action:'Bonus Action', isAction:false,
+    resource:'ki', cost:1,
+    desc:'Disengage o Dash como Bonus Action. Tu distancia de salto se dobla este turno.'
+  },
+  'divine-smite': {
+    name:'Castigo Divino', nameEn:'Divine Smite', action:'No es una acción — se activa al momento de pegar', isAction:false,
+    resource:'slot',
+    desc:'Al pegar con arma melee: gastá un slot. Slot Nv 1 → +2d8 radiante. +1d8 por nivel adicional del slot. +1d8 extra si el objetivo es no-muerto o infernal.'
+  },
+  'lay-on-hands': {
+    name:'Imposición de Manos', nameEn:'Lay on Hands', action:'Action', isAction:true,
+    resource:'lay-on-hands',
+    desc:'Tocás una criatura y gastás HP del pool (5×nivel paladín). Podés curar HP, o gastar 5 HP del pool para purgar 1 enfermedad o veneno.'
+  },
+  'divine-sense': {
+    name:'Sentido Divino', nameEn:'Divine Sense', action:'Action', isAction:true,
+    resource:'divine-sense', cost:1,
+    desc:'Hasta tu próximo turno: conocés ubicación de celestiales, infernales y no-muertos no escondidos a 60 ft. También detectás lugares u objetos consagrados/profanados.'
+  },
+  'wild-shape': {
+    name:'Forma Salvaje', nameEn:'Wild Shape', action:'Action', isAction:true,
+    resource:'wild-shape', cost:1,
+    desc:'Te transformás en una bestia. Sus HP son un escudo — al llegar a 0 volvés a tu forma con los HP originales intactos. No podés lanzar hechizos nuevos (pero mantenés concentración activa).'
+  }
+};
+
 /* ── STATE ── */
 function loadLiveSession(){
   const stored = load('live_session', null);
@@ -87,11 +141,18 @@ function getAliveTargets(){
 }
 
 function getCombatantHP(p){
-  if(p.kind==='player') return load('hp_'+p.refId, getHPMax(p.refId));
+  if(p.kind==='player'){
+    // Wild Shape: devuelve HP de la bestia mientras dure la transformación
+    if(p.wildShape && p.wildShape.active) return p.wildShape.beastHP;
+    return load('hp_'+p.refId, getHPMax(p.refId));
+  }
   return p.hp;
 }
 function getCombatantHPMax(p){
-  if(p.kind==='player') return getHPMax(p.refId);
+  if(p.kind==='player'){
+    if(p.wildShape && p.wildShape.active) return p.wildShape.beastHPMax;
+    return getHPMax(p.refId);
+  }
   return p.hpMax;
 }
 function getCombatantAC(p){
@@ -219,6 +280,16 @@ function advanceRound(){
   const expiredMsgs = [];
   LIVE_SESSION.combat.participants.forEach(p => {
     p.actedThisRound = false;
+    // Limpiar Reckless Attack (dura hasta el próximo turno)
+    if(p.recklessThisTurn) p.recklessThisTurn = false;
+    // Countdown de Furia de Rac
+    if(p.inRage && p.kind === 'player'){
+      p.rageTurnsLeft = (p.rageTurnsLeft || 1) - 1;
+      if(p.rageTurnsLeft <= 0){
+        p.inRage = false; p.rageTurnsLeft = 0;
+        expiredMsgs.push(`😠 La Furia de Rac terminó (10 rounds cumplidos).`);
+      }
+    }
     // Countdown de condiciones
     if(p.conditions && p.conditions.length){
       const expired = [];
@@ -330,6 +401,74 @@ function addAdhocMonster(){
   renderCombatTracker();
 }
 
+/* ── WILD SHAPE ── */
+function endWildShape(combatantId, fromDamage, overflowDmg){
+  const p = getCombatant(combatantId); if(!p || !p.wildShape) return;
+  const ws = p.wildShape;
+  const beastName = ws.beastName;
+  const restoredHP = ws.originalHP;
+  // Restaurar HP original de Boyd
+  save('hp_boyd', restoredHP);
+  const inp = document.getElementById('boyd-hp');
+  if(inp){ inp.value = restoredHP; if(typeof updateHP === 'function') updateHP('boyd'); }
+  // Aplicar overflow damage si lo hubo
+  if(fromDamage && overflowDmg > 0){
+    const newHP = Math.max(0, restoredHP - overflowDmg);
+    save('hp_boyd', newHP);
+    if(inp){ inp.value = newHP; if(typeof updateHP === 'function') updateHP('boyd'); }
+  }
+  p.wildShape = null;
+  renderPresentsGrid();
+  pushNote({
+    type:'class-ability', character:'boyd', abilityKey:'wild-shape-end',
+    abilityName:'Forma Salvaje termina', beastName,
+    notes: fromDamage
+      ? `🐺 La Forma Salvaje de Boyd (${beastName}) llega a 0 HP. Boyd vuelve a su forma original (HP ${restoredHP}).${overflowDmg>0?` Recibe ${overflowDmg} de daño overflow.`:''}`
+      : `🐺 Boyd sale voluntariamente de la Forma Salvaje (${beastName}). Vuelve con ${restoredHP} HP.`
+  });
+  saveLiveSession();
+  renderLive();
+}
+function endWildShapeBtn(combatantId){
+  if(!confirm('¿Boyd sale de Forma Salvaje? Vuelve a su forma original con sus HP intactos.')) return;
+  endWildShape(combatantId, false, 0);
+}
+function changeWildShapeHP(id, delta){
+  const p = getCombatant(id); if(!p || !p.wildShape || !p.wildShape.active) return;
+  const newHP = Math.max(0, Math.min(p.wildShape.beastHPMax, p.wildShape.beastHP + delta));
+  const overflow = (p.wildShape.beastHP + delta < 0) ? Math.abs(p.wildShape.beastHP + delta) : 0;
+  p.wildShape.beastHP = newHP;
+  if(newHP <= 0) endWildShape(id, true, overflow);
+  else { saveLiveSession(); renderCombatTracker(); }
+}
+function setWildShapeHP(id, val){
+  const p = getCombatant(id); if(!p || !p.wildShape || !p.wildShape.active) return;
+  const n = Math.max(0, Math.min(p.wildShape.beastHPMax, parseInt(val)||0));
+  p.wildShape.beastHP = n;
+  if(n <= 0) endWildShape(id, true, 0);
+  else { saveLiveSession(); renderCombatTracker(); }
+}
+
+/* ── RAGE ── */
+function endRageBtn(combatantId){
+  if(!confirm('¿Terminar la Furia de Rac?')) return;
+  const p = getCombatant(combatantId); if(!p) return;
+  p.inRage = false;
+  p.rageTurnsLeft = 0;
+  p.recklessThisTurn = false;
+  pushNote({ type:'combat', subtype:'other', notes:'😠 Furia de Rac termina.' });
+  saveLiveSession();
+  renderLive();
+}
+
+function combatantCardClick(e, charId){
+  // Solo activo en modo jugador y en pantalla angosta (mobile/responsive)
+  if(document.body.classList.contains('dm-mode')) return;
+  if(window.innerWidth > 900) return;
+  if(e.target.closest('button,input,select')) return;
+  openCharSheetModal(charId);
+}
+
 function removeCombatant(id){
   if(!confirm('¿Sacar del combate?')) return;
   LIVE_SESSION.combat.participants = LIVE_SESSION.combat.participants.filter(p=>p.id!==id);
@@ -343,6 +482,42 @@ function removeCombatant(id){
 function changeCombatantHP(id, delta){
   const p = getCombatant(id); if(!p) return;
   if(p.kind==='player'){
+    // Wild Shape: el daño va a los HP de la bestia primero
+    if(p.wildShape && p.wildShape.active && delta < 0){
+      const newBeastHP = Math.max(0, p.wildShape.beastHP + delta);
+      const overflow = (p.wildShape.beastHP + delta < 0) ? Math.abs(p.wildShape.beastHP + delta) : 0;
+      p.wildShape.beastHP = newBeastHP;
+      if(newBeastHP <= 0){
+        endWildShape(id, true, overflow);
+        return;
+      }
+      // CON save de concentración si está concentrado
+      if(delta < 0 && p.concentration){
+        const dmg = Math.abs(delta);
+        const dc = Math.max(10, Math.floor(dmg / 2));
+        const scores = ABILITY_SCORES[p.refId];
+        const conMod = scores ? abilityMod(scores.con) : 0;
+        const modLabel = conMod >= 0 ? `+${conMod}` : String(conMod);
+        const charName = p.refId.charAt(0).toUpperCase() + p.refId.slice(1);
+        setTimeout(() => {
+          const rollStr = prompt(
+            `⚠ ${charName} (en Forma Salvaje) recibió ${dmg} de daño mientras concentrado en ${p.concentration.spellName}.\n\nCON save DC ${dc}\nMod CON de ${charName}: ${modLabel}\n\nTirada d20:`
+          );
+          if(rollStr === null) return;
+          const roll = parseInt(rollStr) || 0;
+          const total = roll + conMod;
+          if(total >= dc){
+            alert(`✓ Mantiene la concentración en ${p.concentration.spellName}. (${roll}${modLabel} = ${total} ≥ DC ${dc})`);
+          } else {
+            alert(`✗ Pierde la concentración en ${p.concentration.spellName}. (${roll}${modLabel} = ${total} < DC ${dc})`);
+            breakConcentration(p.id);
+          }
+        }, 100);
+      }
+      saveLiveSession();
+      renderCombatTracker();
+      return;
+    }
     const cur = load('hp_'+p.refId, getHPMax(p.refId));
     const next = Math.max(0, Math.min(getHPMax(p.refId), cur + delta));
     save('hp_'+p.refId, next);
@@ -577,6 +752,7 @@ function getDefaultFormData(type){
       damage: '',
       damageType: 'slashing',
       applyDamage: true,
+      recklessAttack: false,
       notes: ''
     };
   }
@@ -597,6 +773,9 @@ function getDefaultFormData(type){
   if(type==='combat'){
     return { subtype:'other', notes:'' };
   }
+  if(type==='class-ability'){
+    return { character: CHARS[0], abilityKey:'', beastId:'', beastName:'', beastHP:'', healAmount:'', targetId:'', slotLevel:1, notes:'' };
+  }
   return { eventId:'', title:'', text:'' };
 }
 
@@ -616,8 +795,18 @@ function updateFormField(field, value){
     currentForm.data.damageBonus = '';
     currentForm.data.targetIds = [];
   }
+  if(currentForm.type === 'class-ability' && field === 'character'){
+    currentForm.data.abilityKey = '';
+    currentForm.data.beastId = ''; currentForm.data.beastName = ''; currentForm.data.beastHP = '';
+    currentForm.data.healAmount = ''; currentForm.data.targetId = '';
+  }
   if(['character','actionType','spellName','cantripName','skill','save'].includes(field)){
     renderNoteForm();
+  } else if(currentForm.type === 'class-ability'){
+    // Solo re-renderizar si el campo cambia la estructura del form
+    const ABILITY_STRUCTURAL_FIELDS = ['character','abilityKey','slotLevel','windOption'];
+    if(ABILITY_STRUCTURAL_FIELDS.includes(field)) renderNoteForm();
+    // Si no, solo actualizar el dato (los inputs de texto/número no re-renderizan)
   } else if(currentForm.type === 'npc-action' && field === 'actionType'){
     renderNoteForm();
   } else {
@@ -704,6 +893,452 @@ function cantripRequiresAttack(cantripName, c){
   return sh.includes('attack');
 }
 
+/* ── CLASS ABILITY HELPERS ── */
+function getAbilityResourceStatus(charId, abilityKey){
+  const meta = ABILITY_META[abilityKey];
+  if(!meta) return { available: true, label: '', warn: false };
+  const c = charId;
+  const lvl = getCharLevel(c);
+
+  if(abilityKey === 'rage'){
+    const used = load('resource_'+c+'_rage', 0);
+    const max  = getResourceMax(c, 'rage', lvl);
+    const avail = Math.max(0, max - used);
+    return { available: avail > 0, label: `Furias: ${avail}/${max}`, warn: avail === 0 };
+  }
+  if(abilityKey === 'flurry-of-blows' || abilityKey === 'patient-defense' || abilityKey === 'step-of-the-wind'){
+    const used = load('resource_'+c+'_ki', 0);
+    const max  = getResourceMax(c, 'ki', lvl);
+    const avail = Math.max(0, max - used);
+    return { available: avail >= meta.cost, label: `Ki: ${avail}/${max}`, warn: avail < meta.cost };
+  }
+  if(abilityKey === 'divine-sense'){
+    const used = load('resource_'+c+'_divine-sense', 0);
+    const max  = getResourceMax(c, 'divine-sense', lvl);
+    const avail = Math.max(0, max - used);
+    return { available: avail > 0, label: `Usos: ${avail}/${max}`, warn: avail === 0 };
+  }
+  if(abilityKey === 'lay-on-hands'){
+    const poolMax = getResourceMax(c, 'lay-on-hands', lvl);
+    const poolUsed = load('resource_'+c+'_lay-on-hands', 0);
+    const poolLeft = Math.max(0, poolMax - poolUsed);
+    return { available: poolLeft > 0, label: `Pool: ${poolLeft}/${poolMax} HP`, warn: poolLeft === 0 };
+  }
+  if(abilityKey === 'divine-smite'){
+    // Verifica si hay algún slot disponible
+    const slots = getSpellSlotsForLevel(c, lvl);
+    let anySlot = false;
+    Object.keys(slots).forEach(lv => {
+      const state = loadSlotState(c, parseInt(lv));
+      if(state.max - state.used > 0) anySlot = true;
+    });
+    return { available: anySlot, label: anySlot ? 'Slots disponibles' : 'Sin slots', warn: !anySlot };
+  }
+  if(abilityKey === 'wild-shape'){
+    const p = LIVE_SESSION.combat.participants.find(x=>x.kind==='player'&&x.refId===c);
+    if(p && p.wildShape && p.wildShape.active) return { available: false, label: '🐺 En Forma Salvaje', warn: false };
+    const used = load('resource_'+c+'_wild-shape', 0);
+    const max  = getResourceMax(c, 'wild-shape', lvl);
+    const avail = Math.max(0, max - used);
+    return { available: avail > 0, label: `Usos: ${avail}/${max}`, warn: avail === 0 };
+  }
+  return { available: true, label: '', warn: false };
+}
+
+function renderClassAbilityForm(){
+  const d = currentForm.data;
+  const c = d.character;
+  const abilities = CHAR_CLASS_ABILITIES[c] || [];
+  const lvl = getCharLevel(c);
+
+  // Combatiente player actual (para rage state etc)
+  const combatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
+
+  const charOpts = CHARS.map(ch=>`<option value="${ch}" ${ch===c?'selected':''}>${ch.charAt(0).toUpperCase()+ch.slice(1)}</option>`).join('');
+
+  let abilityOpts = '<option value="">— elegir habilidad —</option>';
+  abilities.forEach(key => {
+    const meta = ABILITY_META[key]; if(!meta) return;
+    const rs = getAbilityResourceStatus(c, key);
+    const tag = rs.label ? ` · ${rs.label}` : '';
+    abilityOpts += `<option value="${key}" ${d.abilityKey===key?'selected':''}>${meta.name} / ${meta.nameEn}${tag}</option>`;
+  });
+
+  const meta = d.abilityKey ? ABILITY_META[d.abilityKey] : null;
+  const rs   = d.abilityKey ? getAbilityResourceStatus(c, d.abilityKey) : null;
+
+  const warnHTML = (rs && rs.warn) ? `<div class="form-warn">⚠ Sin recursos disponibles para esta habilidad. Podés guardar la nota igual.</div>` : '';
+
+  const specificHTML = (d.abilityKey && meta) ? renderAbilitySpecificFields(c, d.abilityKey, d, lvl, combatant) : '';
+
+  return `
+    <div class="note-form class-ability-form">
+      <div class="form-title">⚡ Habilidad de clase</div>
+
+      <div class="form-grid-halves">
+        <div class="form-row">
+          <label>Personaje</label>
+          <select class="form-input" onchange="updateFormField('character', this.value)">${charOpts}</select>
+        </div>
+        <div class="form-row">
+          <label>Habilidad</label>
+          <select class="form-input" onchange="updateFormField('abilityKey', this.value)">${abilityOpts}</select>
+        </div>
+      </div>
+
+      ${meta ? `<div class="ability-info-box">
+        <span class="ability-action-tag ${meta.isAction ? 'is-action' : meta.action.startsWith('Bonus') ? 'is-bonus' : 'is-free'}">${meta.isAction ? '🔵 Action' : meta.action.startsWith('Bonus') ? '🟡 Bonus Action' : '🟣 '+meta.action}</span>
+        ${meta.isAction
+          ? `<span class="ability-turn-warning">Gasta el turno — no puede hacer otra Action después</span>`
+          : meta.action.startsWith('Bonus')
+            ? `<span class="ability-turn-ok">Puede hacer una Action normal en el mismo turno</span>`
+            : `<span class="ability-turn-ok">No consume acción — se usa en el momento en que el ataque pega</span>`}
+        <div class="ability-desc" style="margin-top:0.4rem">${meta.desc}</div>
+      </div>` : ''}
+
+      ${warnHTML}
+      ${specificHTML}
+
+      <div class="form-row">
+        <label>Notas / descripción (opcional)</label>
+        <textarea class="form-input form-textarea" placeholder="Cómo lo usa, qué pasa narrativamente..." oninput="updateFormField('notes', this.value)">${liveEscape(d.notes||'')}</textarea>
+      </div>
+
+      <div class="form-btns">
+        <button class="btn-cancel" onclick="closeNoteForm()">Cancelar</button>
+        <button class="btn-primary" onclick="saveClassAbilityNote()">Usar habilidad</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAbilitySpecificFields(c, abilityKey, d, lvl, combatant){
+  const DISCLAIMER_VENTAJA = `<div class="disclaimer-box">🎲 Tirá 2d20 físicos y elegí el mayor (ventaja).</div>`;
+  const DISCLAIMER_DESVENTAJA = `<div class="disclaimer-box">🎲 Tirá 2d20 físicos y elegí el menor (desventaja).</div>`;
+
+  if(abilityKey === 'rage'){
+    const isInRage = !!(combatant && combatant.inRage);
+    const rageBonus = getRageDamageBonus(lvl);
+    if(isInRage){
+      return `<div class="ability-rage-active">
+        😠 <strong>Rac ya está en Furia</strong> — bonus de daño +${rageBonus} activo.
+        <br><button class="btn-small btn-danger" style="margin-top:0.5rem" onclick="endRageBtn('${combatant?combatant.id:''}')">Terminar Furia</button>
+      </div>`;
+    }
+    const used = load('resource_rac_rage', 0);
+    const max  = getResourceMax('rac', 'rage', lvl);
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Duración: 1 minuto (10 rounds) · Bonus daño STR/melee: <strong>+${rageBonus}</strong></div>
+      <div class="ability-stat-line">Resistencia a daño físico (slashing/piercing/bludgeoning) mientras esté en Furia.</div>
+      ${DISCLAIMER_VENTAJA}
+      <div class="ability-stat-line muted">Furias restantes: ${Math.max(0,max-used)}/${max}</div>
+    </div>`;
+  }
+
+  if(abilityKey === 'flurry-of-blows'){
+    const die = getMartialArtsDie(lvl);
+    const dex  = abilityMod(ABILITY_SCORES.relyo.dex);
+    const prof  = getCharProfBonus('relyo');
+    const atk  = dex + prof;
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Bonus Action post-ataque: 2 ataques adicionales con artes marciales.</div>
+      <div class="ability-grid-2">
+        <div><label>Golpe 1 — Tirada d20</label><input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll1||'')}" oninput="updateFormField('flurryRoll1',this.value)"></div>
+        <div><label>Golpe 2 — Tirada d20</label><input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll2||'')}" oninput="updateFormField('flurryRoll2',this.value)"></div>
+      </div>
+      <div class="ability-stat-line muted">Modificador de ataque: +${atk} (DEX ${dex>=0?'+':''}${dex} + Prof ${prof}) · Daño: 1d${die}+${dex>=0?dex:dex} (unarmed)</div>
+      ${renderCombatantsTargetPicker(d, 'Objetivo', 'targetId')}
+    </div>`;
+  }
+
+  if(abilityKey === 'patient-defense'){
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Bonus Action: Relyo entra en Dodge hasta el inicio de su próximo turno.</div>
+      <div class="ability-stat-line">Los atacantes tienen <strong>desventaja</strong> contra Relyo. Relyo tiene <strong>ventaja</strong> en saves DEX.</div>
+      ${DISCLAIMER_DESVENTAJA}
+    </div>`;
+  }
+
+  if(abilityKey === 'step-of-the-wind'){
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Bonus Action: Relyo usa Disengage o Dash (elegir uno).</div>
+      <div class="form-row" style="margin-top:0.5rem">
+        <label>Opción</label>
+        <select class="form-input" onchange="updateFormField('windOption',this.value)">
+          <option value="disengage" ${(d.windOption||'disengage')==='disengage'?'selected':''}>Disengage — alejarse sin provocar AoO</option>
+          <option value="dash" ${d.windOption==='dash'?'selected':''}>Dash — doble movimiento</option>
+        </select>
+      </div>
+      <div class="ability-stat-line">Salto en distancia también se duplica.</div>
+    </div>`;
+  }
+
+  if(abilityKey === 'divine-smite'){
+    const slots = getSpellSlotsForLevel('tyrell', lvl);
+    const slotOpts = Object.keys(slots).map(lv => {
+      const state = loadSlotState('tyrell', parseInt(lv));
+      const avail = state.max - state.used;
+      const radDice = 2 + (parseInt(lv)-1);
+      return `<option value="${lv}" ${parseInt(d.slotLevel)===parseInt(lv)?'selected':''}>Nivel ${lv} · ${radDice}d8 radiante (${avail}/${state.max} disp.)</option>`;
+    }).join('');
+    const dice = 2 + (parseInt(d.slotLevel||1)-1);
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Al pegar un ataque: gastar slot para agregar daño radiante.</div>
+      <div class="form-row">
+        <label>Nivel del slot</label>
+        <select class="form-input" onchange="updateFormField('slotLevel',this.value)">${slotOpts}</select>
+      </div>
+      <div class="ability-stat-line">Daño: <strong>${dice}d8 radiante</strong>${d.slotLevel>1?' (upcast)':''}</div>
+      ${renderCombatantsTargetPicker(d, 'Objetivo golpeado', 'targetId')}
+      <div class="form-row">
+        <label>Tirada de daño radiante (${dice}d8)</label>
+        <input type="number" class="form-input" placeholder="ej: 14" value="${liveEscape(d.smiteDmg||'')}" oninput="updateFormField('smiteDmg',this.value)">
+      </div>
+    </div>`;
+  }
+
+  if(abilityKey === 'lay-on-hands'){
+    const poolMax = getResourceMax('tyrell', 'lay-on-hands', lvl);
+    const poolUsed = load('resource_tyrell_lay-on-hands', 0);
+    const poolLeft = Math.max(0, poolMax - poolUsed);
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Pool de curación: <strong>${poolLeft} HP</strong> restantes de ${poolMax} (se recarga en descanso largo).</div>
+      ${renderCombatantsTargetPicker(d, 'Objetivo a curar', 'targetId')}
+      <div class="form-row">
+        <label>HP a restaurar (máx. ${poolLeft})</label>
+        <input type="number" class="form-input" placeholder="ej: 5" min="1" max="${poolLeft}" value="${liveEscape(d.healAmount||'')}" oninput="updateFormField('healAmount',this.value)">
+      </div>
+      <div class="ability-stat-line muted">Alternativamente: gastar 5 HP del pool para curar 1 enfermedad o veneno.</div>
+    </div>`;
+  }
+
+  if(abilityKey === 'divine-sense'){
+    const used = load('resource_tyrell_divine-sense', 0);
+    const max  = getResourceMax('tyrell', 'divine-sense', lvl);
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Acción: Tyrell percibe la presencia de criaturas celestiales, infernales o no-muertas a 60 ft.</div>
+      <div class="ability-stat-line">También detecta lugares consagrados o profanados. Dura hasta el final del turno.</div>
+      <div class="ability-stat-line muted">Usos restantes: ${Math.max(0,max-used)}/${max} (recarga en descanso largo)</div>
+    </div>`;
+  }
+
+  if(abilityKey === 'wild-shape'){
+    if(combatant && combatant.wildShape && combatant.wildShape.active){
+      const ws = combatant.wildShape;
+      return `<div class="ability-rage-active">
+        🐺 <strong>Boyd ya está en Forma Salvaje</strong> como ${liveEscape(ws.beastName)} (HP: ${ws.beastHP}/${ws.beastHPMax}).
+        <br><button class="btn-small btn-danger" style="margin-top:0.5rem" onclick="endWildShapeBtn('${combatant.id}')">Salir de Forma Salvaje</button>
+      </div>`;
+    }
+    const used = load('resource_boyd_wild-shape', 0);
+    const max  = getResourceMax('boyd', 'wild-shape', lvl);
+
+    const allForms = (typeof CAMPAIGN !== 'undefined' && CAMPAIGN.wildShapeForms) || [];
+    const available   = allForms.filter(f => lvl >= (f.minLevel || 2));
+    const locked      = allForms.filter(f => lvl < (f.minLevel || 2));
+
+    const formOpts = available.map(f =>
+      `<option value="${f.id}" ${d.beastId===f.id?'selected':''}>` +
+      `${liveEscape(f.name)} · CR ${f.cr} · HP ${f.hpMax} · CA ${f.ac}</option>`
+    ).join('');
+    const lockedOpts = locked.map(f =>
+      `<option value="" disabled>🔒 ${liveEscape(f.name)} (requiere Nv ${f.minLevel})</option>`
+    ).join('');
+
+    // Stats de la forma seleccionada
+    const selectedForm = allForms.find(f => f.id === d.beastId);
+    const statsBlock = selectedForm ? `
+      <div class="ws-form-stats">
+        <div class="ws-stat-row">
+          <span>HP <strong>${selectedForm.hpMax}</strong></span>
+          <span>CA <strong>${selectedForm.ac}</strong></span>
+          <span>Vel. <strong>${selectedForm.speed}</strong></span>
+          <span>STR <strong>${selectedForm.str}</strong> DEX <strong>${selectedForm.dex}</strong> CON <strong>${selectedForm.con}</strong></span>
+        </div>
+        <div class="ws-attacks">
+          ${selectedForm.attacks.map(a =>
+            `<div class="ws-attack-row">⚔ <strong>${liveEscape(a.name)}</strong> +${a.bonus} · ${liveEscape(a.dmg)} ${liveEscape(a.dmgType)}${a.note?` <em class="muted">(${liveEscape(a.note)})</em>`:''}</div>`
+          ).join('')}
+        </div>
+        ${selectedForm.notes ? `<div class="ability-stat-line muted" style="margin-top:0.4rem">📋 ${liveEscape(selectedForm.notes)}</div>` : ''}
+      </div>
+    ` : '';
+
+    return `<div class="ability-specific-block">
+      <div class="ability-stat-line">Boyd se transforma en una bestia. Los HP de la bestia actúan como escudo — el daño va a ellos primero.</div>
+      <div class="ability-stat-line muted">Usos: ${Math.max(0,max-used)}/${max} · Restricción Nv ${lvl}: CR ${lvl>=8?'1':lvl>=4?'1/2':'1/4'} máx${lvl<4?', sin vuelo':''}</div>
+      <div class="form-row">
+        <label>Forma Salvaje</label>
+        <select class="form-input" onchange="selectWildShapeForm(this.value)">
+          <option value="">— elegir forma —</option>
+          ${formOpts}
+          ${lockedOpts}
+        </select>
+      </div>
+      ${statsBlock}
+      ${!selectedForm ? `<div class="form-row"><label>O escribí el nombre manualmente</label>
+        <input class="form-input" placeholder="ej: Lobo" value="${liveEscape(d.beastName||'')}" oninput="updateFormField('beastName',this.value)">
+      </div>
+      <div class="form-row"><label>HP máx. de la bestia</label>
+        <input type="number" class="form-input" placeholder="ej: 11" value="${liveEscape(d.beastHP||'')}" oninput="updateFormField('beastHP',this.value)">
+      </div>` : ''}
+    </div>`;
+  }
+
+  return '';
+}
+
+function renderCombatantsTargetPicker(d, label, field){
+  const all = LIVE_SESSION.combat.participants;
+  if(!all || all.length === 0) return '';
+  const opts = `<option value="">— elegir objetivo —</option>` +
+    all.map(p=>`<option value="${p.id}" ${d[field]===p.id?'selected':''}>${liveEscape(getCombatantName(p))} (HP ${getCombatantHP(p)})</option>`).join('');
+  return `<div class="form-row"><label>${label}</label>
+    <select class="form-input" onchange="updateFormField('${field}',this.value)">${opts}</select>
+  </div>`;
+}
+
+function selectWildShapeForm(formId){
+  if(!currentForm || currentForm.type !== 'class-ability') return;
+  if(!formId){ currentForm.data.beastId=''; currentForm.data.beastName=''; currentForm.data.beastHP=''; renderNoteForm(); return; }
+  const f = ((typeof CAMPAIGN !== 'undefined' && CAMPAIGN.wildShapeForms) || []).find(x=>x.id===formId);
+  if(!f) return;
+  currentForm.data.beastId   = f.id;
+  currentForm.data.beastName = f.name;
+  currentForm.data.beastHP   = String(f.hpMax);
+  renderNoteForm();
+}
+
+function saveClassAbilityNote(){
+  const d = currentForm.data;
+  const c = d.character;
+  const key = d.abilityKey;
+  const lvl = getCharLevel(c);
+  const meta = ABILITY_META[key];
+  if(!meta){ alert('Elegí una habilidad.'); return; }
+
+  const combatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
+  let noteText = '';
+
+  // ── Furia ──
+  if(key === 'rage'){
+    const isInRage = !!(combatant && combatant.inRage);
+    if(isInRage){ alert('Rac ya está en Furia. Usá el botón "Terminar Furia" en lugar de activarla de nuevo.'); return; }
+    // Consumir recurso
+    const used = load('resource_rac_rage', 0);
+    const max  = getResourceMax('rac', 'rage', lvl);
+    if(used >= max && !confirm('Sin furias disponibles. ¿Guardar igual?')) return;
+    save('resource_rac_rage', used + 1);
+    // Estado en combatiente
+    if(combatant){ combatant.inRage = true; combatant.rageTurnsLeft = 10; }
+    const bonus = getRageDamageBonus(lvl);
+    noteText = `😠 Rac entra en Furia. Bonus daño +${bonus} en ataques STR. Resistencia a daño físico. Duración: 10 rounds.`;
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('rac');
+  }
+
+  // ── Ki abilities ──
+  else if(['flurry-of-blows','patient-defense','step-of-the-wind'].includes(key)){
+    const used = load('resource_relyo_ki', 0);
+    const max  = getResourceMax('relyo', 'ki', lvl);
+    const cost = meta.cost || 1;
+    if(used + cost > max && !confirm(`Sin ki suficiente (${max-used} disponible, costo ${cost}). ¿Guardar igual?`)) return;
+    save('resource_relyo_ki', Math.min(used + cost, max));
+    if(key === 'flurry-of-blows'){
+      const die = getMartialArtsDie(lvl);
+      const dex = abilityMod(ABILITY_SCORES.relyo.dex);
+      const prof = getCharProfBonus('relyo');
+      const atk = dex + prof;
+      const r1 = d.flurryRoll1 ? `Golpe 1: d20=${d.flurryRoll1} (+${atk} = ${parseInt(d.flurryRoll1)+atk})` : '';
+      const r2 = d.flurryRoll2 ? `Golpe 2: d20=${d.flurryRoll2} (+${atk} = ${parseInt(d.flurryRoll2)+atk})` : '';
+      noteText = `👊 Lluvia de Golpes (Flurry of Blows): 2 ataques desarmados adicionales. Daño: 1d${die}+${dex}. ${r1} ${r2}`.trim();
+    } else if(key === 'patient-defense'){
+      noteText = `🛡 Defensa Paciente (Patient Defense): Relyo en Dodge hasta su próximo turno. Los atacantes tienen desventaja. 🎲 Tirá 2d20 y elegí el menor.`;
+      if(combatant){ applyCondition(combatant.id, 'dodge', 1, 'Patient Defense', combatant.id); }
+    } else {
+      noteText = `💨 Paso del Viento (Step of the Wind): ${d.windOption==='dash'?'Dash (doble movimiento)':'Disengage (sin AoO)'}. Salto duplicado.`;
+    }
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('relyo');
+  }
+
+  // ── Divine Smite ──
+  else if(key === 'divine-smite'){
+    const slotLv = parseInt(d.slotLevel) || 1;
+    const ok = consumeSpellSlot('tyrell', slotLv);
+    if(!ok && !confirm('Sin slot disponible. ¿Guardar igual?')) return;
+    const dice = 2 + (slotLv - 1);
+    const dmg  = parseInt(d.smiteDmg) || 0;
+    // Aplicar daño radiante al objetivo
+    if(dmg > 0 && d.targetId){
+      changeCombatantHP(d.targetId, -dmg);
+    }
+    noteText = `✨ Castigo Divino (Divine Smite) Nivel ${slotLv}: ${dice}d8 radiante${dmg>0?' = '+dmg+' daño':''}.${d.targetId?' Aplicado al objetivo.':''}`;
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('tyrell');
+  }
+
+  // ── Lay on Hands ──
+  else if(key === 'lay-on-hands'){
+    const poolMax = getResourceMax('tyrell', 'lay-on-hands', lvl);
+    const poolUsed = load('resource_tyrell_lay-on-hands', 0);
+    const poolLeft = Math.max(0, poolMax - poolUsed);
+    const amount = parseInt(d.healAmount) || 0;
+    if(amount <= 0){ alert('Ingresá cuántos HP curar.'); return; }
+    if(amount > poolLeft && !confirm(`Eso excede el pool disponible (${poolLeft} HP). ¿Guardar igual?`)) return;
+    save('resource_tyrell_lay-on-hands', Math.min(poolUsed + amount, poolMax));
+    // Curar al objetivo
+    if(d.targetId) changeCombatantHP(d.targetId, amount);
+    noteText = `🖐 Imposición de Manos (Lay on Hands): ${amount} HP curados.${d.targetId?' Aplicado al objetivo.':''} Pool restante: ${Math.max(0,poolLeft-amount)} HP.`;
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('tyrell');
+  }
+
+  // ── Divine Sense ──
+  else if(key === 'divine-sense'){
+    const used = load('resource_tyrell_divine-sense', 0);
+    const max  = getResourceMax('tyrell', 'divine-sense', lvl);
+    if(used >= max && !confirm('Sin usos disponibles. ¿Guardar igual?')) return;
+    save('resource_tyrell_divine-sense', used + 1);
+    noteText = `👁 Sentido Divino (Divine Sense): Tyrell detecta criaturas celestiales, infernales o no-muertas a 60 ft. Dura hasta fin del turno.`;
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('tyrell');
+  }
+
+  // ── Wild Shape ──
+  else if(key === 'wild-shape'){
+    if(!d.beastName){ alert('Ingresá el nombre de la bestia.'); return; }
+    const beastHPMax = parseInt(d.beastHP);
+    if(!beastHPMax || beastHPMax <= 0){ alert('Ingresá los HP máx. de la bestia.'); return; }
+    // Consumir recurso
+    const used = load('resource_boyd_wild-shape', 0);
+    const max  = getResourceMax('boyd', 'wild-shape', lvl);
+    if(used >= max && !confirm('Sin usos disponibles. ¿Guardar igual?')) return;
+    save('resource_boyd_wild-shape', used + 1);
+    // Guardar HP actuales de Boyd
+    const boydCurrentHP = load('hp_boyd', getHPMax('boyd'));
+    // Actualizar estado del combatiente
+    if(combatant){
+      combatant.wildShape = { active:true, beastId:d.beastId||'', beastName:d.beastName, beastHP:beastHPMax, beastHPMax, originalHP:boydCurrentHP };
+    }
+    noteText = `🐺 Forma Salvaje (Wild Shape): Boyd se transforma en ${d.beastName} (HP ${beastHPMax}). Todo el daño va primero a los HP de la bestia.`;
+    renderPresentsGrid();
+    if(typeof renderCharAbilities === 'function') renderCharAbilities('boyd');
+  }
+
+  else {
+    noteText = `⚡ ${meta.name} usada por ${c.charAt(0).toUpperCase()+c.slice(1)}.`;
+  }
+
+  pushNote({
+    type:'class-ability', character:c, abilityKey:key,
+    abilityName: meta.name, abilityNameEn: meta.nameEn,
+    notes: (d.notes ? noteText+'\n'+d.notes : noteText)
+  });
+
+  // Solo marcar turno gastado si la habilidad es una Action principal (isAction:true)
+  const trigId = combatant ? combatant.id : null;
+  closeNoteForm();
+  if(trigId && meta.isAction) markActed(trigId);
+  saveLiveSession();
+  renderLive();
+}
+
 /* ── RENDER NOTE FORM ── */
 function renderNoteForm(){
   const container = document.getElementById('note-form-container');
@@ -716,6 +1351,7 @@ function renderNoteForm(){
   else if(currentForm.type === 'npc') container.innerHTML = renderNpcForm();
   else if(currentForm.type === 'combat') container.innerHTML = renderCombatForm();
   else if(currentForm.type === 'loot') { container.innerHTML = renderLootForm(); updateLootFormResult(); return; }
+  else if(currentForm.type === 'class-ability') container.innerHTML = renderClassAbilityForm();
   else container.innerHTML = renderNarrativeForm();
   updateFormAssistance();
 }
@@ -1122,6 +1758,28 @@ function renderActionForm(){
       </div>`;
   }
 
+  // ── Rac: detectar si está en Furia o si usó Reckless Attack ──
+  const racCombatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId==='rac');
+  const racInRage = c === 'rac' && racCombatant && racCombatant.inRage;
+  const racReckless = c === 'rac' && racCombatant && racCombatant.recklessThisTurn;
+  const rageBonus = getRageDamageBonus(getCharLevel('rac'));
+
+  const rageBannerHTML = (c === 'rac') ? `
+    ${racInRage ? `<div class="rage-banner-active">😠 Rac está en <strong>Furia</strong> — daño STR/melee +${rageBonus}, resistencia a daño físico.</div>` : ''}
+    ${racReckless ? `<div class="reckless-banner">⚔ Rac usó <strong>Ataque Imprudente</strong> este turno — los atacantes tienen ventaja contra él hasta su próximo turno.</div>` : ''}
+  ` : '';
+
+  // Reckless Attack checkbox (solo Rac + ataque melee)
+  const recklessHTML = (c === 'rac' && d.actionType === 'attack-melee') ? `
+    <div class="form-checkbox-row reckless-row">
+      <label>
+        <input type="checkbox" ${d.recklessAttack?'checked':''} onchange="updateFormField('recklessAttack', this.checked)">
+        <strong>Ataque Imprudente (Reckless Attack)</strong> — ventaja en este ataque STR.
+      </label>
+      <div class="disclaimer-box">🎲 Tirá 2d20 físicos y elegí el mayor (ventaja). Hasta tu próximo turno los enemigos tienen ventaja para atacarte.</div>
+    </div>
+  ` : '';
+
   return `
     <div class="note-form action-form">
       <div class="form-title">+ Acción jugador</div>
@@ -1147,6 +1805,8 @@ function renderActionForm(){
         </div>
       </div>
 
+      ${rageBannerHTML}
+      ${recklessHTML}
       ${conditionalHTML}
 
       ${bottomHTML}
@@ -1781,6 +2441,14 @@ function renderNpcActionForm(){
         </div>
       </div>
       ${renderTargetConditionWarnings(npcTargetId)}
+      ${(()=>{
+        const tp = npcTargetId ? getCombatant(npcTargetId) : null;
+        if(!tp || tp.kind !== 'player') return '';
+        let w = '';
+        if(tp.recklessThisTurn) w += `<div class="advantage-warning">⚔ ¡${liveEscape(getCombatantName(tp))} usó <strong>Ataque Imprudente</strong>! Este ataque tiene <strong>ventaja</strong>.<br><span class="disclaimer-box" style="display:inline-block;margin-top:0.3rem">🎲 Tirá 2d20 físicos y elegí el mayor.</span></div>`;
+        if(tp.inRage) w += `<div class="rage-warning">😠 <strong>${liveEscape(getCombatantName(tp))} está en Furia</strong> — tiene resistencia a daño físico (slashing/piercing/bludgeoning). El daño efectivo se reduce a la mitad.</div>`;
+        return w;
+      })()}
 
       <div class="form-grid">
         <div class="form-row">
@@ -2149,10 +2817,17 @@ function saveActionNote(){
     damageType: d.damageType,
     notes: d.notes
   });
+  // Set recklessThisTurn flag if Rac used Reckless Attack
+  if(d.character === 'rac' && d.recklessAttack){
+    const racC = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId==='rac');
+    if(racC) racC.recklessThisTurn = true;
+  }
+
   const trigId = d.triggeringCombatantId ||
     (LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===d.character)||{}).id;
   closeNoteForm();
   if(trigId) markActed(trigId);
+  saveLiveSession();
   renderLive();
 }
 
@@ -2657,6 +3332,54 @@ function groupLevelUp(){
 }
 
 /* Renderiza badges de condiciones + concentración de un combatiente */
+function renderCombatantResources(charId){
+  const lvl = getCharLevel(charId);
+  const bits = [];
+
+  // ── Recursos por clase ──
+  const RES_META = {
+    'rage':         { label:'😠 Furia',      suffix:'' },
+    'ki':           { label:'🥋 Ki',          suffix:'' },
+    'wild-shape':   { label:'🐺 Formas',      suffix:'' },
+    'divine-sense': { label:'✨ Sent. Div.',   suffix:'' },
+    'lay-on-hands': { label:'🤲 Manos',       suffix:' HP' }
+  };
+  const CHAR_RESOURCES = {
+    rac:   ['rage'],
+    relyo: ['ki'],
+    boyd:  ['wild-shape'],
+    tyrell:['divine-sense','lay-on-hands'],
+    esdas: []
+  };
+
+  (CHAR_RESOURCES[charId] || []).forEach(key => {
+    const max = getResourceMax(charId, key, lvl);
+    if(!max) return;
+    const used  = load('resource_'+charId+'_'+key, 0);
+    const avail = Math.max(0, max - used);
+    const m = RES_META[key] || { label: key, suffix: '' };
+    bits.push(`<span class="res-pill${avail===0?' res-pill-empty':''}">${m.label} <strong>${avail}/${max}</strong>${m.suffix}</span>`);
+  });
+
+  // ── Spell slots (casters) ──
+  const CASTERS = ['tyrell','esdas','relyo','boyd','tyrell'];
+  if(['tyrell','esdas'].includes(charId)){
+    const slots = getSpellSlotsForLevel(charId);
+    Object.keys(slots).sort((a,b)=>+a-+b).forEach(lv => {
+      const s = loadSlotState(charId, +lv);
+      if(!s.max) return;
+      const rem = s.max - s.used;
+      const pips = Array.from({length:s.max},(_,i)=>
+        `<span class="slot-pip${i<rem?'':' used'}"></span>`
+      ).join('');
+      bits.push(`<span class="slot-pill${rem===0?' slot-pill-empty':''}">Nv${lv} ${pips}</span>`);
+    });
+  }
+
+  if(!bits.length) return '';
+  return `<div class="combatant-resources">${bits.join('')}</div>`;
+}
+
 function renderCombatantConditions(p){
   const conds = p.conditions || [];
   const chips = conds.map(c => {
@@ -2776,16 +3499,38 @@ function renderCombatTracker(){
         ? `<button class="combatant-loot" onclick="openLiveLootForm('${p.id}')" title="Tirar loot">🎲</button>`
         : '';
 
+      // Wild Shape: mostrar HP bestia + HP originales de Boyd
+      const isWild = p.kind==='player' && p.wildShape && p.wildShape.active;
+      const wildShapeBlock = isWild ? `
+        <div class="wild-shape-hp-block dm-only">
+          <span class="ws-label">🐺 ${liveEscape(p.wildShape.beastName)}</span>
+          <div class="combatant-hp">
+            <button class="vital-btn vital-btn-sm" onclick="changeWildShapeHP('${p.id}',-1)">−</button>
+            <input class="combatant-hp-val" type="number" value="${p.wildShape.beastHP}" min="0" max="${p.wildShape.beastHPMax}" onchange="setWildShapeHP('${p.id}', this.value)">
+            <span class="combatant-hp-max">/${p.wildShape.beastHPMax} (bestia)</span>
+            <button class="vital-btn vital-btn-sm" onclick="changeWildShapeHP('${p.id}',1)">+</button>
+          </div>
+          <div style="font-size:0.75rem;color:var(--cream-muted);margin-top:0.2rem">HP Boyd (guardados): ${p.wildShape.originalHP}</div>
+          <button class="btn-small btn-danger" style="margin-top:0.3rem" onclick="endWildShapeBtn('${p.id}')">Salir de Forma Salvaje</button>
+        </div>
+      ` : '';
+      const rageBadge  = (p.kind==='player' && p.inRage) ? `<span class="rage-badge" title="En Furia (${p.rageTurnsLeft||0} rounds)">😠 FURIA</span>` : '';
+      const recklessBadge = (p.kind==='player' && p.recklessThisTurn) ? `<span class="reckless-badge" title="Usó Ataque Imprudente — enemigos con ventaja">⚔ RECKLESS</span>` : '';
+
+      const cardClick = p.kind==='player'
+        ? `onclick="combatantCardClick(event,'${p.refId}')"`
+        : '';
       return `
-        <div class="combatant ${p.kind} ${acted?'has-acted':''} ${dead?'is-dead':''}">
+        <div class="combatant ${p.kind} ${acted?'has-acted':''} ${dead?'is-dead':''} ${isWild?'is-wild-shape':''}" ${cardClick}>
           <div class="combatant-row1">
             <input class="combatant-init dm-only" type="number" value="${p.initiative||0}" title="Iniciativa" onchange="setCombatantInit('${p.id}', this.value)">
-            <span class="combatant-name">${liveEscape(getCombatantName(p))}${p.kind==='player'?' <em>(Pj)</em>':''}</span>
+            <span class="combatant-name">${liveEscape(getCombatantName(p))}${p.kind==='player'?' <em>(Pj)</em>':''}${rageBadge}${recklessBadge}</span>
             <div class="combatant-action-btns dm-only">${actionBtn}</div>
             <span class="dm-only">${lootBtn}</span>
             <button class="combatant-del dm-only" onclick="removeCombatant('${p.id}')" title="Sacar del combate">✕</button>
           </div>
-          <div class="combatant-row2 dm-only">
+          ${wildShapeBlock}
+          <div class="combatant-row2 dm-only" ${isWild?'style="display:none"':''}>
             <div class="combatant-hp">
               <button class="vital-btn vital-btn-sm" onclick="changeCombatantHP('${p.id}',-1)">−</button>
               <input class="combatant-hp-val" type="number" value="${hp}" min="0" max="${max}" onchange="setCombatantHP('${p.id}', this.value)">
@@ -2795,6 +3540,7 @@ function renderCombatTracker(){
             <span class="combatant-ac">CA ${ac}</span>
           </div>
           <div class="combatant-hp-bar"><div class="hp-fill" style="width:${hpPct}%;background:${hpColor}"></div></div>
+          ${p.kind==='player' ? renderCombatantResources(p.refId) : ''}
           ${renderCombatantConditions(p)}
         </div>
       `;
@@ -2844,6 +3590,10 @@ function renderNotesStream(){
    • Narrativa sin hijos → badge "Puramente narrativo".
    Las notas están guardadas newest-first; para agrupar correctamente
    construimos el orden cronológico (reverse), agrupamos, y mostramos newest-first. */
+// Lista de narrativas disponibles para el select de "mover a capítulo" — se
+// puebla en buildGroupedStream y se consume en renderNoteCard.
+let _streamNarratives = [];
+
 function buildGroupedStream(notes){
   // Orden cronológico (oldest first)
   const chrono = notes.slice().reverse();
@@ -2855,24 +3605,32 @@ function buildGroupedStream(notes){
   // Map de id → chapter para lookup rápido
   const chapterMap = {};
 
+  // Pase 1: construir el mapa completo de narrativas (preserva orden cronológico)
   chrono.forEach(n => {
     if(n.type === 'narrative'){
       const ch = { narrative: n, children: [] };
       chapters.push(ch);
       chapterMap[n.id] = ch;
-    } else {
+    }
+  });
+
+  // Pase 2: asignar hijos — chapterMap ya tiene TODOS los capítulos,
+  // incluso los más nuevos que el hijo (fix para reasignación entre eventos)
+  chrono.forEach(n => {
+    if(n.type !== 'narrative'){
       const navId = n.narrativeId;
       if(navId && chapterMap[navId]){
         chapterMap[navId].children.push(n);
       } else {
-        // Sin narrativa vinculada (nota técnica temprana o nota sin link)
         preNarrative.push(n);
       }
     }
   });
 
+  // Exponer narrativas para el select de reasignación
+  _streamNarratives = chapters.map(ch => ch.narrative);
+
   // Renderizar newest-first:
-  // Los capítulos más recientes primero, sus hijos más nuevos primero.
   const parts = [];
 
   // notas sueltas (pre-narrativa) — newest first
@@ -2902,6 +3660,80 @@ function buildGroupedStream(notes){
   return parts.join('');
 }
 
+/* ── Reordenar y reasignar notas ─────────────────────────────────────────────
+   moveNote(id, 'up'|'down')   — sube/baja dentro del mismo capítulo
+   moveChapter(id, 'up'|'down') — sube/baja la narrativa completa
+   moveNoteToChapter(noteId, targetNavId) — cambia el capítulo de una nota      */
+
+function moveNote(id, dir){
+  const notes = LIVE_SESSION.notes;
+  const noteIdx = notes.findIndex(n => n.id === id);
+  if(noteIdx < 0) return;
+  const grpId = notes[noteIdx].narrativeId || '__pre__';
+
+  // Recopilar los slots del grupo en orden de display (top→bottom).
+  // El stream muestra newest-first: índice array más bajo → top.
+  // ↑ (arriba en el stream) = más reciente = índice array menor.
+  // El array group está en orden ASCENDENTE de slot → group[0] = top.
+  const group = [];
+  notes.forEach((n, i) => {
+    if(n.type !== 'narrative' && (n.narrativeId || '__pre__') === grpId)
+      group.push(i);
+  });
+
+  const pos = group.indexOf(noteIdx);
+  if(pos < 0) return;
+
+  // ↑ = mover hacia arriba en el stream = hacia índice más bajo = pos-1
+  // ↓ = mover hacia abajo en el stream = hacia índice más alto = pos+1
+  const targetPos = dir === 'up' ? pos - 1 : pos + 1;
+  if(targetPos < 0 || targetPos >= group.length) return;
+
+  const slotA = group[pos];
+  const slotB = group[targetPos];
+  const temp  = notes[slotA];
+  notes[slotA] = notes[slotB];
+  notes[slotB] = temp;
+
+  saveLiveSession();
+  renderNotesStream();
+}
+
+function moveChapter(id, dir){
+  const notes = LIVE_SESSION.notes;
+
+  // Recopilar los slots de narrativas en orden ASCENDENTE (newest = top)
+  const chapSlots = [];
+  notes.forEach((n, i) => {
+    if(n.type === 'narrative') chapSlots.push(i);
+  });
+
+  const pos = chapSlots.findIndex(slot => notes[slot].id === id);
+  if(pos < 0) return;
+
+  // ↑ = capítulo más arriba en el stream = más reciente = índice menor = pos-1
+  // ↓ = más abajo = más antiguo = índice mayor = pos+1
+  const targetPos = dir === 'up' ? pos - 1 : pos + 1;
+  if(targetPos < 0 || targetPos >= chapSlots.length) return;
+
+  const slotA = chapSlots[pos];
+  const slotB = chapSlots[targetPos];
+  const temp  = notes[slotA];
+  notes[slotA] = notes[slotB];
+  notes[slotB] = temp;
+
+  saveLiveSession();
+  renderNotesStream();
+}
+
+function moveNoteToChapter(noteId, targetNavId){
+  const note = LIVE_SESSION.notes.find(n => n.id === noteId);
+  if(!note) return;
+  note.narrativeId = targetNavId === '__pre__' ? null : targetNavId;
+  saveLiveSession();
+  renderNotesStream();
+}
+
 function renderNarrativeChapterHeader(n, isPureNarrative){
   const time = n.timeLabel || '';
   const statusLabel = n.eventId ? '📋 planif.' : '✦ libre';
@@ -2919,14 +3751,23 @@ function renderNarrativeChapterHeader(n, isPureNarrative){
       <span class="chap-status">${statusLabel}</span>
       ${pureLabel}
     </div>
-    <button class="note-del" onclick="deleteNote('${n.id}')" title="Borrar narrativa">✕</button>
+    <div class="note-reorder-btns dm-only">
+      <button class="note-reorder" onclick="moveChapter('${n.id}','up')" title="Subir capítulo">↑</button>
+      <button class="note-reorder" onclick="moveChapter('${n.id}','down')" title="Bajar capítulo">↓</button>
+    </div>
+    <button class="note-del dm-only" onclick="deleteNote('${n.id}')" title="Borrar narrativa">✕</button>
   </div>`;
 }
 
 function renderNoteCard(n){
   const time = n.timeLabel || (n.timestamp ? new Date(n.timestamp).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}) : '');
   let icon='', body='';
-  if(n.type === 'action'){
+  if(n.type === 'class-ability'){
+    icon = '⚡';
+    const charLabel = n.character ? n.character.charAt(0).toUpperCase()+n.character.slice(1) : '—';
+    body = `<div class="note-title"><strong>${charLabel}</strong> — ${liveEscape(n.abilityName||'Habilidad')}</div>
+      ${n.notes ? `<div class="note-text" style="white-space:pre-line">${liveEscape(n.notes)}</div>` : ''}`;
+  } else if(n.type === 'action'){
     icon = '⚔';
     body = renderActionNoteBody(n);
   } else if(n.type === 'npc-action'){
@@ -2951,12 +3792,28 @@ function renderNoteCard(n){
     body = `${n.title ? `<div class="note-title">${liveEscape(n.title)}</div>` : ''}
       <div class="note-text">${liveEscape(n.text||'')}</div>`;
   }
+  // Controles de reordenamiento + reasignación de capítulo (dm-only)
+  const navOpts = _streamNarratives.map(nav =>
+    `<option value="${nav.id}" ${n.narrativeId===nav.id?'selected':''}>${liveEscape((nav.title||'Narrativa').substring(0,30))}</option>`
+  ).join('');
+  const chapterCtrl = `
+    <select class="note-chapter-sel dm-only" title="Mover a otro capítulo"
+      onchange="moveNoteToChapter('${n.id}',this.value)">
+      <option value="__pre__" ${!n.narrativeId?'selected':''}>Sin narrativa</option>
+      ${navOpts}
+    </select>`;
+
   return `
     <div class="note-card note-${n.type}">
       <div class="note-meta">
         <span class="note-icon">${icon}</span>
         <span class="note-time">${liveEscape(time)}</span>
-        <button class="note-del" onclick="deleteNote('${n.id}')" title="Borrar nota">✕</button>
+        <div class="note-reorder-btns dm-only">
+          <button class="note-reorder" onclick="moveNote('${n.id}','up')" title="Subir nota">↑</button>
+          <button class="note-reorder" onclick="moveNote('${n.id}','down')" title="Bajar nota">↓</button>
+        </div>
+        ${chapterCtrl}
+        <button class="note-del dm-only" onclick="deleteNote('${n.id}')" title="Borrar nota">✕</button>
       </div>
       <div class="note-body">${body}</div>
     </div>

@@ -552,3 +552,175 @@
 .spell-effect-block{background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.25);border-radius:6px;padding:0.6rem 0.9rem;margin:0.5rem 0}
 .spell-effect-line{font-size:0.82rem;color:var(--cream);line-height:1.5}
 .spell-effect-line strong{color:#c4b5fd}
+
+/* ── CLASS ABILITIES ─────────────────────────────────── */
+
+/* Ability form */
+.class-ability-form .form-title{color:var(--purple-bright,#c4b5fd)}
+
+.ability-info-box{
+  background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.25);
+  border-radius:6px;padding:0.55rem 0.9rem;margin:0.4rem 0 0.6rem;
+  font-size:0.82rem;color:var(--cream);
+}
+.ability-action-tag{
+  display:inline-block;background:rgba(167,139,250,0.18);color:#c4b5fd;
+  border-radius:4px;padding:0.1rem 0.5rem;font-size:0.75rem;font-weight:600;
+  margin-right:0.6rem;vertical-align:middle;
+}
+
+.ability-specific-block{
+  background:var(--bg3);border:1px solid var(--border-light);
+  border-radius:6px;padding:0.7rem 0.9rem;margin:0.5rem 0;
+}
+.ability-stat-line{font-size:0.82rem;color:var(--cream);line-height:1.6;margin-bottom:0.2rem}
+.ability-stat-line strong{color:#f5e9d0}
+.ability-stat-line.muted{color:var(--cream-muted)}
+
+.ability-grid-2{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;
+}
+.ability-grid-2 label{font-size:0.78rem;color:var(--cream-muted);display:block;margin-bottom:0.25rem}
+
+/* Rage banner (en action form cuando Rac está en furia) */
+.rage-banner-active{
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);
+  border-radius:6px;padding:0.5rem 0.9rem;margin:0.5rem 0;
+  font-size:0.83rem;color:#fca5a5;
+}
+.reckless-banner{
+  background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.35);
+  border-radius:6px;padding:0.5rem 0.9rem;margin:0.4rem 0;
+  font-size:0.82rem;color:#fdba74;
+}
+.ability-rage-active{
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);
+  border-radius:6px;padding:0.7rem 0.9rem;margin:0.5rem 0;
+  font-size:0.85rem;color:#fca5a5;
+}
+
+/* Reckless Attack checkbox row */
+.reckless-row{
+  background:rgba(251,146,60,0.06);border:1px solid rgba(251,146,60,0.25);
+  border-radius:6px;padding:0.6rem 0.9rem;margin:0.4rem 0;
+}
+.reckless-row label{font-size:0.85rem;color:var(--cream);cursor:pointer}
+.reckless-row input[type=checkbox]{margin-right:0.5rem;accent-color:#f97316}
+
+/* Disclaimer box (advantage/disadvantage hint) */
+.disclaimer-box{
+  display:block;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);
+  border-radius:4px;padding:0.3rem 0.7rem;margin-top:0.4rem;
+  font-size:0.77rem;color:#fde68a;font-style:italic;
+}
+
+/* Advantage warning (NPC attacking Reckless player) */
+.advantage-warning{
+  background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.35);
+  border-radius:6px;padding:0.55rem 0.9rem;margin:0.4rem 0;
+  font-size:0.83rem;color:#fdba74;
+}
+/* Rage resistance warning */
+.rage-warning{
+  background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);
+  border-radius:6px;padding:0.5rem 0.9rem;margin:0.4rem 0;
+  font-size:0.82rem;color:#fca5a5;
+}
+
+/* Combat tracker: Wild Shape HP block */
+.wild-shape-hp-block{
+  background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.25);
+  border-radius:6px;padding:0.5rem 0.75rem;margin:0.35rem 0;
+}
+.ws-label{font-size:0.82rem;font-weight:600;color:#6ee7b7;display:block;margin-bottom:0.3rem}
+.combatant.is-wild-shape{border-color:rgba(52,211,153,0.4)}
+
+/* Rage badge in combat tracker */
+.rage-badge{
+  display:inline-block;background:rgba(239,68,68,0.18);color:#fca5a5;
+  border-radius:4px;padding:0 0.4rem;font-size:0.7rem;font-weight:700;
+  margin-left:0.4rem;vertical-align:middle;
+}
+/* Reckless badge in combat tracker */
+.reckless-badge{
+  display:inline-block;background:rgba(251,146,60,0.18);color:#fdba74;
+  border-radius:4px;padding:0 0.4rem;font-size:0.7rem;font-weight:700;
+  margin-left:0.4rem;vertical-align:middle;
+}
+
+/* Note card color for class-ability */
+.note-class-ability{border-left:3px solid #a78bfa}
+.note-class-ability .note-icon{color:#a78bfa}
+
+/* btn-danger */
+.btn-danger{
+  background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);
+  border-radius:6px;padding:0.25rem 0.75rem;font-size:0.8rem;cursor:pointer;
+}
+.btn-danger:hover{background:rgba(239,68,68,0.35)}
+
+/* Action vs Bonus Action tags */
+.ability-action-tag.is-action{background:rgba(59,130,246,0.2);color:#93c5fd}
+.ability-action-tag.is-bonus{background:rgba(234,179,8,0.18);color:#fde68a}
+.ability-turn-warning{font-size:0.78rem;color:#fca5a5;font-style:italic}
+.ability-turn-ok{font-size:0.78rem;color:#6ee7b7;font-style:italic}
+.ability-desc{font-size:0.8rem;color:var(--cream-muted);line-height:1.5}
+.ability-action-tag.is-free{background:rgba(167,139,250,0.2);color:#c4b5fd}
+
+/* ── Recursos en combatant card ────────────────────────────────────────────── */
+.combatant-resources{
+  display:flex;flex-wrap:wrap;gap:0.3rem;padding:0.3rem 0.5rem 0.1rem;
+}
+.res-pill, .slot-pill{
+  display:inline-flex;align-items:center;gap:0.25rem;
+  font-size:0.72rem;padding:0.15rem 0.5rem;border-radius:20px;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);
+  color:var(--cream-muted);
+}
+.res-pill strong{ color:var(--cream); }
+.res-pill.res-pill-empty, .slot-pill.slot-pill-empty{
+  background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#fca5a5;
+}
+.res-pill.res-pill-empty strong{ color:#fca5a5; }
+
+/* Slot pips */
+.slot-pip{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--accent);margin:0 1px;
+}
+.slot-pip.used{ background:transparent;border:1px solid rgba(255,255,255,0.25); }
+
+/* Player card clickeable en mobile (modo jugador) */
+@media(max-width:900px){
+  body:not(.dm-mode) .combatant.player{
+    cursor:pointer;
+    transition:background 0.12s;
+  }
+  body:not(.dm-mode) .combatant.player:active{
+    background:rgba(255,255,255,0.07);
+  }
+}
+
+/* ── Controles de reordenamiento y reasignación de notas (dm-only) ─────────── */
+.note-reorder-btns{
+  display:inline-flex;gap:1px;
+}
+.note-reorder{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  color:var(--cream-muted);border-radius:4px;padding:0 5px;font-size:0.75rem;
+  cursor:pointer;line-height:1.6;transition:background 0.12s,color 0.12s;
+}
+.note-reorder:hover{background:rgba(255,255,255,0.14);color:var(--cream);}
+
+/* Select de capítulo destino */
+.note-chapter-sel{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  color:var(--cream-muted);border-radius:4px;font-size:0.72rem;padding:0 4px;
+  max-width:120px;cursor:pointer;
+}
+.note-chapter-sel:focus{outline:1px solid var(--accent);color:var(--cream);}
+
+/* Ajuste: el chap-header también necesita espacio para los botones de orden */
+.narrative-chapter-hdr{
+  flex-wrap:wrap;gap:0.35rem;
+}

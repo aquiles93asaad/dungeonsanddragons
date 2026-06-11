@@ -123,6 +123,12 @@ async function loadCharState() {
     if(state.money){
       Object.entries(state.money).forEach(([owner, m]) => save('money_'+owner, m));
     }
+    if(Array.isArray(state.wildShapeForms)){
+      CAMPAIGN.wildShapeForms = state.wildShapeForms;
+      console.log('[init] wildShapeForms cargados:', state.wildShapeForms.length);
+    } else {
+      console.warn('[init] wildShapeForms no encontrado en state:', state.wildShapeForms);
+    }
   } catch(e){
     // Degradación graceful: si falla la API, usa los valores de localStorage
     console.warn('loadCharState: usando localStorage como fallback.', e.message);

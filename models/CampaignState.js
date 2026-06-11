@@ -14,6 +14,9 @@ const CampaignStateSchema = new Schema({
 
   misc: { type: Schema.Types.Mixed, default: {} },
   // cualquier clave extra de localStorage que no encaje en otra colección
+
+  wildShapeForms: { type: [Schema.Types.Mixed], default: [] },
+  // formas salvajes custom agregadas por el DM (las base vienen del preset de Boyd)
 }, { timestamps: true });
 
 module.exports = model('CampaignState', CampaignStateSchema);
