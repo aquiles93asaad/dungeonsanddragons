@@ -1,6 +1,6 @@
 /* ── CLASS PRESETS: personajes jugadores ── */
 
-const CLASS_PRESETS = {
+module.exports = {
   rac: {
     className:'Bárbaro',
     equipment:[

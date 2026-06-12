@@ -1,22 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-// Cargar datos desde los archivos existentes
-// (usan variables globales, los evaluamos en contexto Node)
-const fs   = require('fs');
-const path = require('path');
-
-const vm = require('vm');
-
-function loadDataFile(file) {
-  const src = fs.readFileSync(path.join(__dirname, '../public/data', file), 'utf8');
-  // const/let no se asignan al sandbox en vm; reemplazamos por var para capturarlos
-  const modifiedSrc = src.replace(/^(const|let)\s+/gm, 'var ');
-  const sandbox = {};
-  vm.createContext(sandbox);
-  vm.runInContext(modifiedSrc, sandbox);
-  return sandbox;
-}
 
 const items     = require('./seed-data/items.js');
 const conds     = require('./seed-data/conditions.js');
@@ -25,7 +9,7 @@ const events    = require('./seed-data/campaign-events.js');
 const threads   = require('./seed-data/campaign-threads.js');
 const locations = require('./seed-data/campaign-locations.js');
 const monsters  = require('./seed-data/monsters.js');
-const presets   = loadDataFile('class-presets.js');
+const presets   = require('./seed-data/class-presets.js');
 
 // Modelos
 const Item             = require('../models/Item');
@@ -82,7 +66,7 @@ async function seed() {
 
   // Class Presets — un doc por personaje
   await ClassPreset.deleteMany({});
-  const presetDocs = Object.entries(presets.CLASS_PRESETS).map(([charId, data]) => ({ charId, data }));
+  const presetDocs = Object.entries(presets).map(([charId, data]) => ({ charId, data }));
   await ClassPreset.insertMany(presetDocs);
   console.log(`✓ Class Presets: ${presetDocs.length} personajes`);
 
