@@ -1,6 +1,6 @@
 /* ── CAMPAÑA: eventos ── */
 
-const DEFAULT_CAMPAIGN_EVENTS = [
+module.exports = [
   { id:'evt-mina-zafira', title:'Llegada a Mina Zafira', status:'done', session:'1',
     description:'Los jugadores despiertan en un barco acercándose lentamente a Mina Zafira. La ciudad debe sentirse viva, misteriosa y abrumadora. Mercaderes, marineros, comida, armaduras y magia llenan las calles. Los jugadores descubren sus habilidades naturalmente mediante el rol.' },
   { id:'evt-zyren-gato', title:'Primer encuentro con Zyren (gato)', status:'done', session:'1',

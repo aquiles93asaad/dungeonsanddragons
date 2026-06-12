@@ -21,9 +21,9 @@ function loadDataFile(file) {
 const items     = loadDataFile('items.js');
 const conds     = loadDataFile('conditions.js');
 const npcs      = loadDataFile('npcs.js');
-const events    = loadDataFile('campaign-events.js');
-const threads   = loadDataFile('campaign-threads.js');
-const locations = loadDataFile('campaign-locations.js');
+const events    = require('./seed-data/campaign-events.js');
+const threads   = require('./seed-data/campaign-threads.js');
+const locations = require('./seed-data/campaign-locations.js');
 const monsters  = loadDataFile('monsters.js');
 const presets   = loadDataFile('class-presets.js');
 
@@ -67,18 +67,18 @@ async function seed() {
 
   // Campaign Events
   await CampaignEvent.deleteMany({});
-  await CampaignEvent.insertMany(events.DEFAULT_CAMPAIGN_EVENTS);
-  console.log(`✓ Campaign Events: ${events.DEFAULT_CAMPAIGN_EVENTS.length}`);
+  await CampaignEvent.insertMany(events);
+  console.log(`✓ Campaign Events: ${events.length}`);
 
   // Campaign Threads
   await CampaignThread.deleteMany({});
-  await CampaignThread.insertMany(threads.DEFAULT_CAMPAIGN_THREADS);
-  console.log(`✓ Campaign Threads: ${threads.DEFAULT_CAMPAIGN_THREADS.length}`);
+  await CampaignThread.insertMany(threads);
+  console.log(`✓ Campaign Threads: ${threads.length}`);
 
   // Campaign Locations
   await CampaignLocation.deleteMany({});
-  await CampaignLocation.insertMany(locations.DEFAULT_CAMPAIGN_LOCATIONS);
-  console.log(`✓ Campaign Locations: ${locations.DEFAULT_CAMPAIGN_LOCATIONS.length}`);
+  await CampaignLocation.insertMany(locations);
+  console.log(`✓ Campaign Locations: ${locations.length}`);
 
   // Class Presets — un doc por personaje
   await ClassPreset.deleteMany({});

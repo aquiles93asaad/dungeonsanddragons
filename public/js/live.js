@@ -3553,7 +3553,7 @@ function renderCombatTracker(){
       pickerEl.innerHTML = `
         <div class="monster-picker-box">
           <div class="form-title">Elegir del Bestiario</div>
-          ${MONSTERS.map(m=>`
+          ${MONSTERS.filter(m=>m.showInLive!==false).map(m=>`
             <div class="monster-pick-row">
               <span class="monster-pick-name">${liveEscape(m.name)} <em class="muted">(${m.size} ${m.type}, CR ${m.cr}, HP ${m.hpMax}, CA ${m.ac})</em></span>
               <label class="monster-pick-count">cant: <input type="number" min="1" max="20" value="1" id="pick-${m.id}-count"></label>

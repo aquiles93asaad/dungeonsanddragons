@@ -1,6 +1,6 @@
 /* ── CAMPAÑA: hilos narrativos ── */
 
-const DEFAULT_CAMPAIGN_THREADS = [
+module.exports = [
   // ── HILOS PRINCIPALES ──
   { id:'thread-despertar', name:'El Despertar en Ardaetheros', status:'active',
     description:'Los héroes llegaron al mundo sin saber por qué. Zyren los reconoció. Zyren mencionó "una resonancia" al sentirlos. Hay una razón detrás de su presencia que aún no se revela.',

@@ -1,6 +1,6 @@
 /* ── CAMPAÑA: locaciones ── */
 
-const DEFAULT_CAMPAIGN_LOCATIONS = [
+module.exports = [
   // ── REGIÓN 1 — COSTA Y PUERTO ──
   { id:'loc-mina-zafira', name:'Mina Zafira',
     description:'Ciudad costera portuaria — ciudad inicial de la campaña. "Mina" (puerto, raíz árabe) + "Zafira" (sufijo élfico mediterráneo). Atmósfera viva, caótica, mercantil. Abrumador pero emocionante. Mercado activo, marineros, telas exóticas, olor a especias, músicos, armeros. Lugares: Taberna de Reynera, Taller de Smith, Local de Farandon, Puerto.',

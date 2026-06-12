@@ -6,6 +6,9 @@ hojas de personaje, NPCs, bestiario con loot, sesión en vivo, historia, campañ
 **Idioma:** todo en español (es-AR), con términos D&D bilingües (EN/ES).
 **Stack:** Node.js + Express + MongoDB Atlas + Vanilla JS. Sin frameworks de frontend.
 
+### Regla: Sin Claude_Preview — el testeo lo hace el DM
+**Nunca usar las herramientas `Claude_Preview` (`preview_*`).** El testeo visual y funcional lo hace el usuario directamente en el browser. No iniciar servidores de preview, no tomar screenshots, no evaluar JS en el preview. Ahorra tokens.
+
 ### Regla: StoryActs — solo narrativa, sin números mecánicos
 Al cargar o actualizar actos en `storyacts` (y `storychapters`), el contenido debe ser **puramente narrativo**.
 - ❌ No incluir: HP, daño, AC, DC, modificadores, resultados de dados, rondas numeradas.
