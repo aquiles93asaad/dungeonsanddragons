@@ -96,6 +96,7 @@ function initApp() {
   renderAllAbilities();
   renderAllMoney();
   updateOverview();
+  renderOverviewSituation();
 }
 
 // ── Estado en memoria cargado desde MongoDB (fuente de verdad para renders) ──
@@ -158,6 +159,15 @@ checkDMSession().then(() => loadReferenceData())
 
     initApp();
     _apiSyncEnabled = true;            // habilitar sync DESPUÉS del render inicial
+
+    // Navegar al hash de la URL si existe
+    const slug = window.location.hash.replace('#','');
+    if(slug && typeof SLUG_TO_PAGE !== 'undefined' && SLUG_TO_PAGE[slug]){
+      const target = SLUG_TO_PAGE[slug];
+      if(target === 'chars') showChar(currentChar);
+      else if(target === 'sessions') { showPage('sessions'); renderSessionsTab(); }
+      else showPage(target);
+    }
   })
   .catch(err => {
     console.error('Error cargando datos de referencia:', err);

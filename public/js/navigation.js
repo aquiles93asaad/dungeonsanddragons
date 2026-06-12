@@ -2,6 +2,13 @@
 
 let currentPage='overview', currentChar='rac';
 
+const PAGE_SLUGS = {
+  overview:'inicio', story:'historia', live:'live',
+  campaign:'campana', chars:'personajes', npcs:'npcs',
+  bestiary:'bestiario', items:'items', sessions:'sesiones'
+};
+const SLUG_TO_PAGE = Object.fromEntries(Object.entries(PAGE_SLUGS).map(([p,s])=>[s,p]));
+
 function showPage(p){
   // Si hay una hoja de personaje en el modal, devolverla a su lugar antes de navegar
   if(typeof CHAR_MODAL_STATE !== 'undefined' && CHAR_MODAL_STATE){
@@ -16,6 +23,9 @@ function showPage(p){
   currentPage=p;
   if(p!=='chars') hideSidebar();
   else showSidebar('chars');
+  // Actualizar URL hash
+  const slug = PAGE_SLUGS[p];
+  if(slug) history.replaceState(null,'','#'+slug);
 }
 
 function showSidebar(t){document.getElementById('sidebar').classList.add('show')}
