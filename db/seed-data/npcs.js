@@ -1,6 +1,6 @@
 /* ── NPCs data-driven ── */
 
-const NPCS = [
+module.exports = [
   // ── VELO ELMYRA ──
   { id:'zyren', name:'Zyren', icon:'✦', faction:'Velo Elmyra',
     role:'Líder y guardián principal del Velo Elmyra · Cambiaformas',

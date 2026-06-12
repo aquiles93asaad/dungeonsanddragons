@@ -20,7 +20,7 @@ function loadDataFile(file) {
 
 const items     = loadDataFile('items.js');
 const conds     = loadDataFile('conditions.js');
-const npcs      = loadDataFile('npcs.js');
+const npcs      = require('./seed-data/npcs.js');
 const events    = require('./seed-data/campaign-events.js');
 const threads   = require('./seed-data/campaign-threads.js');
 const locations = require('./seed-data/campaign-locations.js');
@@ -55,8 +55,8 @@ async function seed() {
 
   // NPCs
   await Npc.deleteMany({});
-  await Npc.insertMany(npcs.NPCS);
-  console.log(`✓ NPCs: ${npcs.NPCS.length}`);
+  await Npc.insertMany(npcs);
+  console.log(`✓ NPCs: ${npcs.length}`);
 
   // Monsters
   await Monster.deleteMany({});
