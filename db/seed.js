@@ -18,7 +18,7 @@ function loadDataFile(file) {
   return sandbox;
 }
 
-const items     = loadDataFile('items.js');
+const items     = require('./seed-data/items.js');
 const conds     = require('./seed-data/conditions.js');
 const npcs      = require('./seed-data/npcs.js');
 const events    = require('./seed-data/campaign-events.js');
@@ -45,8 +45,8 @@ async function seed() {
 
   // Items
   await Item.deleteMany({});
-  await Item.insertMany(items.ITEMS);
-  console.log(`✓ Items: ${items.ITEMS.length}`);
+  await Item.insertMany(items);
+  console.log(`✓ Items: ${items.length}`);
 
   // Conditions
   await Condition.deleteMany({});

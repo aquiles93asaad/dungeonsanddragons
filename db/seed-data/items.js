@@ -1,6 +1,6 @@
 /* ── ITEMS: catálogo de armas y objetos ── */
 
-const ITEMS = [
+module.exports = [
 
   // ── ARMAS CUERPO A CUERPO ─────────────────────────────────────────────────
   // known:true = la party ya lo vio/tiene (visible para jugadores sin login DM)
