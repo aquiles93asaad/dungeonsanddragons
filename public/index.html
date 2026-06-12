@@ -669,6 +669,38 @@
       <h1 class="page-title">NPCs</h1>
       <p class="page-subtitle muted">Click en cada tarjeta para expandir. Click en el retrato para agregar imagen.</p>
 
+      <div style="margin-bottom:1rem">
+        <button class="bst-add-btn dm-only" onclick="toggleNPCForm()">+ Agregar NPC</button>
+      </div>
+
+      <!-- NPC FORM -->
+      <div class="monster-form" id="npcForm">
+        <h3 id="npcFormTitle" style="font-family:var(--font-title);font-size:0.9rem;color:var(--gold);margin-bottom:1rem;letter-spacing:0.08em">Nuevo NPC</h3>
+        <div class="form-grid">
+          <div class="form-field"><label class="form-label">Nombre</label><input class="form-input" id="nf-name" placeholder="Zyren"></div>
+          <div class="form-field"><label class="form-label">Ícono (emoji)</label><input class="form-input" id="nf-icon" placeholder="🐱"></div>
+          <div class="form-field"><label class="form-label">Facción</label><input class="form-input" id="nf-faction" placeholder="Velo Elmyra"></div>
+          <div class="form-field"><label class="form-label">Rol</label><input class="form-input" id="nf-role" placeholder="Guardián del Grove"></div>
+          <div class="form-field"><label class="form-label">Estado</label>
+            <select class="form-input" id="nf-status">
+              <option value="friendly">Friendly</option>
+              <option value="neutral" selected>Neutral</option>
+              <option value="hostile">Hostile</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </div>
+          <div class="form-field"><label class="form-label">Etiqueta estado</label><input class="form-input" id="nf-status-label" placeholder="Aliado"></div>
+        </div>
+        <div class="form-section-title">Descripción</div>
+        <textarea class="form-textarea" id="nf-desc" placeholder="Descripción del NPC..."></textarea>
+        <div class="form-section-title">Info extra</div>
+        <textarea class="form-textarea" id="nf-extra" placeholder="Detalles adicionales, secretos, motivaciones..."></textarea>
+        <div class="form-btns">
+          <button class="btn-cancel" onclick="toggleNPCForm()">Cancelar</button>
+          <button class="btn-primary" onclick="saveNPCForm()">Guardar NPC</button>
+        </div>
+      </div>
+
       <div class="npc-grid" id="npc-grid"></div>
     </div>
 
@@ -751,12 +783,12 @@
         <button class="items-filter"    id="items-filt-loot"    onclick="setItemFilter('loot')">Loot</button>
         <button class="items-filter"    id="items-filt-quest"   onclick="setItemFilter('quest')">Quest</button>
         <button class="items-filter"    id="items-filt-misc"    onclick="setItemFilter('misc')">Misc</button>
-        <button class="items-add-btn" onclick="toggleItemForm()">+ Add item</button>
+        <button class="items-add-btn dm-only" onclick="toggleItemForm()">+ Agregar item</button>
       </div>
 
       <!-- ADD ITEM FORM -->
-      <div class="item-form" id="itemForm" style="display:none">
-        <h3 class="item-form-title">New Item</h3>
+      <div class="item-form" id="itemForm">
+        <h3 id="itemFormTitle" style="font-family:var(--font-title);font-size:0.9rem;color:var(--gold);margin-bottom:1rem;letter-spacing:0.08em">Nuevo Item</h3>
         <div class="item-form-grid">
           <div class="item-form-field">
             <label>Name (EN)</label>
@@ -844,9 +876,13 @@
           <textarea class="form-input item-form-textarea" id="if-desc" placeholder="Descripción del item..."></textarea>
         </div>
 
+        <div class="item-form-field" style="margin-top:0.5rem">
+          <label><input type="checkbox" id="if-known"> Visible para jugadores (known)</label>
+        </div>
+
         <div class="item-form-btns">
-          <button class="btn-cancel" onclick="toggleItemForm()">Cancel</button>
-          <button class="btn-primary" onclick="saveNewItem()">Save item</button>
+          <button class="btn-cancel" onclick="toggleItemForm()">Cancelar</button>
+          <button class="btn-primary" onclick="saveNewItem()">Guardar item</button>
         </div>
       </div>
 
