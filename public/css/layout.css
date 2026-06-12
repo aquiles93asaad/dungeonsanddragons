@@ -73,12 +73,10 @@ body:not(.dm-mode) .inv-add             { display: none !important; }
 body:not(.dm-mode) .items-add-btn       { display: none !important; }
 /* Spell slots: solo lectura */
 body:not(.dm-mode) .slot-box            { pointer-events: none; cursor: default; }
-/* Cantrips: no toggle + ocultar inactivos */
+/* Cantrips: no toggle (players ven todos, con badge si no disponible) */
 body:not(.dm-mode) .cantrip-active-btn  { pointer-events: none; cursor: default; }
-body:not(.dm-mode) .cantrip-item.is-inactive { display: none !important; }
-/* Spells: no toggle prep + ocultar no preparados */
+/* Spells: no toggle prep (players ven todos, con badge si no disponible) */
 body:not(.dm-mode) button.spell-prep-btn { pointer-events: none; cursor: default; }
-body:not(.dm-mode) .spell-item:not(.is-prepared):not(.is-always-prep) { display: none !important; }
 
 /* ── SESSION INDICATOR ── */
 .session-indicator{

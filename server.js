@@ -45,6 +45,9 @@ io.on('connection', socket => {
     liveCache.hp[charId] = hp;
     socket.broadcast.emit('hp:update', { charId, hp });
   });
+  socket.on('char:update', ({ charId, data }) => {
+    socket.broadcast.emit('char:update', { charId, data });
+  });
   socket.on('live:request', () => {
     if (liveCache.session || Object.keys(liveCache.hp).length) {
       socket.emit('live:welcome', liveCache);

@@ -63,6 +63,7 @@ function syncCharState(c){
       prepared:       load('prepared_'+c, []),
       activeCantrips: load('active_cantrips_'+c, []),
       committedSchool:load('committed_school_'+c, null),
+      abilityScores:  (typeof getAbilityScores !== 'undefined') ? getAbilityScores(c) : null,
       slots:          {},
       resources:      {}
     };
@@ -75,10 +76,16 @@ function syncCharState(c){
     if(preset && preset.resources){
       preset.resources.forEach(r => { data.resources[r.key] = load('resource_'+c+'_'+r.key, 0); });
     }
+    // Actualizar CHAR_STATE en memoria inmediatamente (sin esperar respuesta API)
+    if(!window.CHAR_STATE) window.CHAR_STATE = {};
+    window.CHAR_STATE[c] = Object.assign(window.CHAR_STATE[c] || {}, data);
+
     fetch(`/api/state/character/${c}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
+    }).then(() => {
+      if(window._socket) window._socket.emit('char:update', { charId: c, data });
     }).catch(e => console.error('syncCharState error:', e));
   }, 400);
 }

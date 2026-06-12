@@ -3980,35 +3980,62 @@ async function finalizeSession(){
   let eventsUpdated = 0, eventsCreated = 0;
 
   if(typeof CAMPAIGN !== 'undefined'){
-    // Marcar eventos vinculados como "Hecho" en MongoDB
-    for(const eventId of linkedEventIds){
-      const e = CAMPAIGN.events.find(x => x.id === eventId);
-      if(e){
-        e.status = 'done';
-        eventsUpdated++;
-        await fetch(`/api/events/${eventId}`, {
-          method:'PUT', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({status:'done'})
-        }).catch(err => console.error('finalizeSession PUT error:', err));
+    // Calcular el próximo número de orden: max orden de eventos "done" + 1
+    const maxDoneOrder = (CAMPAIGN.events || [])
+      .filter(e => e.status === 'done' && typeof e.order === 'number' && e.order < 1000)
+      .reduce((max, e) => Math.max(max, e.order), 0);
+
+    // Construir la secuencia de eventos tal como ocurrieron en el stream.
+    // Las notas narrativas están ordenadas cronológicamente en LIVE_SESSION.notes;
+    // iteramos en ese orden para preservar la secuencia real de la sesión.
+    const sessionEventSequence = [];
+    const seenEventIds = new Set();
+    for(const note of (LIVE_SESSION.notes || [])){
+      if(note.type !== 'narrative') continue;
+      if(note.eventId && !seenEventIds.has(note.eventId)){
+        seenEventIds.add(note.eventId);
+        sessionEventSequence.push({ kind: 'linked', eventId: note.eventId });
+      } else if(!note.eventId && (note.title || note.text)){
+        // Nota no planificada — se identifica por su ts para no duplicar
+        if(!seenEventIds.has(note.ts)){
+          seenEventIds.add(note.ts);
+          sessionEventSequence.push({ kind: 'unlinked', note });
+        }
       }
     }
 
-    // Crear eventos nuevos para notas no planificadas
-    for(let i = 0; i < unlinkedNotes.length; i++){
-      const note = unlinkedNotes[i];
-      const newEvent = {
-        id: `evt-live-${Date.now()}-${i}`,
-        title: note.title || 'Evento sin título',
-        description: note.text || '',
-        status: 'done',
-        session: String(LIVE_SESSION.meta.number || '')
-      };
-      CAMPAIGN.events.push(newEvent);
-      eventsCreated++;
-      await fetch('/api/events', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(newEvent)
-      }).catch(err => console.error('finalizeSession POST error:', err));
+    let nextOrder = maxDoneOrder + 1;
+    let unlinkedCounter = 0;
+
+    for(const item of sessionEventSequence){
+      if(item.kind === 'linked'){
+        const e = CAMPAIGN.events.find(x => x.id === item.eventId);
+        if(e){
+          e.status = 'done';
+          e.order  = nextOrder++;
+          eventsUpdated++;
+          await fetch(`/api/events/${item.eventId}`, {
+            method:'PUT', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ status:'done', order: e.order })
+          }).catch(err => console.error('finalizeSession PUT error:', err));
+        }
+      } else {
+        const note = item.note;
+        const newEvent = {
+          id: `evt-live-${Date.now()}-${unlinkedCounter++}`,
+          title: note.title || 'Evento sin título',
+          description: note.text || '',
+          status: 'done',
+          session: String(LIVE_SESSION.meta.number || ''),
+          order: nextOrder++
+        };
+        CAMPAIGN.events.push(newEvent);
+        eventsCreated++;
+        await fetch('/api/events', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(newEvent)
+        }).catch(err => console.error('finalizeSession POST error:', err));
+      }
     }
 
     if(typeof renderEvents === 'function') renderEvents();

@@ -18,7 +18,7 @@ let CLASS_PRESETS = {};
 
 const CHARS = ['rac','relyo','tyrell','boyd','esdas'];
 
-const HP_MAX = {rac:15,relyo:10,tyrell:13,boyd:9,esdas:7};
+const HP_MAX = {rac:27,relyo:16,tyrell:21,boyd:15,esdas:12};
 
 const DEFAULT_INVENTORY = {
   rac:['Greataxe / Hacha de dos manos','Chainmail / remera de cadenas','Bolsa básica de aventurero'],
@@ -46,16 +46,26 @@ function getCondition(id){ return CONDITIONS.find(c=>c.id===id); }
 
 /* ── D&D 5E: stats ─────────────────────────────────────────────────────── */
 
-const ABILITY_SCORES = {
+// Fallback hardcodeado — fuente de verdad es MongoDB (cargado en init.js → loadCharState)
+const _ABILITY_SCORES_FALLBACK = {
   rac:{str:17,dex:13,con:16,int:8,wis:10,cha:11},
   relyo:{str:10,dex:17,con:13,int:10,wis:15,cha:9},
   tyrell:{str:17,dex:10,con:14,int:8,wis:16,cha:10},
   boyd:{str:8,dex:13,con:12,int:14,wis:16,cha:12},
   esdas:{str:8,dex:14,con:13,int:17,wis:11,cha:12}
 };
+// CHAR_STATE: prioridad 1 — datos en memoria cargados desde MongoDB en loadCharState()
+// localStorage:  prioridad 2 — cache persistente entre sesiones
+// hardcodeado:   prioridad 3 — fallback si la API falla
+function getAbilityScores(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  if(cs && cs.abilityScores) return cs.abilityScores;
+  return load('ability_scores_'+c, _ABILITY_SCORES_FALLBACK[c]);
+}
+const ABILITY_SCORES = new Proxy({}, { get(_, c){ return getAbilityScores(c); } });
 
-const CHAR_LEVEL = 2;   // default; cada char tiene su nivel via getCharLevel(c)
-const PROF_BONUS = 2;   // default lv 1-4; cada char tiene el suyo via getCharProfBonus(c)
+const CHAR_LEVEL = 2;   // fallback si no hay datos de MongoDB
+const PROF_BONUS = 2;   // fallback lv 1-4
 
 function abilityMod(score){ return Math.floor((score-10)/2); }
 
@@ -76,9 +86,17 @@ function hpGainOnLevelUp(c){
   return hitDieAvg(die) + conMod;
 }
 
-/* ── Getters dinámicos (leen de localStorage con fallback) ── */
-function getCharLevel(c){ return load('char_level_'+c, CHAR_LEVEL); }
-function getHPMax(c){ return load('hp_max_'+c, HP_MAX[c]); }
+/* ── Getters dinámicos: CHAR_STATE → localStorage → fallback hardcodeado ── */
+function getCharLevel(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  if(cs && cs.level !== undefined) return cs.level;
+  return load('char_level_'+c, CHAR_LEVEL);
+}
+function getHPMax(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  if(cs && cs.hpMax !== undefined) return cs.hpMax;
+  return load('hp_max_'+c, HP_MAX[c]);
+}
 function getCharProfBonus(c){
   const lvl = getCharLevel(c);
   return 2 + Math.floor((lvl-1)/4); // Nv 1-4→+2, 5-8→+3, 9-12→+4, 13-16→+5, 17-20→+6

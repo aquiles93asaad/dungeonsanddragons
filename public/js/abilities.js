@@ -410,6 +410,7 @@ function renderCharAbilities(c){
           ${schoolBadge(cn.school)}
           ${cn.shape?`<span class="spell-shape">${cn.shape}</span>`:''}
           <span class="cantrip-tag">${active?'Cantrip · libre':'Cantrip · pausado'}</span>
+          <span class="badge-no-disponible">No disponible</span>
         </div>
         ${dmgLine}
         <div class="cantrip-desc">${(cn.desc||'').replace(/\n/g,'<br>')}</div>
@@ -434,7 +435,8 @@ function renderCharAbilities(c){
       const circleBadge = s.circleSpell
         ? `<span class="circle-spell-badge" title="${alwaysActive?'Siempre preparado':'Se desbloqueará como siempre preparado a Nv '+(s.alwaysPreparedAt||'?')}">${s.circleSpell}${alwaysPending?' 🔒 Nv '+(s.alwaysPreparedAt||'?'):' ★'}</span>`
         : '';
-      return `<div class="spell-item ${prepared?'is-prepared':''} ${isLocked?'is-locked':''} ${isLocked?'dm-only':''} ${alwaysActive?'is-always-prep':''}">
+      const noDisponible = !prepared && !alwaysActive && !isLocked;
+      return `<div class="spell-item ${prepared?'is-prepared':''} ${isLocked?'is-locked':''} ${isLocked?'dm-only':''} ${alwaysActive?'is-always-prep':''} ${noDisponible?'no-disponible':''}">
         <div class="spell-header">
           ${prepBtn}
           <span class="spell-name">${s.name}<em> / ${s.nameEs||''}</em></span>
@@ -442,6 +444,7 @@ function renderCharAbilities(c){
           ${circleBadge}
           ${s.shape?`<span class="spell-shape">${s.shape}</span>`:''}
           <span class="spell-level">Nivel ${s.level}${isLocked?' 🔒':''}</span>
+          <span class="badge-no-disponible">No disponible</span>
         </div>
         <div class="spell-desc">${s.desc}</div>
       </div>`;

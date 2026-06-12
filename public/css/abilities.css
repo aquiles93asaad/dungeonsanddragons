@@ -186,6 +186,16 @@
 }
 .cantrip-desc{font-size:0.85rem;color:var(--cream);line-height:1.5}
 
+/* Badge "no disponible" para players */
+.badge-no-disponible{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;
+  text-transform:uppercase;padding:0.1rem 0.5rem;
+  color:#ef4444;border:1px solid #ef4444;
+  display:none;
+}
+body:not(.dm-mode) .cantrip-item.is-inactive .badge-no-disponible,
+body:not(.dm-mode) .spell-item.no-disponible .badge-no-disponible { display:inline-block; }
+
 /* Spell shape tag */
 .spell-shape{
   font-family:var(--font-body);font-size:0.72rem;color:var(--gold-dim);

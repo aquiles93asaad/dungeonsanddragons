@@ -98,6 +98,9 @@ function initApp() {
   updateOverview();
 }
 
+// ── Estado en memoria cargado desde MongoDB (fuente de verdad para renders) ──
+window.CHAR_STATE = {};
+
 // ── Carga de estado de personajes desde MongoDB ────────────────────────────
 async function loadCharState() {
   try {
@@ -107,6 +110,9 @@ async function loadCharState() {
       CHARS.forEach(c => {
         const cs = state.characters[c];
         if(!cs) return;
+        // Guardar en memoria (fuente de verdad primaria para renders)
+        window.CHAR_STATE[c] = cs;
+        // Guardar en localStorage (persistencia entre sesiones / fallback offline)
         if(cs.level            !== undefined) save('char_level_'+c,       cs.level);
         if(cs.hpMax            !== undefined) save('hp_max_'+c,           cs.hpMax);
         if(cs.hp               !== undefined) save('hp_'+c,               cs.hp);
@@ -117,6 +123,7 @@ async function loadCharState() {
         if(cs.prepared)                       save('prepared_'+c,         cs.prepared);
         if(cs.activeCantrips)                 save('active_cantrips_'+c,  cs.activeCantrips);
         if(cs.committedSchool)                save('committed_school_'+c, cs.committedSchool);
+        if(cs.abilityScores)                  save('ability_scores_'+c,   cs.abilityScores);
         if(cs.slots)     Object.entries(cs.slots).forEach(([lvl,v])  => save('slots_'+c+'_'+lvl, v));
         if(cs.resources) Object.entries(cs.resources).forEach(([k,v]) => save('resource_'+c+'_'+k, v));
       });
@@ -126,7 +133,6 @@ async function loadCharState() {
     }
     if(Array.isArray(state.wildShapeForms)){
       CAMPAIGN.wildShapeForms = state.wildShapeForms;
-      console.log('[init] wildShapeForms cargados:', state.wildShapeForms.length);
     } else {
       console.warn('[init] wildShapeForms no encontrado en state:', state.wildShapeForms);
     }

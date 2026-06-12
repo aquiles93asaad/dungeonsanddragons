@@ -6,6 +6,10 @@ function updateHP(c){
   let val=parseInt(document.getElementById(c+'-hp').value)||0;
   val=Math.max(0,Math.min(max,val));
   document.getElementById(c+'-hp').value=val;
+  const maxSpan=document.getElementById(c+'-hp-max');
+  if(maxSpan) maxSpan.textContent=max;
+  const inp=document.getElementById(c+'-hp');
+  if(inp) inp.max=max;
   const pct=(val/max)*100;
   const bar=document.getElementById(c+'-hp-bar');
   bar.style.width=pct+'%';
