@@ -146,8 +146,7 @@ async function loadCharState() {
 checkDMSession().then(() => loadReferenceData())
   .then(() => loadCharState())         // cargar estado de personajes desde MongoDB
   .then(() => {
-    loadMonsters();
-    renderMonsters();
+    loadMonsters().then(() => renderMonsters());
     initCampaign();
     initLive();
     initItems();

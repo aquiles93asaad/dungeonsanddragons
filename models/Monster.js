@@ -19,6 +19,8 @@ const MonsterSchema = new Schema({
   rewards:   String,
   loot:      { type: Schema.Types.Mixed, default: [] },
   notes:     String,
+  hpCurrent: Number,
+  showInLive: { type: Boolean, default: true },
 }, { timestamps: true });
 
 module.exports = model('Monster', MonsterSchema);

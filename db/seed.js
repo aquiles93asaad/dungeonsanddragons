@@ -60,7 +60,9 @@ async function seed() {
 
   // Monsters
   await Monster.deleteMany({});
-  await Monster.insertMany(monsters.PRESET_MONSTERS);
+  await Monster.insertMany(monsters.PRESET_MONSTERS.map(m => ({
+    ...m, hpCurrent: m.hpMax, showInLive: true,
+  })));
   console.log(`✓ Monsters: ${monsters.PRESET_MONSTERS.length}`);
 
   // Campaign Events

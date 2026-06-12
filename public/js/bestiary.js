@@ -3,57 +3,57 @@
 let MONSTERS = [];
 let activeFilter = 'all';
 let expandedMonster = null;
+let editingMonsterId = null;
 
-function loadMonsters(){
+async function loadMonsters(){
+  try {
+    const res = await fetch('/api/monsters');
+    if(res.ok){
+      const apiMonsters = await res.json();
+      if(apiMonsters.length > 0){
+        MONSTERS = apiMonsters;
+        // Migración: agregar monstruos del PRESET que no están en la API
+        let newOnes = [];
+        PRESET_MONSTERS.forEach(preset => {
+          if(!MONSTERS.find(m => m.id === preset.id)){
+            const nm = {...preset, hpCurrent: preset.hpMax, showInLive: true};
+            newOnes.push(nm);
+            MONSTERS.push(nm);
+          }
+        });
+        // Crear en API los nuevos del preset
+        for(const nm of newOnes){
+          fetch('/api/monsters', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(nm)}).catch(()=>{});
+        }
+        return;
+      }
+    }
+  } catch(e){}
+  // Fallback: localStorage o presets
   const saved = load('bestiary', null);
   if(saved && saved.length > 0){
     MONSTERS = saved;
-    let migrated = false;
-
-    // ── Migración 1: campos nuevos del PRESET en monstruos existentes
-    MONSTERS.forEach(m => {
-      const preset = PRESET_MONSTERS.find(p => p.id === m.id);
-      if(!preset) return;
-      Object.keys(preset).forEach(key => {
-        if(!(key in m)){
-          m[key] = preset[key];
-          migrated = true;
-        }
-      });
-    });
-
-    // ── Migración 2: actualizar loot canónico para los monstruos del preset
-    // (sin tocar custom monsters del usuario)
-    MONSTERS.forEach(m => {
-      const preset = PRESET_MONSTERS.find(p => p.id === m.id);
-      if(!preset || !preset.loot) return;
-      // Si el monstruo cacheado tiene loot pero no incluye items "GARANTIZADO" del preset
-      // (señal de versión vieja), reemplazar con el loot canónico nuevo.
-      const presetHasGuaranteed = preset.loot.some(it => it.minRoll === 0);
-      const cachedHasGuaranteed = (m.loot||[]).some(it => it.minRoll === 0);
-      if(presetHasGuaranteed && !cachedHasGuaranteed){
-        m.loot = JSON.parse(JSON.stringify(preset.loot));
-        m.rewards = preset.rewards;
-        migrated = true;
-      }
-    });
-
-    // ── Migración 3: agregar monstruos del PRESET que no están en cache (nuevos)
-    PRESET_MONSTERS.forEach(preset => {
-      if(!MONSTERS.find(m => m.id === preset.id)){
-        MONSTERS.push({...preset, hpCurrent: preset.hpMax});
-        migrated = true;
-      }
-    });
-
-    if(migrated) save('bestiary', MONSTERS);
   } else {
-    MONSTERS = PRESET_MONSTERS.map(m => ({...m, hpCurrent: m.hpMax}));
-    save('bestiary', MONSTERS);
+    MONSTERS = PRESET_MONSTERS.map(m => ({...m, hpCurrent: m.hpMax, showInLive: true}));
   }
 }
 
 function saveMonsters(){ save('bestiary', MONSTERS); }
+
+const _hpSyncTimers = {};
+function syncMonsterToAPI(m){
+  if(!m) return;
+  fetch('/api/monsters/'+m.id, {
+    method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(m)
+  }).catch(()=>{});
+}
+function syncMonsterHPDebounced(id){
+  clearTimeout(_hpSyncTimers[id]);
+  _hpSyncTimers[id] = setTimeout(()=>{
+    const m = MONSTERS.find(x=>x.id===id);
+    if(m) syncMonsterToAPI(m);
+  }, 800);
+}
 
 function mod(score){ const m = Math.floor((score-10)/2); return (m>=0?'+':'')+m; }
 
@@ -95,7 +95,9 @@ function renderMonsters(){
       </div>
       <div class="m-val" style="font-size:0.82rem;color:var(--muted)">${m.speed}</div>
       <div style="text-align:center"><span class="m-cr-badge ${crClass(m.cr)}">CR ${m.cr}</span></div>
-      <div style="display:flex;gap:0.4rem;justify-content:center" onclick="event.stopPropagation()">
+      <div style="display:flex;gap:0.4rem;justify-content:center;align-items:center" onclick="event.stopPropagation()">
+        <button class="m-live-toggle ${m.showInLive!==false?'on':''}" title="${m.showInLive!==false?'Visible en Live':'Oculto en Live'}" onclick="toggleShowInLive('${m.id}')">⚔</button>
+        <button class="m-del-btn" onclick="openEditMonster('${m.id}')">✏</button>
         <button class="m-del-btn" onclick="resetMonsterHP('${m.id}')">↺</button>
         <button class="m-del-btn" onclick="deleteMonster('${m.id}')">✕</button>
       </div>
@@ -197,6 +199,7 @@ function changeMonsterHP(id, delta){
   if(!m) return;
   m.hpCurrent = Math.max(0, Math.min(m.hpMax, (m.hpCurrent||m.hpMax) + delta));
   saveMonsters();
+  syncMonsterHPDebounced(id);
   renderMonsters();
 }
 
@@ -205,6 +208,7 @@ function setMonsterHP(id, val){
   if(!m) return;
   m.hpCurrent = Math.max(0, Math.min(m.hpMax, parseInt(val)||0));
   saveMonsters();
+  syncMonsterHPDebounced(id);
   renderMonsters();
 }
 
@@ -213,6 +217,7 @@ function resetMonsterHP(id){
   if(!m) return;
   m.hpCurrent = m.hpMax;
   saveMonsters();
+  syncMonsterToAPI(m);
   renderMonsters();
 }
 
@@ -221,6 +226,7 @@ function deleteMonster(id){
   MONSTERS = MONSTERS.filter(x=>x.id!==id);
   if(expandedMonster===id) expandedMonster=null;
   saveMonsters();
+  fetch('/api/monsters/'+id, {method:'DELETE'}).catch(()=>{});
   renderMonsters();
 }
 
@@ -235,10 +241,51 @@ function setFilter(f){
   renderMonsters();
 }
 
+function toggleShowInLive(id){
+  const m = MONSTERS.find(x=>x.id===id);
+  if(!m) return;
+  m.showInLive = m.showInLive === false ? true : false;
+  saveMonsters();
+  syncMonsterToAPI(m);
+  renderMonsters();
+}
+
 function toggleMonsterForm(){
   const f=document.getElementById('monsterForm');
+  editingMonsterId = null;
+  document.getElementById('monsterFormTitle').textContent = 'Nueva Criatura';
   f.classList.toggle('show');
   if(f.classList.contains('show')) f.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openEditMonster(id){
+  const m = MONSTERS.find(x=>x.id===id);
+  if(!m) return;
+  editingMonsterId = id;
+  const g = eid => document.getElementById(eid);
+  g('fn-name').value   = m.name || '';
+  g('fn-type').value   = m.type || 'Bestia';
+  g('fn-size').value   = m.size || 'Mediano';
+  g('fn-cr').value     = m.cr   || '';
+  g('fn-ac').value     = m.ac   || '';
+  g('fn-hp').value     = m.hpMax || '';
+  g('fn-speed').value  = m.speed || '';
+  g('fn-atk').value    = m.atk   || '';
+  g('fn-str').value    = m.str   || '';
+  g('fn-dex').value    = m.dex   || '';
+  g('fn-con').value    = m.con   || '';
+  g('fn-int').value    = m.int   || '';
+  g('fn-wis').value    = m.wis   || '';
+  g('fn-cha').value    = m.cha   || '';
+  g('fn-desc').value      = m.desc      || '';
+  g('fn-abilities').value = m.abilities || '';
+  g('fn-notes').value     = m.notes     || '';
+  g('fn-attacks').value   = (m.attacks||[]).map(a=>[a.name,a.bonus,a.dmg,a.note].filter(Boolean).join(' | ')).join('\n');
+  g('fn-phases').value    = (m.phases||[]).map(p=>[p.name,p.desc].join(' | ')).join('\n');
+  document.getElementById('monsterFormTitle').textContent = 'Editar Criatura';
+  const f = document.getElementById('monsterForm');
+  f.classList.add('show');
+  f.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function saveNewMonster(){
@@ -259,15 +306,13 @@ function saveNewMonster(){
   }) : [];
 
   const hpMax = parseInt(g('fn-hp').value)||10;
-  const newM = {
-    id: 'custom-'+Date.now(),
+  const fields = {
     name,
     type: g('fn-type').value,
     size: g('fn-size').value,
     cr: g('fn-cr').value||'—',
     ac: parseInt(g('fn-ac').value)||10,
     hpMax,
-    hpCurrent: hpMax,
     speed: g('fn-speed').value||'30 ft',
     atk: g('fn-atk').value||'+0',
     str:parseInt(g('fn-str').value)||10,
@@ -281,12 +326,26 @@ function saveNewMonster(){
     abilities: g('fn-abilities').value,
     phases,
     notes: g('fn-notes').value,
-    rewards:''
   };
-  MONSTERS.push(newM);
+
+  if(editingMonsterId){
+    const idx = MONSTERS.findIndex(x=>x.id===editingMonsterId);
+    if(idx !== -1){
+      MONSTERS[idx] = { ...MONSTERS[idx], ...fields };
+      MONSTERS[idx].hpCurrent = Math.min(MONSTERS[idx].hpCurrent || hpMax, hpMax);
+      syncMonsterToAPI(MONSTERS[idx]);
+    }
+    editingMonsterId = null;
+  } else {
+    const nm = { id:'custom-'+Date.now(), ...fields, hpCurrent: hpMax, showInLive: true, rewards:'' };
+    MONSTERS.push(nm);
+    fetch('/api/monsters', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(nm)}).catch(()=>{});
+  }
+
   saveMonsters();
   renderMonsters();
-  toggleMonsterForm();
-  // clear form
-  ['fn-name','fn-cr','fn-ac','fn-hp','fn-speed','fn-atk','fn-str','fn-dex','fn-con','fn-int','fn-wis','fn-cha','fn-desc','fn-attacks','fn-abilities','fn-phases','fn-notes'].forEach(id=>{g(id).value=''});
+  // Cerrar y limpiar form
+  document.getElementById('monsterForm').classList.remove('show');
+  document.getElementById('monsterFormTitle').textContent = 'Nueva Criatura';
+  ['fn-name','fn-cr','fn-ac','fn-hp','fn-speed','fn-atk','fn-str','fn-dex','fn-con','fn-int','fn-wis','fn-cha','fn-desc','fn-attacks','fn-abilities','fn-phases','fn-notes'].forEach(id=>{g(id).value='';});
 }
