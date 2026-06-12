@@ -25,9 +25,9 @@ router.use('/items',      crud(Item,             { protect: requireDM, playerFil
 router.use('/conditions', crud(Condition,         { protect: requireDM }));
 router.use('/npcs',       crud(Npc,               { protect: requireDM }));
 router.use('/monsters',   crud(Monster,           { protect: requireDM }));
-router.use('/events',     crud(CampaignEvent,     { protect: requireDM }));
-router.use('/threads',    crud(CampaignThread,    { protect: requireDM }));
-router.use('/locations',  crud(CampaignLocation,  { protect: requireDM }));
+router.use('/events',     crud(CampaignEvent,     { protect: requireDM, sort: { order: 1 } }));
+router.use('/threads',    crud(CampaignThread,    { protect: requireDM, sort: { order: 1 } }));
+router.use('/locations',  crud(CampaignLocation,  { protect: requireDM, sort: { order: 1 } }));
 
 // ── Class Presets (id = charId: 'rac', 'relyo', etc.) ─────────────────────
 router.use('/presets', crud(ClassPreset, { idField: 'charId', protect: requireDM }));

@@ -6,6 +6,7 @@ const CampaignThreadSchema = new Schema({
   status:      { type: String, default: 'dormant' }, // 'active' | 'emerging' | 'dormant' | 'resolved'
   description: String,
   characters:  [String],
+  order:       { type: Number, default: 0 },
 }, { timestamps: true });
 
 module.exports = model('CampaignThread', CampaignThreadSchema);

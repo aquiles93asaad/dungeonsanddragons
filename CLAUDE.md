@@ -6,6 +6,12 @@ hojas de personaje, NPCs, bestiario con loot, sesión en vivo, historia, campañ
 **Idioma:** todo en español (es-AR), con términos D&D bilingües (EN/ES).
 **Stack:** Node.js + Express + MongoDB Atlas + Vanilla JS. Sin frameworks de frontend.
 
+### Regla: StoryActs — solo narrativa, sin números mecánicos
+Al cargar o actualizar actos en `storyacts` (y `storychapters`), el contenido debe ser **puramente narrativo**.
+- ❌ No incluir: HP, daño, AC, DC, modificadores, resultados de dados, rondas numeradas.
+- ✅ Sí incluir: qué pasó, quién actuó, qué aprendieron, momentos memorables, consecuencias narrativas.
+- Los números existen en las `sessions` (stream de la sesión live) — la Historia es la crónica, no el log de combate.
+
 ---
 
 ## Grafo de conocimiento (graphify-out/)

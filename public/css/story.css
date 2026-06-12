@@ -1,4 +1,6 @@
 /* ── STORY TIMELINE ── */
+.story-chapter-title{font-family:var(--font-title);font-size:1.2rem;color:var(--cream);margin:2rem 0 0.2rem;letter-spacing:0.04em}
+.story-chapter-title:first-child{margin-top:0}
 .timeline{position:relative;padding-left:2rem}
 .timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border2)}
 .timeline-act{margin-bottom:2rem;position:relative}

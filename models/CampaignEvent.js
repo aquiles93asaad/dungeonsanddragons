@@ -6,6 +6,7 @@ const CampaignEventSchema = new Schema({
   status:      { type: String, default: 'planned' }, // 'planned' | 'done'
   session:     String,
   description: String,
+  order:       { type: Number, default: 0 },
 }, { timestamps: true });
 
 module.exports = model('CampaignEvent', CampaignEventSchema);

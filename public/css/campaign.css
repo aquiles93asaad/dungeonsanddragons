@@ -96,6 +96,41 @@
 .cmp-btn:hover{background:var(--border2);color:var(--gold);border-color:var(--gold-dim)}
 .cmp-btn.cmp-del{color:var(--red-bright);border-color:var(--red-dim)}
 .cmp-btn.cmp-del:hover{background:var(--red-dim);color:var(--red-bright)}
+.cmp-btn.cmp-cancel{color:var(--muted);border-color:var(--border2)}
+.cmp-btn.cmp-cancel:hover{color:var(--red-bright);border-color:var(--red-dim)}
+
+/* ── Botón guardar por card ── */
+.cmp-save-btn{
+  display:none;width:28px;height:28px;padding:0;
+  background:var(--gold-dark);border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:0.95rem;cursor:pointer;
+  transition:all 0.15s;text-align:center;line-height:28px;
+}
+.cmp-save-btn.visible{display:block}
+.cmp-save-btn:hover{background:var(--gold-dim);color:#000;border-color:var(--gold)}
+
+/* ── Banner de guardar orden ── */
+.order-banner{
+  display:none;align-items:center;gap:0.75rem;
+  background:rgba(184,134,11,0.12);border:1px solid var(--gold-dim);
+  padding:0.55rem 1rem;margin-bottom:0.75rem;
+  font-family:var(--font-body);font-size:0.85rem;color:var(--gold);
+}
+.order-banner span{flex:1}
+.btn-save-order{
+  background:var(--gold-dark);border:1px solid var(--gold-dim);
+  color:var(--gold);font-family:var(--font-title);font-size:0.65rem;
+  letter-spacing:0.07em;text-transform:uppercase;cursor:pointer;
+  padding:0.3rem 0.7rem;transition:all 0.15s;
+}
+.btn-save-order:hover{background:var(--gold-dim);color:#000}
+.btn-discard-order{
+  background:none;border:1px solid var(--border2);
+  color:var(--muted);font-family:var(--font-title);font-size:0.65rem;
+  letter-spacing:0.07em;cursor:pointer;padding:0.3rem 0.6rem;
+  transition:all 0.15s;
+}
+.btn-discard-order:hover{border-color:var(--red-dim);color:var(--red-bright)}
 
 /* ── Responsive: simplificar grid en pantallas chicas ── */
 @media(max-width:640px){
@@ -104,6 +139,45 @@
   .cmp-row1{grid-template-columns:1fr;gap:0.4rem}
   .cmp-row1.thread-row{grid-template-columns:1fr}
 }
+
+/* ── SESIONES ── */
+.ses-card{
+  background:var(--bg2);border:1px solid var(--border);
+  margin-bottom:0.5rem;overflow:hidden;
+}
+.ses-header{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.7rem 1rem;cursor:pointer;user-select:none;
+  transition:background 0.15s;
+}
+.ses-header:hover{background:var(--bg3)}
+.ses-num{
+  font-family:var(--font-title);font-size:0.75rem;letter-spacing:0.1em;
+  color:var(--gold);background:var(--gold-dark);border:1px solid var(--gold-dim);
+  padding:0.15rem 0.5rem;white-space:nowrap;
+}
+.ses-title{flex:1;font-family:var(--font-title);font-size:0.95rem;color:var(--cream)}
+.ses-date{font-size:0.78rem;color:var(--muted);white-space:nowrap}
+.ses-count{font-size:0.75rem;color:var(--muted);white-space:nowrap}
+.ses-chevron{color:var(--muted);font-size:0.7rem;transition:transform 0.2s}
+.ses-card.open .ses-chevron{transform:rotate(180deg)}
+
+.ses-body{
+  display:none;border-top:1px solid var(--border);
+  padding:0.6rem 1rem 0.8rem;max-height:420px;overflow-y:auto;
+}
+.ses-card.open .ses-body{display:block}
+
+.ses-note-row{
+  display:flex;align-items:baseline;gap:0.6rem;
+  padding:0.25rem 0;border-bottom:1px solid var(--border2);font-size:0.82rem;
+}
+.ses-note-row:last-child{border-bottom:none}
+.ses-note-type{
+  white-space:nowrap;color:var(--muted);font-size:0.75rem;
+  min-width:90px;
+}
+.ses-note-text{color:var(--cream-muted);line-height:1.45}
 
 /* ── FORMAS SALVAJES ── */
 .ws-grid{

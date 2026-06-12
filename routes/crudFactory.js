@@ -4,7 +4,7 @@ const { Router } = require('express');
  * Genera un router con GET/POST/PUT/DELETE estándar para un modelo Mongoose.
  * idField: campo que actúa como id público (por defecto 'id')
  */
-function crudRouter(Model, { idField = 'id', protect = null, playerFilter = null } = {}) {
+function crudRouter(Model, { idField = 'id', protect = null, playerFilter = null, sort = null } = {}) {
   const router = Router();
   const auth = protect || ((req, res, next) => next());
 
@@ -12,7 +12,9 @@ function crudRouter(Model, { idField = 'id', protect = null, playerFilter = null
   router.get('/', async (req, res) => {
     try {
       const filter = (!req.session?.isDM && playerFilter) ? playerFilter : {};
-      const docs = await Model.find(filter).lean();
+      let q = Model.find(filter).lean();
+      if (sort) q = q.sort(sort);
+      const docs = await q;
       res.json(docs);
     } catch (e) { res.status(500).json({ error: e.message }); }
   });

@@ -5,6 +5,7 @@ const CampaignLocationSchema = new Schema({
   name:        String,
   description: String,
   state:       String,
+  order:       { type: Number, default: 0 },
 }, { timestamps: true });
 
 module.exports = model('CampaignLocation', CampaignLocationSchema);

@@ -60,6 +60,7 @@ async function loadReferenceData() {
 }
 
 function initApp() {
+  loadStory();
   renderNPCs();
 
   CHARS.forEach(c => {

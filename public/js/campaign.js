@@ -3,40 +3,56 @@
 let CAMPAIGN = { events: [], threads: [], locations: [] };
 let currentCampaignTab = 'events';
 
-// ── Helpers para persistir a MongoDB ──────────────────────────────────────
-const _apiDebounce = {};
-function _campaignPut(path, data, immediate){
-  if(immediate){
-    fetch(path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-      .catch(e => console.error('Campaign PUT error:', e.message));
-  } else {
-    clearTimeout(_apiDebounce[path]);
-    _apiDebounce[path] = setTimeout(() => {
-      fetch(path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-        .catch(e => console.error('Campaign PUT error:', e.message));
-    }, 600);
-  }
+// ── Estado de edición pendiente ────────────────────────────────────────────
+const _dirty   = {};    // { [id]: true }  — campos editados sin guardar
+const _isNew   = {};    // { [id]: true }  — aún no POSTeado
+const _orderDirty = { events: false, threads: false, locations: false };
+
+const API = { events:'/api/events', threads:'/api/threads', locations:'/api/locations' };
+
+function _put(path, data){
+  return fetch(path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+    .catch(e => console.error('Campaign PUT error:', e.message));
 }
-function _campaignPost(path, data){
+function _post(path, data){
   return fetch(path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
     .catch(e => console.error('Campaign POST error:', e.message));
 }
-function _campaignDelete(path){
+function _delete(path){
   fetch(path, { method:'DELETE' }).catch(e => console.error('Campaign DELETE error:', e.message));
 }
 
+// Marca una card como sucia y muestra el botón guardar
+function _markDirty(id){
+  _dirty[id] = true;
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if(card) card.querySelector('.cmp-save-btn')?.classList.add('visible');
+}
+
+// Limpia el estado dirty y oculta el botón guardar
+function _clearDirty(id){
+  delete _dirty[id];
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if(card) card.querySelector('.cmp-save-btn')?.classList.remove('visible');
+}
+
+// Muestra u oculta el banner de "guardar orden" para un kind
+function _setOrderDirty(kind, dirty){
+  _orderDirty[kind] = dirty;
+  const banner = document.getElementById('order-banner-'+kind);
+  if(banner) banner.style.display = dirty ? 'flex' : 'none';
+}
+
 function loadCampaign(){
-  // La fuente de verdad es MongoDB — DEFAULT_CAMPAIGN_* ya fue cargado desde la API en init.js
   CAMPAIGN = {
     events:         JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_EVENTS)),
     threads:        JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_THREADS)),
     locations:      JSON.parse(JSON.stringify(DEFAULT_CAMPAIGN_LOCATIONS)),
-    wildShapeForms: CAMPAIGN.wildShapeForms || []   // preservar custom forms ya cargadas
+    wildShapeForms: CAMPAIGN.wildShapeForms || []
   };
 }
 
-// No-op — se mantiene por compatibilidad, las mutaciones llaman a la API directamente
-function saveCampaign(){}
+function saveCampaign(){}  // no-op legacy
 
 function escapeAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
@@ -48,35 +64,100 @@ function switchCampaignTab(tab){
   if(el) el.classList.add('active');
 }
 
-/* ── EVENTOS ── */
+// ── Banner de orden ─────────────────────────────────────────────────────────
+function _orderBannerHTML(kind){
+  return `<div class="order-banner" id="order-banner-${kind}" style="display:none">
+    <span>Orden modificado sin guardar</span>
+    <button class="btn-save-order" onclick="saveOrder('${kind}')">💾 Guardar orden</button>
+    <button class="btn-discard-order" onclick="discardOrder('${kind}')">✕ Descartar</button>
+  </div>`;
+}
+
+async function saveOrder(kind){
+  const arr = CAMPAIGN[kind];
+  await Promise.all(arr.map((item, i) =>
+    _put(`${API[kind]}/${item.id}`, { order: i })
+  ));
+  arr.forEach((item, i) => { item.order = i; });
+  _setOrderDirty(kind, false);
+}
+
+function discardOrder(kind){
+  // Recarga desde el estado en memoria (sin re-fetch) y cancela el orden pendiente
+  _setOrderDirty(kind, false);
+  if(kind==='events') renderEvents();
+  else if(kind==='threads') renderThreads();
+  else if(kind==='locations') renderLocations();
+}
+
+/* ── GUARDAR / CANCELAR por card ─────────────────────────────────────────── */
+function saveCard(kind, id){
+  const item = CAMPAIGN[kind].find(x=>x.id===id);
+  if(!item) return;
+
+  if(_isNew[id]){
+    // Primer guardado — POST
+    const order = CAMPAIGN[kind].indexOf(item);
+    _post(API[kind], { ...item, order })
+      .then(() => { delete _isNew[id]; _clearDirty(id); })
+      .catch(e => console.error(e));
+  } else {
+    // Actualización — PUT con todos los campos del item
+    _put(`${API[kind]}/${id}`, item)
+      .then(() => _clearDirty(id))
+      .catch(e => console.error(e));
+  }
+}
+
+function cancelNewCard(kind, id){
+  CAMPAIGN[kind] = CAMPAIGN[kind].filter(x=>x.id!==id);
+  delete _isNew[id];
+  delete _dirty[id];
+  if(kind==='events') renderEvents();
+  else if(kind==='threads') renderThreads();
+  else if(kind==='locations') renderLocations();
+}
+
+/* ── EVENTOS ──────────────────────────────────────────────────────────────── */
 function renderEvents(){
   const list = document.getElementById('event-list');
   if(!list) return;
-  list.innerHTML = '';
+  list.innerHTML = _orderBannerHTML('events');
+  if(_orderDirty.events) document.getElementById('order-banner-events').style.display='flex';
   CAMPAIGN.events.forEach(e=>{
     const card = document.createElement('div');
     card.className = 'cmp-card event-card draggable';
     card.dataset.id = e.id;
     card.draggable = true;
+    const isNew = !!_isNew[e.id];
+    const isDirty = !!_dirty[e.id];
     card.innerHTML = `
       <div class="cmp-handle" title="Arrastrar para reordenar">≡</div>
       <div class="cmp-body">
         <div class="cmp-row1">
-          <input class="cmp-title" value="${escapeAttr(e.title)}" oninput="updateEvent('${e.id}','title',this.value)" placeholder="Título del evento">
-          <select class="cmp-status status-${e.status}" onchange="updateEvent('${e.id}','status',this.value)">
-            <option value="done" ${e.status==='done'?'selected':''}>Hecho</option>
+          <input class="cmp-title" value="${escapeAttr(e.title)}"
+            oninput="onEventField('${e.id}','title',this.value)" placeholder="Título del evento">
+          <select class="cmp-status status-${e.status}"
+            onchange="onEventField('${e.id}','status',this.value);this.className='cmp-status status-'+this.value">
+            <option value="done"        ${e.status==='done'       ?'selected':''}>Hecho</option>
             <option value="in-progress" ${e.status==='in-progress'?'selected':''}>En curso</option>
-            <option value="planned" ${e.status==='planned'?'selected':''}>Planificado</option>
-            <option value="idea" ${e.status==='idea'?'selected':''}>Idea</option>
+            <option value="planned"     ${e.status==='planned'    ?'selected':''}>Planificado</option>
+            <option value="idea"        ${e.status==='idea'       ?'selected':''}>Idea</option>
           </select>
-          <input class="cmp-session" value="${escapeAttr(e.session)}" oninput="updateEvent('${e.id}','session',this.value)" placeholder="Ses.">
+          <input class="cmp-session" value="${escapeAttr(e.session||'')}"
+            oninput="onEventField('${e.id}','session',this.value)" placeholder="Ses.">
         </div>
-        <textarea class="cmp-desc" oninput="updateEvent('${e.id}','description',this.value)" placeholder="Descripción del evento...">${escapeAttr(e.description||'')}</textarea>
+        <textarea class="cmp-desc"
+          oninput="onEventField('${e.id}','description',this.value)"
+          placeholder="Descripción del evento...">${escapeAttr(e.description||'')}</textarea>
       </div>
       <div class="cmp-controls">
+        <button class="cmp-save-btn${isDirty||isNew?' visible':''}"
+          onclick="saveCard('events','${e.id}')" title="Guardar">💾</button>
+        ${isNew ? `<button class="cmp-btn cmp-cancel" onclick="cancelNewCard('events','${e.id}')" title="Cancelar">✕</button>` : ''}
         <button class="cmp-btn" onclick="moveItem('events','${e.id}',-1)" title="Subir">↑</button>
         <button class="cmp-btn" onclick="moveItem('events','${e.id}',1)" title="Bajar">↓</button>
-        <button class="cmp-btn cmp-del" onclick="deleteItem('events','${e.id}')" title="Eliminar">✕</button>
+        ${!isNew ? `<button class="cmp-btn cmp-del" onclick="deleteItem('events','${e.id}')" title="Eliminar">✕</button>` : ''}
       </div>
     `;
     list.appendChild(card);
@@ -84,56 +165,79 @@ function renderEvents(){
   attachDragHandlers(list, 'events');
 }
 
+function onEventField(id, field, value){
+  const e = CAMPAIGN.events.find(x=>x.id===id);
+  if(!e) return;
+  e[field] = value;
+  _markDirty(id);
+}
+
+// Llamado desde live.js para cambios de status programáticos (sin botón guardar)
 function updateEvent(id, field, value){
   const e = CAMPAIGN.events.find(x=>x.id===id);
   if(!e) return;
   e[field] = value;
-  _campaignPut(`/api/events/${id}`, {[field]:value}, field==='status'||field==='session');
+  _put(`${API.events}/${id}`, { [field]: value });
   if(field==='status'){
     const card = document.querySelector(`.event-card[data-id="${id}"]`);
-    if(card){
-      const sel = card.querySelector('.cmp-status');
-      sel.className = 'cmp-status status-'+value;
-    }
+    if(card){ card.querySelector('.cmp-status').className = 'cmp-status status-'+value; }
   }
 }
 
 function addCampaignEvent(){
-  const newEvent = { id:'evt-'+Date.now(), title:'Nuevo evento', description:'', status:'idea', session:'' };
+  const id = 'evt-'+Date.now();
+  const newEvent = { id, title:'Nuevo evento', description:'', status:'idea', session:'' };
   CAMPAIGN.events.push(newEvent);
-  _campaignPost('/api/events', newEvent);
+  _isNew[id] = true;
+  _dirty[id] = true;
   renderEvents();
+  // Scroll al nuevo card
+  setTimeout(()=>{
+    const card = document.querySelector(`.event-card[data-id="${id}"]`);
+    if(card) card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 50);
 }
 
-/* ── HILOS ── */
+/* ── HILOS ────────────────────────────────────────────────────────────────── */
 function renderThreads(){
   const list = document.getElementById('thread-list');
   if(!list) return;
-  list.innerHTML = '';
+  list.innerHTML = _orderBannerHTML('threads');
+  if(_orderDirty.threads) document.getElementById('order-banner-threads').style.display='flex';
   CAMPAIGN.threads.forEach(t=>{
     const card = document.createElement('div');
     card.className = 'cmp-card thread-card draggable';
     card.dataset.id = t.id;
     card.draggable = true;
+    const isNew = !!_isNew[t.id];
+    const isDirty = !!_dirty[t.id];
     card.innerHTML = `
       <div class="cmp-handle" title="Arrastrar para reordenar">≡</div>
       <div class="cmp-body">
         <div class="cmp-row1 thread-row">
-          <input class="cmp-title" value="${escapeAttr(t.name)}" oninput="updateThread('${t.id}','name',this.value)" placeholder="Nombre del hilo">
-          <select class="cmp-status status-${t.status}" onchange="updateThread('${t.id}','status',this.value)">
-            <option value="active" ${t.status==='active'?'selected':''}>Activo</option>
+          <input class="cmp-title" value="${escapeAttr(t.name)}"
+            oninput="onThreadField('${t.id}','name',this.value)" placeholder="Nombre del hilo">
+          <select class="cmp-status status-${t.status}"
+            onchange="onThreadField('${t.id}','status',this.value);this.className='cmp-status status-'+this.value">
+            <option value="active"   ${t.status==='active'  ?'selected':''}>Activo</option>
             <option value="emerging" ${t.status==='emerging'?'selected':''}>Emergiendo</option>
-            <option value="dormant" ${t.status==='dormant'?'selected':''}>Dormido</option>
+            <option value="dormant"  ${t.status==='dormant' ?'selected':''}>Dormido</option>
             <option value="resolved" ${t.status==='resolved'?'selected':''}>Resuelto</option>
           </select>
         </div>
-        <textarea class="cmp-desc" oninput="updateThread('${t.id}','description',this.value)" placeholder="Descripción del hilo narrativo...">${escapeAttr(t.description||'')}</textarea>
-        <input class="cmp-meta" value="${escapeAttr((t.characters||[]).join(', '))}" oninput="updateThreadChars('${t.id}',this.value)" placeholder="Personajes involucrados (separados por coma)">
+        <textarea class="cmp-desc"
+          oninput="onThreadField('${t.id}','description',this.value)"
+          placeholder="Descripción del hilo narrativo...">${escapeAttr(t.description||'')}</textarea>
+        <input class="cmp-meta" value="${escapeAttr((t.characters||[]).join(', '))}"
+          oninput="onThreadChars('${t.id}',this.value)" placeholder="Personajes involucrados (separados por coma)">
       </div>
       <div class="cmp-controls">
+        <button class="cmp-save-btn${isDirty||isNew?' visible':''}"
+          onclick="saveCard('threads','${t.id}')">💾 Guardar</button>
+        ${isNew ? `<button class="cmp-btn cmp-cancel" onclick="cancelNewCard('threads','${t.id}')" title="Cancelar">✕</button>` : ''}
         <button class="cmp-btn" onclick="moveItem('threads','${t.id}',-1)" title="Subir">↑</button>
         <button class="cmp-btn" onclick="moveItem('threads','${t.id}',1)" title="Bajar">↓</button>
-        <button class="cmp-btn cmp-del" onclick="deleteItem('threads','${t.id}')" title="Eliminar">✕</button>
+        ${!isNew ? `<button class="cmp-btn cmp-del" onclick="deleteItem('threads','${t.id}')" title="Eliminar">✕</button>` : ''}
       </div>
     `;
     list.appendChild(card);
@@ -141,55 +245,70 @@ function renderThreads(){
   attachDragHandlers(list, 'threads');
 }
 
+function onThreadField(id, field, value){
+  const t = CAMPAIGN.threads.find(x=>x.id===id);
+  if(!t) return;
+  t[field] = value;
+  _markDirty(id);
+}
+function onThreadChars(id, value){
+  const t = CAMPAIGN.threads.find(x=>x.id===id);
+  if(!t) return;
+  t.characters = value.split(',').map(s=>s.trim()).filter(Boolean);
+  _markDirty(id);
+}
+// legacy — usado desde live.js
 function updateThread(id, field, value){
   const t = CAMPAIGN.threads.find(x=>x.id===id);
   if(!t) return;
   t[field] = value;
-  _campaignPut(`/api/threads/${id}`, {[field]:value}, field==='status');
-  if(field==='status'){
-    const card = document.querySelector(`.thread-card[data-id="${id}"]`);
-    if(card){
-      const sel = card.querySelector('.cmp-status');
-      sel.className = 'cmp-status status-'+value;
-    }
-  }
-}
-
-function updateThreadChars(id, value){
-  const t = CAMPAIGN.threads.find(x=>x.id===id);
-  if(!t) return;
-  t.characters = value.split(',').map(s=>s.trim()).filter(Boolean);
-  _campaignPut(`/api/threads/${id}`, {characters:t.characters});
+  _put(`${API.threads}/${id}`, { [field]: value });
 }
 
 function addCampaignThread(){
-  const newThread = { id:'thread-'+Date.now(), name:'Nuevo hilo', status:'active', description:'', characters:[] };
+  const id = 'thread-'+Date.now();
+  const newThread = { id, name:'Nuevo hilo', status:'active', description:'', characters:[] };
   CAMPAIGN.threads.push(newThread);
-  _campaignPost('/api/threads', newThread);
+  _isNew[id] = true;
+  _dirty[id] = true;
   renderThreads();
+  setTimeout(()=>{
+    const card = document.querySelector(`.thread-card[data-id="${id}"]`);
+    if(card) card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 50);
 }
 
-/* ── LUGARES ── */
+/* ── LUGARES ──────────────────────────────────────────────────────────────── */
 function renderLocations(){
   const list = document.getElementById('location-list');
   if(!list) return;
-  list.innerHTML = '';
+  list.innerHTML = _orderBannerHTML('locations');
+  if(_orderDirty.locations) document.getElementById('order-banner-locations').style.display='flex';
   CAMPAIGN.locations.forEach(l=>{
     const card = document.createElement('div');
     card.className = 'cmp-card location-card draggable';
     card.dataset.id = l.id;
     card.draggable = true;
+    const isNew = !!_isNew[l.id];
+    const isDirty = !!_dirty[l.id];
     card.innerHTML = `
       <div class="cmp-handle" title="Arrastrar para reordenar">≡</div>
       <div class="cmp-body">
-        <input class="cmp-title" value="${escapeAttr(l.name)}" oninput="updateLocation('${l.id}','name',this.value)" placeholder="Nombre del lugar">
-        <textarea class="cmp-desc" oninput="updateLocation('${l.id}','description',this.value)" placeholder="Descripción del lugar...">${escapeAttr(l.description||'')}</textarea>
-        <input class="cmp-meta" value="${escapeAttr(l.state||'')}" oninput="updateLocation('${l.id}','state',this.value)" placeholder="Estado actual / quiénes están ahí">
+        <input class="cmp-title" value="${escapeAttr(l.name)}"
+          oninput="onLocationField('${l.id}','name',this.value)" placeholder="Nombre del lugar">
+        <textarea class="cmp-desc"
+          oninput="onLocationField('${l.id}','description',this.value)"
+          placeholder="Descripción del lugar...">${escapeAttr(l.description||'')}</textarea>
+        <input class="cmp-meta" value="${escapeAttr(l.state||'')}"
+          oninput="onLocationField('${l.id}','state',this.value)" placeholder="Estado actual / quiénes están ahí">
       </div>
       <div class="cmp-controls">
+        <button class="cmp-save-btn${isDirty||isNew?' visible':''}"
+          onclick="saveCard('locations','${l.id}')">💾 Guardar</button>
+        ${isNew ? `<button class="cmp-btn cmp-cancel" onclick="cancelNewCard('locations','${l.id}')" title="Cancelar">✕</button>` : ''}
         <button class="cmp-btn" onclick="moveItem('locations','${l.id}',-1)" title="Subir">↑</button>
         <button class="cmp-btn" onclick="moveItem('locations','${l.id}',1)" title="Bajar">↓</button>
-        <button class="cmp-btn cmp-del" onclick="deleteItem('locations','${l.id}')" title="Eliminar">✕</button>
+        ${!isNew ? `<button class="cmp-btn cmp-del" onclick="deleteItem('locations','${l.id}')" title="Eliminar">✕</button>` : ''}
       </div>
     `;
     list.appendChild(card);
@@ -197,21 +316,34 @@ function renderLocations(){
   attachDragHandlers(list, 'locations');
 }
 
+function onLocationField(id, field, value){
+  const l = CAMPAIGN.locations.find(x=>x.id===id);
+  if(!l) return;
+  l[field] = value;
+  _markDirty(id);
+}
+// legacy
 function updateLocation(id, field, value){
   const l = CAMPAIGN.locations.find(x=>x.id===id);
   if(!l) return;
   l[field] = value;
-  _campaignPut(`/api/locations/${id}`, {[field]:value});
+  _put(`${API.locations}/${id}`, { [field]: value });
 }
 
 function addCampaignLocation(){
-  const newLoc = { id:'loc-'+Date.now(), name:'Nuevo lugar', description:'', state:'' };
+  const id = 'loc-'+Date.now();
+  const newLoc = { id, name:'Nuevo lugar', description:'', state:'' };
   CAMPAIGN.locations.push(newLoc);
-  _campaignPost('/api/locations', newLoc);
+  _isNew[id] = true;
+  _dirty[id] = true;
   renderLocations();
+  setTimeout(()=>{
+    const card = document.querySelector(`.location-card[data-id="${id}"]`);
+    if(card) card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 50);
 }
 
-/* ── COMUNES: mover / eliminar / drag&drop ── */
+/* ── COMUNES: mover / eliminar / drag&drop ────────────────────────────────── */
 function moveItem(kind, id, delta){
   const arr = CAMPAIGN[kind];
   const idx = arr.findIndex(x=>x.id===id);
@@ -219,7 +351,7 @@ function moveItem(kind, id, delta){
   if(idx<0 || newIdx<0 || newIdx>=arr.length) return;
   const [item] = arr.splice(idx,1);
   arr.splice(newIdx,0,item);
-  // Orden local — no hay campo order en el schema, se resetea al recargar
+  _setOrderDirty(kind, true);
   if(kind==='events') renderEvents();
   else if(kind==='threads') renderThreads();
   else if(kind==='locations') renderLocations();
@@ -228,8 +360,7 @@ function moveItem(kind, id, delta){
 function deleteItem(kind, id){
   if(!confirm('¿Eliminar este elemento?')) return;
   CAMPAIGN[kind] = CAMPAIGN[kind].filter(x=>x.id!==id);
-  const apiPaths = { events:'/api/events', threads:'/api/threads', locations:'/api/locations' };
-  _campaignDelete(apiPaths[kind]+'/'+id);
+  _delete(`${API[kind]}/${id}`);
   if(kind==='events') renderEvents();
   else if(kind==='threads') renderThreads();
   else if(kind==='locations') renderLocations();
@@ -247,7 +378,7 @@ function attachDragHandlers(list, kind){
       const newOrder = Array.from(list.querySelectorAll('.draggable')).map(x=>x.dataset.id);
       const collection = CAMPAIGN[kind];
       CAMPAIGN[kind] = newOrder.map(id=>collection.find(x=>x.id===id)).filter(Boolean);
-      // Orden local — no hay campo order en el schema, se resetea al recargar
+      _setOrderDirty(kind, true);
     });
     el.addEventListener('dragover', e=>{
       e.preventDefault();
@@ -262,17 +393,70 @@ function attachDragHandlers(list, kind){
   });
 }
 
-/* Evitar que al arrastrar inputs/textareas dentro del card inicie el drag del card */
 function bindDragFromHandleOnly(){
   document.addEventListener('mousedown', e=>{
     const card = e.target.closest('.draggable');
     if(!card) return;
-    const fromHandle = e.target.closest('.cmp-handle');
-    card.draggable = !!fromHandle;
+    card.draggable = !!e.target.closest('.cmp-handle');
   });
-  document.addEventListener('mouseup', e=>{
+  document.addEventListener('mouseup', ()=>{
     document.querySelectorAll('.draggable').forEach(c=>{ c.draggable = true; });
   });
+}
+
+/* ── SESIONES ────────────────────────────────────────────────────────────── */
+const SESSION_TYPE_LABEL = {
+  action:'⚔ Acción', narrative:'📖 Narrativa', combat:'💀 Combate',
+  conversation:'💬 Conv.', loot:'🎲 Loot', rest:'😴 Descanso',
+  levelup:'⬆ Nivel', 'round-start':'🔄 Round', 'combat-start':'⚔ Inicio combate',
+  'combat-end':'🏁 Fin combate',
+};
+
+async function renderSessionsTab(){
+  const el = document.getElementById('sessions-list');
+  if(!el) return;
+  el.innerHTML = '<p class="muted" style="padding:1rem">Cargando sesiones…</p>';
+
+  let sessions;
+  try {
+    const r = await fetch('/api/sessions');
+    sessions = await r.json();
+  } catch(e) {
+    el.innerHTML = '<p class="muted" style="padding:1rem">Error cargando sesiones.</p>';
+    return;
+  }
+
+  if(!sessions.length){
+    el.innerHTML = '<p class="muted" style="padding:1rem">No hay sesiones registradas.</p>';
+    return;
+  }
+
+  // Ordenar por número descendente (más reciente primero)
+  sessions.sort((a,b) => b.number - a.number);
+
+  el.innerHTML = sessions.map(s => {
+    const noteCount = (s.notes||[]).length;
+    const dateStr = s.date ? new Date(s.date).toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}) : '—';
+    const notes = (s.notes||[]);
+
+    const notesHTML = notes.length ? notes.map(n => {
+      const label = SESSION_TYPE_LABEL[n.type] || n.type || '—';
+      const text = n.text ? `<span class="ses-note-text">${escapeAttr(n.text)}</span>` : '';
+      return `<div class="ses-note-row"><span class="ses-note-type">${label}</span>${text}</div>`;
+    }).join('') : '<p class="muted" style="font-size:0.8rem;margin:0.4rem 0">Sin notas registradas.</p>';
+
+    return `
+      <div class="ses-card">
+        <div class="ses-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="ses-num">S${s.number}</span>
+          <span class="ses-title">${escapeAttr(s.title||'Sin título')}</span>
+          <span class="ses-date">${dateStr}</span>
+          <span class="ses-count">${noteCount} nota${noteCount!==1?'s':''}</span>
+          <span class="ses-chevron">▾</span>
+        </div>
+        <div class="ses-body">${notesHTML}</div>
+      </div>`;
+  }).join('');
 }
 
 /* ── IDEAS ── */

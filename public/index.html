@@ -48,6 +48,7 @@
     <button class="nav-tab dm-only" onclick="showPage('npcs')">NPCs</button>
     <button class="nav-tab dm-only" onclick="showPage('bestiary')">Bestiario</button>
     <button class="nav-tab" onclick="showPage('items')">Items</button>
+    <button class="nav-tab" onclick="showPage('sessions');renderSessionsTab()">Sesiones</button>
   </div>
   <div class="save-indicator" id="saveIndicator">✓ Guardado</div>
   <span id="session-indicator" class="session-indicator"></span>
@@ -96,87 +97,7 @@
 
     <!-- ═══════════ STORY ═══════════ -->
     <div class="page" id="page-story">
-      <h1 class="page-title">Crónica — Sesión 1</h1>
-      <p class="page-subtitle muted">Reconstruida a partir de lo jugado en mesa</p>
-
-      <div class="timeline">
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto I — Despertar en el barco y llegada a Mina Zafira</div>
-          <div class="act-body">
-            <p>El grupo despertó en un barco acercándose al puerto de Mina Zafira. Nadie sabía por qué estaba allí. Relyo, Tyrell y Esdas se mostraron desconfiados; Rac fue más directo e impulsivo; Boyd permaneció vigilante y observador.</p>
-            <p>En la taberna, Tyron el guardapuerta no los dejó entrar al verlos desarmados y sin dinero. Rac fue amable y honesto — Tyron les regaló pan. <em>Primer momento donde el mundo respondió a la conducta de los personajes.</em></p>
-            <p>Un gato blanco y negro los guió por callejones desde la taberna hasta el borde del pueblo, internándose en el bosque y desapareciendo entre los árboles.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto II — El Bosque y el Lobo Corrupto</div>
-          <div class="act-body">
-            <p>Boyd sintió una conexión especial con el bosque. La atmósfera se volvió densa e inquietante. Apareció el primer gran enemigo: un lobo corrupto con venas verdes y líquido Fell.</p>
-            <p>Rac corrió sin armas — esquivó una pata enorme y golpeó al lobo en la cara. El lobo lo derribó. Relyo intentó un ataque acrobático desde un árbol; el lobo esquivó. Relyo salvó a Esdas durante el caos. Boyd usó raíces para inmovilizar una pata. Esdas frenó mentalmente al lobo por un instante. Tyrell observó desde un árbol.</p>
-            <div class="act-note">Cuando el lobo iba a matar a Rac, Zyren apareció en forma híbrida (león/águila) y lo arrastró lejos. Luego volvió en forma élfica.</div>
-            <p>Zyren reveló el nombre del mundo, entregó 10 monedas de plata y cuestionó a Tyrell por no proteger al grupo. Boyd percibió el espíritu del lobo agradeciendo su liberación.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto III — Regreso a Mina Zafira</div>
-          <div class="act-body">
-            <p>Tyron los recibió recordando que habían alimentado al gato. Reynera, la innkeeper, los invitó a comer y a alojarse. Contó que su marido había sido aventurero.</p>
-            <p>Tyrell juró proteger la taberna y a Reynera. Cada personaje procesó la noche a su manera: Boyd reflexionó sobre el lobo, Relyo meditó, Rac habló con Ati, Tyrell sintió vergüenza y reconexión con la luz, Esdas sintió impotencia y deuda hacia Relyo.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto IV — Equipo en Mina Zafira</div>
-          <div class="act-body">
-            <p>Smith (herrero): le simpatizó Rac, prometió descuento futuro. Se enemistó con Esdas por falta de respeto. Farandon (armero): equipó a todo el grupo con ~8 monedas de plata.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto V — Entierro del lobo y promesa de Zyren</div>
-          <div class="act-body">
-            <p>El grupo volvió al lobo, retiró piel/pelo/colmillos y lo enterró para honrarlo. Tyrell oró. Zyren reapareció: llevará los materiales y los esperará en Aether Grove con algo útil.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto VI — Entrenamiento e introspección</div>
-          <div class="act-body">
-            <p>Boyd, Tyrell y Rac practicaron sinergia táctica (raíces + escudo + hacha). Relyo meditó. Esdas se conectó con el agua en una cascada como foco de magia. Fue el único en bañarse.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto VII — La Madre Araña</div>
-          <div class="act-body">
-            <p>El camino se perdió de noche. Apareció la Madre Araña corrupta con sus spiderlings. Rac atacó directo. Esdas sintió fuego en sus manos — la araña lo apuntó con veneno. Tyrell se interpuso con su escudo.</p>
-            <p>Un spiderling saltó al pecho de Rac; otro al hombro/cuello de Esdas. Tyrell tiró crítico: golpeó el escudo contra el suelo y despertó un <strong style="color:var(--gold)">aura de luz</strong> que repelió las arañas y destruyó varios spiderlings.</p>
-            <p>Esdas lanzó Firebolt — <strong style="color:var(--gold)">20 natural</strong>. La araña quedó girando. Relyo, desde el árbol, sintió el punto vulnerable y ejecutó su golpe de monje aéreo, arrancando el corazón de la Madre Araña.</p>
-          </div>
-        </div>
-
-        <div class="timeline-act">
-          <div class="timeline-dot"></div>
-          <div class="act-title">Acto VIII — Veneno Fell y aparición de Nira</div>
-          <div class="act-body">
-            <p>Rac y Esdas cayeron intoxicados por veneno Fell. Boyd y Tyrell no pudieron purgarlo. Una pantera negra se acercó — se transformó en <strong style="color:var(--gold)">Nira</strong>: elfa de piel oscura, elegante y sigilosa.</p>
-            <p>Nira purgó el veneno con magia de naturaleza. En Rac llegaba hasta el brazo izquierdo; en Esdas subía por el hombro/cuello. Quedaron cicatrices. Nira dijo que Zyren la envió y que sin él "ya no serían los mismos".</p>
-            <div class="act-note">El Fell no solo mata — transforma.</div>
-            <p>Nira los invitó a seguirla hacia Aether Grove. <em>Fin de la Sesión 1.</em></p>
-          </div>
-        </div>
-
-      </div>
+      <!-- Renderizado dinámicamente por story.js desde /api/story -->
     </div>
 
     <!-- ═══════════ SESIÓN LIVE ═══════════ -->
@@ -279,6 +200,14 @@
       <div class="campaign-tab-content" id="cmp-wildshape">
         <!-- renderWildShapeTab() lo puebla dinámicamente -->
       </div>
+
+    </div>
+
+    <!-- ═══════════ SESIONES ═══════════ -->
+    <div class="page" id="page-sessions">
+      <h1 class="page-title">Sesiones</h1>
+      <p class="page-subtitle muted">Registro explícito de todo lo que pasó en cada sesión</p>
+      <div id="sessions-list"></div>
     </div>
 
     <!-- ═══════════ PERSONAJES ═══════════ -->
@@ -963,6 +892,7 @@
 <script src="js/campaign.js"></script>
 <script src="js/live.js"></script>
 <script src="js/items.js"></script>
+<script src="js/story.js"></script>
 <script src="js/dm-auth.js"></script>
 <script src="js/players.js"></script>
 <script src="/socket.io/socket.io.js"></script>
