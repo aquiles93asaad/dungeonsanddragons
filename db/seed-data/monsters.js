@@ -1,6 +1,6 @@
 /* ── PRESET MONSTERS: encuentros ── */
 
-const PRESET_MONSTERS = [
+module.exports = [
   {
     id:'lobo-corrupto',
     name:'Lobo Corrupto',

@@ -24,7 +24,7 @@ const npcs      = require('./seed-data/npcs.js');
 const events    = require('./seed-data/campaign-events.js');
 const threads   = require('./seed-data/campaign-threads.js');
 const locations = require('./seed-data/campaign-locations.js');
-const monsters  = loadDataFile('monsters.js');
+const monsters  = require('./seed-data/monsters.js');
 const presets   = loadDataFile('class-presets.js');
 
 // Modelos
@@ -60,10 +60,10 @@ async function seed() {
 
   // Monsters
   await Monster.deleteMany({});
-  await Monster.insertMany(monsters.PRESET_MONSTERS.map(m => ({
+  await Monster.insertMany(monsters.map(m => ({
     ...m, hpCurrent: m.hpMax, showInLive: true,
   })));
-  console.log(`✓ Monsters: ${monsters.PRESET_MONSTERS.length}`);
+  console.log(`✓ Monsters: ${monsters.length}`);
 
   // Campaign Events
   await CampaignEvent.deleteMany({});
