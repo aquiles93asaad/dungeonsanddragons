@@ -1,6 +1,6 @@
 /* ── CONDITIONS D&D 5E ── */
 
-const CONDITIONS = [
+module.exports = [
   { id:'blinded', name:'Blinded', nameEs:'Cegado', icon:'👁',  color:'#6b7280',
     mechanical: { attacksDisadvantage:true, attacksAgainstAdvantage:true },
     desc:'No puede ver. Sus ataques: desventaja. Ataques contra él: ventaja. Falla checks que requieran vista.' },
