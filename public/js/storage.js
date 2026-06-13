@@ -5,7 +5,7 @@ var _apiSyncEnabled = false;
 
 // Limpiar localStorage obsoleto al arrancar (excepto el token de acceso)
 (function clearStaleStorage(){
-  const STORAGE_VERSION = '4';
+  const STORAGE_VERSION = '5';
   const token = localStorage.getItem('ard_access_token');
   if(localStorage.getItem('ard_storage_version') !== STORAGE_VERSION){
     Object.keys(localStorage)
@@ -66,28 +66,29 @@ function syncCharState(c){
   clearTimeout(_charSyncTimers[c]);
   _charSyncTimers[c] = setTimeout(() => {
     const preset = (typeof CLASS_PRESETS !== 'undefined') ? CLASS_PRESETS[c] : null;
+    const cs = (window.CHAR_STATE && window.CHAR_STATE[c]) || {};
     const data = {
-      level:          (typeof getCharLevel  !== 'undefined') ? getCharLevel(c)  : load('char_level_'+c, 2),
-      hpMax:          (typeof getHPMax      !== 'undefined') ? getHPMax(c)      : load('hp_max_'+c, 10),
-      hp:             load('hp_'+c, 10),
-      conditions:     load('cond_'+c, []),
-      inventory:      load('inv_'+c, []),
-      notes:          load('notes_'+c, ''),
-      prepared:       load('prepared_'+c, []),
-      activeCantrips: load('active_cantrips_'+c, []),
-      committedSchool:load('committed_school_'+c, null),
-      abilityScores:  (typeof getAbilityScores !== 'undefined') ? getAbilityScores(c) : null,
+      level:          (typeof getCharLevel  !== 'undefined') ? getCharLevel(c)  : (cs.level || 2),
+      hpMax:          (typeof getHPMax      !== 'undefined') ? getHPMax(c)      : (cs.hpMax || 10),
+      hp:             cs.hp !== undefined ? cs.hp : (cs.hpMax || 10),
+      conditions:     cs.conditions     || [],
+      inventory:      cs.inventory      || [],
+      notes:          cs.notes          || '',
+      prepared:       cs.prepared       || [],
+      activeCantrips: cs.activeCantrips || [],
+      committedSchool:cs.committedSchool || null,
+      abilityScores:  (typeof getAbilityScores !== 'undefined') ? getAbilityScores(c) : (cs.abilityScores || null),
       slots:          {},
       resources:      {}
     };
     // Spell slots
     if(typeof getSpellSlotsForLevel !== 'undefined'){
       const slotTable = getSpellSlotsForLevel(c);
-      Object.keys(slotTable).forEach(lvl => { data.slots[lvl] = load('slots_'+c+'_'+lvl, 0); });
+      Object.keys(slotTable).forEach(lvl => { data.slots[lvl] = (cs.slots && cs.slots[lvl] !== undefined) ? cs.slots[lvl] : 0; });
     }
     // Resources
     if(preset && preset.resources){
-      preset.resources.forEach(r => { data.resources[r.key] = load('resource_'+c+'_'+r.key, 0); });
+      preset.resources.forEach(r => { data.resources[r.key] = (cs.resources && cs.resources[r.key] !== undefined) ? cs.resources[r.key] : 0; });
     }
     // Actualizar CHAR_STATE en memoria inmediatamente (sin esperar respuesta API)
     if(!window.CHAR_STATE) window.CHAR_STATE = {};

@@ -64,11 +64,15 @@ function initApp() {
   renderNPCs();
 
   CHARS.forEach(c => {
-    const hp  = load('hp_' + c, getHPMax(c));
+    const cs  = (window.CHAR_STATE && window.CHAR_STATE[c]) || {};
+
+    // HP — siempre desde CHAR_STATE (MongoDB), portrait sigue en localStorage
+    const hp  = cs.hp !== undefined ? cs.hp : getHPMax(c);
     const inp = document.getElementById(c + '-hp');
     if (inp) { inp.value = hp; updateHP(c); }
 
-    const conds = load('cond_' + c, []);
+    // Condiciones desde CHAR_STATE
+    const conds = cs.conditions || [];
     conds.forEach(cond => {
       document.querySelectorAll('#' + c + '-conditions .condition-btn')
         .forEach(btn => { if (btn.textContent === cond) btn.classList.add('active'); });
@@ -76,10 +80,12 @@ function initApp() {
 
     renderInventory(c);
 
-    const notes = load('notes_' + c, '');
+    // Notas desde CHAR_STATE
+    const notes = cs.notes || '';
     const ta    = document.getElementById(c + '-notes');
     if (ta) ta.value = notes;
 
+    // Retrato — se queda en localStorage (son data URLs, pesadas para MongoDB)
     const portrait = load('portrait_' + c, null);
     if (portrait) setPortrait(c, portrait);
   });
