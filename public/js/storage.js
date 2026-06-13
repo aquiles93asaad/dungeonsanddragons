@@ -3,6 +3,19 @@
 // Se activa desde init.js después de cargar el estado inicial (para no sincronizar durante el arranque)
 var _apiSyncEnabled = false;
 
+// Limpiar localStorage obsoleto al arrancar (excepto el token de acceso)
+(function clearStaleStorage(){
+  const STORAGE_VERSION = '4';
+  const token = localStorage.getItem('ard_access_token');
+  if(localStorage.getItem('ard_storage_version') !== STORAGE_VERSION){
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('ard_'))
+      .forEach(k => localStorage.removeItem(k));
+    if(token) localStorage.setItem('ard_access_token', token);
+    localStorage.setItem('ard_storage_version', STORAGE_VERSION);
+  }
+})();
+
 function save(key, val){
   try{ localStorage.setItem('ard_'+key, JSON.stringify(val)); showSaved(); } catch(e){}
   if(_apiSyncEnabled) _maybeSyncToAPI(key);
