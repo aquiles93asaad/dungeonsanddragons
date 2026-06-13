@@ -35,7 +35,7 @@ function updateOverview(){
   const grid=document.getElementById('overview-grid');
   if(!grid)return;
   grid.innerHTML='';
-  const labels={rac:'Bárbaro Nv2',relyo:'Monje Nv2',tyrell:'Paladín Nv2',boyd:'Druida Nv2',esdas:'Wizard Nv2'};
+  const labels={}; CHARS.forEach(c=>{ const preset=CLASS_PRESETS[c]||{}; const lvl=getCharLevel(c); labels[c]=(preset.className||c)+' Nv'+lvl; });
   const icons={rac:'🪓',relyo:'🥋',tyrell:'🛡',boyd:'🌿',esdas:'🔥'};
   CHARS.forEach(c=>{
     const hp=load('hp_'+c,getHPMax(c));
