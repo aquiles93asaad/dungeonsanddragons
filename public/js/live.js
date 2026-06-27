@@ -753,6 +753,8 @@ function getDefaultFormData(type){
       damageType: 'slashing',
       applyDamage: true,
       recklessAttack: false,
+      // class-ability fields
+      abilityKey: '', beastId: '', beastName: '', beastHP: '', healAmount: '', targetId: '', windOption: '',
       notes: ''
     };
   }
@@ -795,18 +797,15 @@ function updateFormField(field, value){
     currentForm.data.damageBonus = '';
     currentForm.data.targetIds = [];
   }
-  if(currentForm.type === 'class-ability' && field === 'character'){
+  // Al cambiar personaje en form de clase-habilidad (como type propio o como actionType), limpiar habilidad seleccionada
+  const isAbilityContext = currentForm.type === 'class-ability' || currentForm.data.actionType === 'class-ability';
+  if(isAbilityContext && field === 'character'){
     currentForm.data.abilityKey = '';
     currentForm.data.beastId = ''; currentForm.data.beastName = ''; currentForm.data.beastHP = '';
     currentForm.data.healAmount = ''; currentForm.data.targetId = '';
   }
-  if(['character','actionType','spellName','cantripName','skill','save'].includes(field)){
+  if(['character','actionType','spellName','cantripName','skill','save','abilityKey','windOption'].includes(field)){
     renderNoteForm();
-  } else if(currentForm.type === 'class-ability'){
-    // Solo re-renderizar si el campo cambia la estructura del form
-    const ABILITY_STRUCTURAL_FIELDS = ['character','abilityKey','slotLevel','windOption'];
-    if(ABILITY_STRUCTURAL_FIELDS.includes(field)) renderNoteForm();
-    // Si no, solo actualizar el dato (los inputs de texto/número no re-renderizan)
   } else if(currentForm.type === 'npc-action' && field === 'actionType'){
     renderNoteForm();
   } else {
@@ -1756,6 +1755,37 @@ function renderActionForm(){
           <div class="form-total-display"><span id="form-total">—</span></div>
         </div>
       </div>`;
+  } else if(d.actionType === 'class-ability'){
+    const abilities = CHAR_CLASS_ABILITIES[c] || [];
+    const lvl = getCharLevel(c);
+    const combatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
+    let abilityOpts = '<option value="">— elegir habilidad —</option>';
+    abilities.forEach(key => {
+      const abMeta = ABILITY_META[key]; if(!abMeta) return;
+      const rs = getAbilityResourceStatus(c, key);
+      const tag = rs.label ? ` · ${rs.label}` : '';
+      abilityOpts += `<option value="${key}" ${d.abilityKey===key?'selected':''}>${abMeta.name} / ${abMeta.nameEn}${tag}</option>`;
+    });
+    const abMeta = d.abilityKey ? ABILITY_META[d.abilityKey] : null;
+    const rs     = d.abilityKey ? getAbilityResourceStatus(c, d.abilityKey) : null;
+    const warnHTML = (rs && rs.warn) ? `<div class="form-warn">⚠ Sin recursos disponibles para esta habilidad. Podés guardar la nota igual.</div>` : '';
+    const specificHTML = (d.abilityKey && abMeta) ? renderAbilitySpecificFields(c, d.abilityKey, d, lvl, combatant) : '';
+    conditionalHTML = `
+      <div class="form-row">
+        <label>Habilidad</label>
+        <select class="form-input" onchange="updateFormField('abilityKey', this.value)">${abilityOpts}</select>
+      </div>
+      ${abMeta ? `<div class="ability-info-box">
+        <span class="ability-action-tag ${abMeta.isAction ? 'is-action' : abMeta.action.startsWith('Bonus') ? 'is-bonus' : 'is-free'}">${abMeta.isAction ? '🔵 Action' : abMeta.action.startsWith('Bonus') ? '🟡 Bonus Action' : '🟣 '+abMeta.action}</span>
+        ${abMeta.isAction
+          ? `<span class="ability-turn-warning">Gasta el turno — no puede hacer otra Action después</span>`
+          : abMeta.action.startsWith('Bonus')
+            ? `<span class="ability-turn-ok">Puede hacer una Action normal en el mismo turno</span>`
+            : `<span class="ability-turn-ok">No consume acción — se usa en el momento en que el ataque pega</span>`}
+        <div class="ability-desc" style="margin-top:0.4rem">${abMeta.desc}</div>
+      </div>` : ''}
+      ${warnHTML}
+      ${specificHTML}`;
   }
 
   // ── Rac: detectar si está en Furia o si usó Reckless Attack ──
@@ -1800,6 +1830,7 @@ function renderActionForm(){
             <option value="save" ${d.actionType==='save'?'selected':''}>Saving throw</option>
             <option value="spell" ${d.actionType==='spell'?'selected':''}>Lanzar hechizo</option>
             <option value="cantrip" ${d.actionType==='cantrip'?'selected':''}>Lanzar cantrip</option>
+            <option value="class-ability" ${d.actionType==='class-ability'?'selected':''}>⚡ Habilidad de clase</option>
             <option value="other" ${d.actionType==='other'?'selected':''}>Acción libre / narrativa</option>
           </select>
         </div>
@@ -2690,6 +2721,12 @@ function selectNarrativeEvent(eventId){
 function saveActionNote(){
   const d = currentForm.data;
 
+  // Delegar a saveClassAbilityNote cuando el tipo de acción es habilidad de clase
+  if(d.actionType === 'class-ability'){
+    saveClassAbilityNote();
+    return;
+  }
+
   // Side effect 1: consume spell slot si es hechizo nivelado
   if(d.actionType === 'spell' && d.spellName){
     const ok = consumeSpellSlot(d.character, parseInt(d.spellLevel)||1);
@@ -3137,6 +3174,7 @@ function renderLiveHeader(){
       📍 ${liveEscape(curLocName)}${liveEscape(locDetail)}
     </div>` : ''}
     <button class="btn-finalize dm-only" onclick="finalizeSession()">Finalizar sesión ↗</button>
+    <button class="btn-reset-session dm-only" onclick="resetLiveSession()" title="Borrar todas las notas y el combate, empezar de cero">↺ Resetear</button>
 
     <div class="live-group-actions dm-only">
       <div class="live-group-actions-label">Acciones del grupo:</div>
@@ -4068,20 +4106,45 @@ async function finalizeSession(){
     }).catch(err => console.error('Session archive PUT error:', err));
   }
 
-  LIVE_SESSION.meta.active = false;
+  // ── Resetear LIVE_SESSION para la próxima sesión ──────────────────────────
+  const nextNumber = (Number(LIVE_SESSION.meta.number) || 0) + 1;
+  LIVE_SESSION = {
+    meta: {
+      number: nextNumber,
+      title:  '',
+      date:   new Date().toISOString().slice(0, 10),
+      active: false,
+      presentChars: [...CHARS],
+      present: CHARS.join(', '),
+      locationId:     null,
+      locationDetail: ''
+    },
+    notes:  [],
+    combat: { active: false, round: 1, turn: 0, participants: [] }
+  };
   saveLiveSession();
   renderLive();
 
   alert([
-    `✓ Sesión #${LIVE_SESSION.meta.number} finalizada y archivada.`,
+    `✓ Sesión #${nextNumber - 1} finalizada y archivada.`,
     ``,
     `• ${eventsUpdated} evento(s) marcados como "Hecho"`,
     `• ${eventsCreated} evento(s) nuevo(s) creados como "Hecho"`,
     `• Stream completo guardado en la colección Sessions`,
     ``,
-    `Mirá la pestaña Campaña → Eventos para ver todo en orden cronológico.`,
-    `La sesión live queda visible (inactiva) hasta que arranques una nueva sesión.`
+    `La sesión live fue reseteada. Lista para la Sesión #${nextNumber}.`
   ].join('\n'));
+}
+
+function resetLiveSession(){
+  if(!confirm(
+    `¿Resetear la sesión live?\n\nEsto borra TODAS las notas, el stream y el combate actual.\nEl número de sesión (#${LIVE_SESSION.meta.number}) y los datos de personajes NO se tocan.\n\nEsta acción no se puede deshacer.`
+  )) return;
+  LIVE_SESSION.notes  = [];
+  LIVE_SESSION.combat = { active: false, round: 1, turn: 0, participants: [] };
+  currentForm = null;
+  saveLiveSession();
+  renderLive();
 }
 
 /* ── INIT ── */

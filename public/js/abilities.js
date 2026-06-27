@@ -30,13 +30,32 @@ function getMaxSpellLevel(c){
   return keys.length ? Math.max(...keys) : 0;
 }
 
+/* Helper: mantiene CHAR_STATE sincronizado para que syncCharState() lea valores frescos */
+function _patchCharState(c, patch){
+  if(!window.CHAR_STATE) window.CHAR_STATE = {};
+  if(!window.CHAR_STATE[c]) window.CHAR_STATE[c] = {};
+  Object.assign(window.CHAR_STATE[c], patch);
+}
+
+function _patchCharStateSlot(c, level, newUsed){
+  if(!window.CHAR_STATE) window.CHAR_STATE = {};
+  if(!window.CHAR_STATE[c]) window.CHAR_STATE[c] = {};
+  if(!window.CHAR_STATE[c].slots) window.CHAR_STATE[c].slots = {};
+  window.CHAR_STATE[c].slots[String(level)] = newUsed;
+}
+
+function _patchCharStateResource(c, key, newVal){
+  if(!window.CHAR_STATE) window.CHAR_STATE = {};
+  if(!window.CHAR_STATE[c]) window.CHAR_STATE[c] = {};
+  if(!window.CHAR_STATE[c].resources) window.CHAR_STATE[c].resources = {};
+  window.CHAR_STATE[c].resources[key] = newVal;
+}
+
 function toggleSpellSlot(c, level, idx){
   const state = loadSlotState(c, level);
-  if(idx < state.used){
-    save('slots_'+c+'_'+level, state.used - 1);
-  } else {
-    save('slots_'+c+'_'+level, state.used + 1);
-  }
+  const newUsed = idx < state.used ? state.used - 1 : state.used + 1;
+  _patchCharStateSlot(c, level, newUsed);
+  save('slots_'+c+'_'+level, newUsed);
   renderCharAbilities(c);
 }
 
@@ -44,7 +63,9 @@ function toggleSpellSlot(c, level, idx){
 function consumeSpellSlot(c, level){
   const state = loadSlotState(c, level);
   if(state.used >= state.max) return false;
-  save('slots_'+c+'_'+level, state.used + 1);
+  const newUsed = state.used + 1;
+  _patchCharStateSlot(c, level, newUsed);
+  save('slots_'+c+'_'+level, newUsed);
   renderCharAbilities(c);
   return true;
 }
@@ -65,8 +86,9 @@ function toggleResourceUse(c, key, idx){
   const r = (CLASS_PRESETS[c].resources||[]).find(x=>x.key===key);
   if(!r) return;
   const state = loadResourceState(c, r);
-  const newUsed = idx < state.used ? state.used - 1 : state.used + 1;
-  save('resource_'+c+'_'+key, Math.max(0, Math.min(r.max, newUsed)));
+  const newUsed = Math.max(0, Math.min(r.max, idx < state.used ? state.used - 1 : state.used + 1));
+  _patchCharStateResource(c, key, newUsed);
+  save('resource_'+c+'_'+key, newUsed);
   renderCharAbilities(c);
 }
 
@@ -75,6 +97,7 @@ function changeResourcePool(c, key, delta){
   if(!r || r.kind !== 'pool') return;
   const state = loadResourceState(c, r);
   const next = Math.max(0, Math.min(r.max, state.current + delta));
+  _patchCharStateResource(c, key, next);
   save('resource_'+c+'_'+key, next);
   renderCharAbilities(c);
 }
@@ -83,6 +106,7 @@ function setResourcePool(c, key, val){
   const r = (CLASS_PRESETS[c].resources||[]).find(x=>x.key===key);
   if(!r || r.kind !== 'pool') return;
   const next = Math.max(0, Math.min(r.max, parseInt(val)||0));
+  _patchCharStateResource(c, key, next);
   save('resource_'+c+'_'+key, next);
   renderCharAbilities(c);
 }
@@ -168,19 +192,27 @@ function levelUpCharacter(c){
 /* ── REST ── */
 function longRest(c){
   if(!confirm('¿Long rest? Restaura HP máximo, slots de hechizo, Rage/Ki/Lay on Hands/Wild Shape, y todos los recursos diarios.')) return;
+  const preset = CLASS_PRESETS[c];
   // HP
   const inp = document.getElementById(c+'-hp');
   if(inp){ inp.value = getHPMax(c); updateHP(c); }
-  // Slots
-  const preset = CLASS_PRESETS[c];
+  // Slots → patch CHAR_STATE + localStorage
+  const newSlots = {};
   if(preset.spellSlots){
-    Object.keys(preset.spellSlots).forEach(level=>save('slots_'+c+'_'+level, 0));
+    Object.keys(preset.spellSlots).forEach(level => {
+      newSlots[level] = 0;
+      save('slots_'+c+'_'+level, 0);
+    });
   }
-  // Resources
+  _patchCharState(c, { slots: newSlots });
+  // Resources → patch CHAR_STATE + localStorage
+  const newResources = {};
   (preset.resources||[]).forEach(r=>{
-    if(r.kind === 'pool') save('resource_'+c+'_'+r.key, r.max);
-    else save('resource_'+c+'_'+r.key, 0);
+    const val = r.kind === 'pool' ? r.max : 0;
+    newResources[r.key] = val;
+    save('resource_'+c+'_'+r.key, val);
   });
+  _patchCharState(c, { resources: newResources });
   renderCharAbilities(c);
 }
 
@@ -189,8 +221,9 @@ function shortRest(c){
   const preset = CLASS_PRESETS[c];
   (preset.resources||[]).forEach(r=>{
     if(r.restoresOn === 'short'){
-      if(r.kind === 'pool') save('resource_'+c+'_'+r.key, r.max);
-      else save('resource_'+c+'_'+r.key, 0);
+      const val = r.kind === 'pool' ? r.max : 0;
+      _patchCharStateResource(c, r.key, val);
+      save('resource_'+c+'_'+r.key, val);
     }
   });
   renderCharAbilities(c);
@@ -210,6 +243,7 @@ function toggleSpellPrepared(c, spellName){
   } else {
     list.push(spellName);
   }
+  _patchCharState(c, { prepared: list });
   save('prepared_'+c, list);
   renderCharAbilities(c);
 }
@@ -255,6 +289,7 @@ function toggleCantripActive(c, name){
   } else {
     list.push(name);
   }
+  _patchCharState(c, { activeCantrips: list });
   save('active_cantrips_'+c, list);
   renderCharAbilities(c);
 }

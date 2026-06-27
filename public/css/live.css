@@ -99,6 +99,12 @@
   color:var(--gold);cursor:pointer;transition:all 0.15s;text-transform:uppercase;
 }
 .btn-finalize:hover{background:var(--gold-dim);color:var(--white)}
+.btn-reset-session{
+  font-family:var(--font-title);font-size:0.7rem;letter-spacing:0.1em;
+  padding:0.55rem 0.8rem;background:transparent;border:1px solid var(--border2);
+  color:var(--text-muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;
+}
+.btn-reset-session:hover{background:var(--red-dark,#3a1010);border-color:var(--red-bright,#f87171);color:var(--red-bright,#f87171)}
 
 /* Layout */
 .live-layout{

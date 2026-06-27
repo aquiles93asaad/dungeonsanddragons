@@ -219,6 +219,9 @@ function getCantripDamageDice(cn, charLevel, c){
 /* ── Comprometerse con una escuela (Esdas) ── */
 function commitToSchool(c, school){
   if(!confirm(`¿${c.charAt(0).toUpperCase()+c.slice(1)} se compromete con la escuela ${school}? Esto desbloquea el escalado de cantrips y los features de subclase. La decisión es permanente narrativamente (pero podés revertirla manualmente borrando la clave del localStorage).`)) return;
+  if(!window.CHAR_STATE) window.CHAR_STATE = {};
+  if(!window.CHAR_STATE[c]) window.CHAR_STATE[c] = {};
+  window.CHAR_STATE[c].committedSchool = school;
   save('committed_school_'+c, school);
   alert(`${c.charAt(0).toUpperCase()+c.slice(1)} ahora es ${school}. Sus cantrips de daño escalan normalmente con el nivel.`);
   renderCharAbilities(c);
