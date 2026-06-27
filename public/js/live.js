@@ -1738,24 +1738,7 @@ function renderActionForm(){
       ${condName ? `<div class="spell-effect-line">⚡ Aplica <strong>${liveEscape(condName)}</strong>${dur ? ` · ${dur}` : ''} a los objetivos que fallen el save.</div>` : ''}
       ${!condName && !casterEff ? '<div class="spell-effect-line muted">Sin daño directo.</div>' : ''}
     </div>`;
-  } else {
-    // Skill check, saving throw personal, free action, o spell sin seleccionar
-    bottomHTML = `
-      <div class="form-grid">
-        <div class="form-row">
-          <label>Tirada d20</label>
-          <input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.roll)}" oninput="updateFormField('roll', this.value)">
-        </div>
-        <div class="form-row">
-          <label>Modificador (+/-)</label>
-          <input type="number" class="form-input" placeholder="+5" value="${liveEscape(d.modifier)}" oninput="updateFormField('modifier', this.value)">
-        </div>
-        <div class="form-row">
-          <label>Total</label>
-          <div class="form-total-display"><span id="form-total">—</span></div>
-        </div>
-      </div>`;
-  } else if(d.actionType === 'class-ability'){
+  } else if(d.actionType === 'class-ability') {
     const abilities = CHAR_CLASS_ABILITIES[c] || [];
     const lvl = getCharLevel(c);
     const combatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
@@ -1786,6 +1769,23 @@ function renderActionForm(){
       </div>` : ''}
       ${warnHTML}
       ${specificHTML}`;
+  } else {
+    // Skill check, saving throw personal, free action, o spell sin seleccionar
+    bottomHTML = `
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Tirada d20</label>
+          <input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.roll)}" oninput="updateFormField('roll', this.value)">
+        </div>
+        <div class="form-row">
+          <label>Modificador (+/-)</label>
+          <input type="number" class="form-input" placeholder="+5" value="${liveEscape(d.modifier)}" oninput="updateFormField('modifier', this.value)">
+        </div>
+        <div class="form-row">
+          <label>Total</label>
+          <div class="form-total-display"><span id="form-total">—</span></div>
+        </div>
+      </div>`;
   }
 
   // ── Rac: detectar si está en Furia o si usó Reckless Attack ──
