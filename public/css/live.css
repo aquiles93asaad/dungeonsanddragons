@@ -339,6 +339,7 @@
   flex-wrap:wrap;
 }
 .spell-info-preview > .school-badge, .spell-info-preview > .spell-shape{display:inline-block}
+.spell-smite-save{font-size:0.82rem;color:#fde68a;margin-top:0.2rem;padding:0.25rem 0.4rem;background:rgba(250,204,21,0.08);border-left:2px solid rgba(250,204,21,0.4)}
 
 .outcome-badge{
   font-family:var(--font-title);font-size:0.85rem;letter-spacing:0.05em;
@@ -368,9 +369,15 @@
 .narrative-chapter-hdr{
   display:flex;align-items:flex-start;gap:0.7rem;
   padding:0.65rem 0.9rem;background:rgba(0,0,0,0.15);
-  border-bottom:1px solid var(--border2);
+  border-bottom:1px solid var(--border2);cursor:pointer;user-select:none;
 }
-.narrative-chapter-hdr.chapter-pre-hdr{background:transparent;border-bottom:none}
+.narrative-chapter-hdr:hover{background:rgba(0,0,0,0.25)}
+.narrative-chapter-hdr.chapter-pre-hdr{background:transparent;border-bottom:none;cursor:default}
+.narrative-chapter-hdr.chapter-pre-hdr:hover{background:transparent}
+.chap-chevron{font-size:0.65rem;color:var(--muted);transition:transform 0.2s;flex-shrink:0;align-self:center}
+.narrative-chapter.open .chap-chevron{transform:rotate(180deg)}
+.narrative-chapter-body{display:none}
+.narrative-chapter.open .narrative-chapter-body{display:flex}
 .chap-icon{
   font-size:1rem;color:var(--green-bright);flex-shrink:0;margin-top:0.1rem;
 }
@@ -393,7 +400,7 @@
   color:var(--green-bright);border:1px solid var(--green-bright);padding:0.1rem 0.45rem;opacity:0.8;
 }
 .narrative-chapter-body{
-  display:flex;flex-direction:column;gap:0.5rem;padding:0.6rem 0.8rem;
+  flex-direction:column;gap:0.5rem;padding:0.6rem 0.8rem;
 }
 /* las notas hijo no necesitan borde izquierdo propio dentro del capítulo */
 .narrative-chapter-body .note-card{margin-left:0.5rem}
@@ -558,6 +565,7 @@
 .spell-effect-block{background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.25);border-radius:6px;padding:0.6rem 0.9rem;margin:0.5rem 0}
 .spell-effect-line{font-size:0.82rem;color:var(--cream);line-height:1.5}
 .spell-effect-line strong{color:#c4b5fd}
+.buff-effect-desc{color:#e9d5ff;font-style:italic}
 
 /* ── CLASS ABILITIES ─────────────────────────────────── */
 
@@ -588,17 +596,25 @@
 }
 .ability-grid-2 label{font-size:0.78rem;color:var(--cream-muted);display:block;margin-bottom:0.25rem}
 
-/* Rage banner (en action form cuando Rac está en furia) */
-.rage-banner-active{
-  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);
-  border-radius:6px;padding:0.5rem 0.9rem;margin:0.5rem 0;
-  font-size:0.83rem;color:#fca5a5;
+/* Buff banners en action form */
+.action-buff-banner{
+  border-radius:6px;padding:0.5rem 0.9rem;margin:0.4rem 0;font-size:0.83rem;
 }
-.reckless-banner{
-  background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.35);
-  border-radius:6px;padding:0.5rem 0.9rem;margin:0.4rem 0;
-  font-size:0.82rem;color:#fdba74;
+.action-buff-banner.buff-rage{
+  background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;
 }
+.action-buff-banner.buff-warn{
+  background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.35);color:#fdba74;
+}
+.action-buff-banner.buff-conc{
+  background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;
+}
+.action-buff-banner.buff-holy{
+  background:rgba(250,204,21,0.10);border:1px solid rgba(250,204,21,0.30);color:#fde68a;
+}
+/* Legacy aliases */
+.rage-banner-active{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);border-radius:6px;padding:0.5rem 0.9rem;margin:0.5rem 0;font-size:0.83rem;color:#fca5a5}
+.reckless-banner{background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.35);border-radius:6px;padding:0.5rem 0.9rem;margin:0.4rem 0;font-size:0.82rem;color:#fdba74}
 .ability-rage-active{
   background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);
   border-radius:6px;padding:0.7rem 0.9rem;margin:0.5rem 0;
@@ -729,4 +745,39 @@
 /* Ajuste: el chap-header también necesita espacio para los botones de orden */
 .narrative-chapter-hdr{
   flex-wrap:wrap;gap:0.35rem;
+}
+
+/* ── LOOT FORM (nuevo) ── */
+.loot-config-grid{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end}
+.loot-rolls-section{display:flex;flex-direction:column;gap:0.6rem;margin-top:0.8rem}
+.loot-roll-row{background:var(--bg3);border:1px solid var(--border);padding:0.6rem 0.8rem}
+.loot-roll-header{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap}
+.loot-roll-label{font-family:var(--font-title);font-size:0.8rem;color:var(--muted);letter-spacing:0.06em;min-width:70px}
+.loot-roll-input{width:80px !important}
+.loot-roll-badge{
+  font-family:var(--font-title);font-size:0.85rem;padding:0.15rem 0.5rem;
+  border:1px solid var(--border2);color:var(--cream);background:var(--bg2);
+}
+.loot-roll-badge.loot-nat1{color:var(--red-bright);border-color:var(--red-bright);background:var(--red-dim)}
+.loot-roll-badge.loot-nat20{color:var(--gold);border-color:var(--gold);background:var(--gold-dark)}
+.loot-roll-drops{display:flex;flex-direction:column;gap:0.35rem;margin-top:0.5rem}
+.loot-drop{
+  display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;
+  background:var(--bg2);border:1px solid var(--border);
+  border-left:3px solid var(--green-bright);padding:0.4rem 0.6rem;
+}
+.loot-drop-assigned{border-left-color:var(--muted);opacity:0.7}
+.loot-drop-name{font-family:var(--font-title);font-size:0.85rem;color:var(--cream);flex:1;min-width:120px}
+.loot-drop-qty{display:flex;align-items:center;gap:0.35rem;font-size:0.82rem}
+.loot-qty-label{color:var(--gold);font-family:var(--font-title);font-size:0.82rem}
+.loot-qty-input{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--cream);
+  font-family:var(--font-title);font-size:0.85rem;padding:0.2rem 0.4rem;
+  text-align:center;
+}
+.loot-qty-input:focus{outline:none;border-color:var(--gold)}
+.loot-drop-who{font-size:0.78rem;color:var(--green-bright);font-family:var(--font-title)}
+.loot-indiv-sel{
+  background:var(--bg3);border:1px solid var(--border2);color:var(--cream);
+  font-size:0.8rem;padding:0.2rem 0.4rem;
 }

@@ -430,12 +430,9 @@ Fuentes de verdad narrativa (en `D&D/`): `Ardaetheros_Personajes_V1.md`, `_NPCs_
 - **Fase 4** ✅ Auth DM: token en `.env`, gate de acceso, `body.dm-mode`, `requireDM`
 - **Fase 4B** ✅ Visibilidad por rol: CSS `dm-only`/`player-only`, spells/slots read-only para jugadores
 - **Fase 5** ✅ Cuentas de jugadores: tokens únicos, notas privadas, panel DM en Campaña
-
-## Fases pendientes
-
-- **Fase 6** — Vistas de jugador refinadas (navegación automática al char del jugador al loguearse)
-- **Fase 7** — Socket.IO para sesión live en tiempo real (múltiples clientes viendo simultáneamente)
-- **Fase 8** — Deploy a Render
+- **Fase 6** ✅ Vistas de jugador refinadas (navegación automática al char del jugador al loguearse)
+- **Fase 7** ✅ Socket.IO para sesión live en tiempo real (múltiples clientes viendo simultáneamente)
+- **Fase 8** ✅ Deploy a Render
 
 ---
 

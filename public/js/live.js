@@ -880,14 +880,17 @@ function spellRequiresAttack(spellName, c){
   if(!spellName) return false;
   const s = (CLASS_PRESETS[c]?.spellList||[]).find(x=>x.name===spellName);
   if(!s) return false;
-  // Heurística: si shape menciona "spell attack" o "dardos" o "Toque"/"melee", es ataque
+  // Campo explícito tiene prioridad sobre heurística
+  if(typeof s.requiresAttack === 'boolean') return s.requiresAttack;
+  // Heurística conservadora: solo "spell attack" en shape (no 'toque' — false positive para buffs/heal)
   const sh = (s.shape||'').toLowerCase();
-  return sh.includes('attack') || sh.includes('toque') || sh.includes('dardos') || sh.includes('melee');
+  return sh.includes('spell attack') || sh.includes('melee spell');
 }
 function cantripRequiresAttack(cantripName, c){
   if(!cantripName) return false;
   const cn = (CLASS_PRESETS[c]?.cantripsData||[]).find(x=>x.name===cantripName);
   if(!cn) return false;
+  if(typeof cn.requiresAttack === 'boolean') return cn.requiresAttack;
   const sh = (cn.shape||'').toLowerCase();
   return sh.includes('attack');
 }
@@ -1349,7 +1352,7 @@ function renderNoteForm(){
   else if(currentForm.type === 'conversation') container.innerHTML = renderConversationForm();
   else if(currentForm.type === 'npc') container.innerHTML = renderNpcForm();
   else if(currentForm.type === 'combat') container.innerHTML = renderCombatForm();
-  else if(currentForm.type === 'loot') { container.innerHTML = renderLootForm(); updateLootFormResult(); return; }
+  else if(currentForm.type === 'loot') { container.innerHTML = renderLootForm(); return; }
   else if(currentForm.type === 'class-ability') container.innerHTML = renderClassAbilityForm();
   else container.innerHTML = renderNarrativeForm();
   updateFormAssistance();
@@ -1465,6 +1468,36 @@ function renderHealBlock(d){
   </div>`;
 }
 
+function renderCharBuffBanners(c, actionType){
+  const banners = [];
+  const combatant = LIVE_SESSION.combat.participants.find(p => p.kind === 'player' && p.refId === c);
+  if(!combatant) return '';
+
+  // Buff por concentración activa
+  if(combatant.concentration && combatant.concentration.spellName){
+    const sName = combatant.concentration.spellName;
+    const preset = CLASS_PRESETS[c];
+    const spellData = preset && (
+      (preset.spellList||[]).find(s => s.name === sName) ||
+      (preset.cantripsData||[]).find(s => s.name === sName)
+    );
+    const desc = spellData && spellData.buffDesc;
+    if(desc){
+      const turnsLeft = combatant.concentration.turnsLeft != null ? ` (${combatant.concentration.turnsLeft}r)` : '';
+      banners.push(`<div class="action-buff-banner buff-conc">◎ <strong>${sName}</strong>${turnsLeft} — ${desc}</div>`);
+    }
+  }
+
+  // Condiciones propias que afectan acción
+  const conds = (combatant.conditions || []).map(cn => cn.toLowerCase ? cn.toLowerCase() : cn);
+  if(conds.includes('rage') || (combatant.inRage)) { /* rage ya tiene rageBannerHTML */ }
+  if(conds.includes('blessed') || (LIVE_SESSION.charBuffs && LIVE_SESSION.charBuffs[c] && LIVE_SESSION.charBuffs[c].bless)){
+    banners.push(`<div class="action-buff-banner buff-holy">✨ <strong>Bendición (Bless)</strong> activa — sumá 1d4 a tus tiradas de ataque y saving throws.</div>`);
+  }
+
+  return banners.join('');
+}
+
 function renderActionForm(){
   const d = currentForm.data;
   const c = d.character;
@@ -1499,12 +1532,12 @@ function renderActionForm(){
   const selectedSpellData = d.actionType === 'spell' ? preparedSpells.find(s=>s.name===d.spellName) : null;
   const selectedCantripData = d.actionType === 'cantrip' ? activeCantrips.find(cn=>cn.name===d.cantripName) : null;
   const activeSpellData = selectedSpellData || selectedCantripData;
-  const isHealSpell = d.damageType === 'healing' || !!(activeSpellData && activeSpellData.damageType === 'healing');
+  const isHealSpell = d.damageType === 'healing' || !!(activeSpellData && (activeSpellData.damageType === 'healing' || activeSpellData.isHeal));
   const isPhysicalAttack = ['attack-melee','attack-ranged'].includes(d.actionType);
   const isAttackSpell = (d.actionType==='spell' && spellRequiresAttack(d.spellName, d.character)) ||
                         (d.actionType==='cantrip' && cantripRequiresAttack(d.cantripName, d.character));
   const needsRollTarget = isPhysicalAttack || isAttackSpell;
-  const isUtilitySpell = !!(activeSpellData && !activeSpellData.damage && !activeSpellData.saveType && !isHealSpell);
+  const isUtilitySpell = !!(activeSpellData && !activeSpellData.damage && !activeSpellData.damageBase && !activeSpellData.saveType && !isHealSpell);
   const dmgTypes = ['slashing','piercing','bludgeoning','fire','cold','lightning','thunder','acid','poison','psychic','necrotic','radiant','force'];
 
   // Sub-fields condicionales
@@ -1531,7 +1564,11 @@ function renderActionForm(){
     if(selectedSpell){
       if(!d.damageDice && selectedSpell.damage) d.damageDice = selectedSpell.damage;
       if(!d.damageType && selectedSpell.damageType) d.damageType = selectedSpell.damageType;
-      if(selectedSpell.saveType && !d.isSaveSpell){
+      // requiresAttack tiene prioridad sobre saveType (smites: ataque primero, save secundario)
+      if(selectedSpell.requiresAttack){
+        d.isSaveSpell = false;
+        if(d.modifier === '' || d.modifier == null){ const m = calcSpellAttackMod(d.character); if(m !== '') d.modifier = String(m); }
+      } else if(selectedSpell.saveType && !d.isSaveSpell){
         d.isSaveSpell = true; d.saveType = selectedSpell.saveType;
         d.halfOnSave = selectedSpell.halfOnSave || false;
         if(!d.saveDC) d.saveDC = String(calcSpellSaveDC(d.character));
@@ -1540,9 +1577,13 @@ function renderActionForm(){
         if(d.modifier === '' || d.modifier == null){ const m = calcSpellAttackMod(d.character); if(m !== '') d.modifier = String(m); }
       }
     }
+    const smiteSaveNote = (selectedSpell && selectedSpell.requiresAttack && selectedSpell.saveType)
+      ? `<div class="spell-smite-save">Si pega → objetivo tira <strong>${selectedSpell.saveType.toUpperCase()} save</strong> (DC ${calcSpellSaveDC(d.character)}) o ${selectedSpell.damageType||'efecto adicional'}.</div>`
+      : '';
     const spellInfo = selectedSpell ? `<div class="spell-info-preview">
       ${schoolBadge(selectedSpell.school)} <span class="spell-shape">${selectedSpell.shape||''}</span>
       <div style="font-size:0.82rem;color:var(--cream);margin-top:0.3rem">${selectedSpell.desc}</div>
+      ${smiteSaveNote}
     </div>` : '';
     const showDamageDice = !!(selectedSpell && selectedSpell.damage && !isHealSpell);
     conditionalHTML = `
@@ -1728,15 +1769,29 @@ function renderActionForm(){
       </div>
       <div id="result-hp-preview" class="result-hp-preview">${hpPreviewHTML}</div>`;
   } else if(isUtilitySpell){
-    // Spell sin daño y sin save: mostrar efecto que aplica
+    // Buff / utilidad pura: sin daño ni save. Mostrar descripción del efecto activo.
     const eff = activeSpellData && activeSpellData.effect;
     const condName = eff && eff.targetConditionOnFail ? eff.targetConditionOnFail : '';
     const dur = eff && eff.duration ? `${eff.duration} rounds` : '';
-    const casterEff = eff && eff.casterCondition === 'concentration' ? '◎ Requiere concentración' : '';
+    const isConc = (activeSpellData && activeSpellData.shape && activeSpellData.shape.toLowerCase().includes('concentración'))
+                || (eff && eff.casterCondition === 'concentration');
+    const buffDescText = activeSpellData && activeSpellData.buffDesc;
+    // Selector de objetivo para buffs que se aplican a aliados
+    const buffTargets = getAlivePlayers();
+    const buffTargetId = (d.targetIds||[])[0]||'';
+    const buffTargetOpts = buffTargets.length > 1
+      ? `<option value="">— elegir objetivo (opcional) —</option>` +
+        buffTargets.map(p=>`<option value="${p.id}" ${p.id===buffTargetId?'selected':''}>${liveEscape(getCombatantName(p))}</option>`).join('')
+      : '';
     bottomHTML = `<div class="spell-effect-block">
-      ${casterEff ? `<div class="spell-effect-line">${liveEscape(casterEff)}</div>` : ''}
-      ${condName ? `<div class="spell-effect-line">⚡ Aplica <strong>${liveEscape(condName)}</strong>${dur ? ` · ${dur}` : ''} a los objetivos que fallen el save.</div>` : ''}
-      ${!condName && !casterEff ? '<div class="spell-effect-line muted">Sin daño directo.</div>' : ''}
+      ${isConc ? `<div class="spell-effect-line">◎ <strong>Concentración</strong> — rompe cualquier concentración activa anterior.</div>` : ''}
+      ${buffDescText ? `<div class="spell-effect-line buff-effect-desc">${liveEscape(buffDescText)}</div>` : ''}
+      ${condName ? `<div class="spell-effect-line">⚡ Aplica <strong>${liveEscape(condName)}</strong>${dur ? ` · ${dur}` : ''} al objetivo.</div>` : ''}
+      ${!buffDescText && !condName && !isConc ? '<div class="spell-effect-line muted">Sin daño directo.</div>' : ''}
+      ${buffTargetOpts ? `<div class="form-row" style="margin-top:0.5rem">
+        <label>Objetivo del buff (opcional)</label>
+        <select class="form-input" onchange="setSingleTarget(this.value)">${buffTargetOpts}</select>
+      </div>` : ''}
     </div>`;
   } else if(d.actionType === 'class-ability') {
     const abilities = CHAR_CLASS_ABILITIES[c] || [];
@@ -1795,9 +1850,11 @@ function renderActionForm(){
   const rageBonus = getRageDamageBonus(getCharLevel('rac'));
 
   const rageBannerHTML = (c === 'rac') ? `
-    ${racInRage ? `<div class="rage-banner-active">😠 Rac está en <strong>Furia</strong> — daño STR/melee +${rageBonus}, resistencia a daño físico.</div>` : ''}
-    ${racReckless ? `<div class="reckless-banner">⚔ Rac usó <strong>Ataque Imprudente</strong> este turno — los atacantes tienen ventaja contra él hasta su próximo turno.</div>` : ''}
+    ${racInRage ? `<div class="action-buff-banner buff-rage">😠 <strong>Furia activa</strong> — daño STR/melee +${rageBonus}, resistencia a daño físico (B/P/S), ventaja en STR checks/saves.</div>` : ''}
+    ${racReckless ? `<div class="action-buff-banner buff-warn">⚔ <strong>Ataque Imprudente</strong> activo — los atacantes tienen ventaja contra Rac hasta su próximo turno.</div>` : ''}
   ` : '';
+
+  const buffBannersHTML = renderCharBuffBanners(c, d.actionType);
 
   // Reckless Attack checkbox (solo Rac + ataque melee)
   const recklessHTML = (c === 'rac' && d.actionType === 'attack-melee') ? `
@@ -1837,6 +1894,7 @@ function renderActionForm(){
       </div>
 
       ${rageBannerHTML}
+      ${buffBannersHTML}
       ${recklessHTML}
       ${conditionalHTML}
 
@@ -2043,8 +2101,12 @@ function selectSpell(spellName, charId){
   const sp = (preset && preset.spellList || []).find(s => s.name === spellName);
   if(sp && sp.damage) currentForm.data.damageDice = sp.damage;
   if(sp && sp.damageType) currentForm.data.damageType = sp.damageType;
-  if(sp && sp.saveType){
-    // Modo save: DC auto-calculado, no se muestra tirada de ataque
+  // requiresAttack tiene prioridad — smites: attack block primero, save secundario
+  if(sp && sp.requiresAttack){
+    currentForm.data.isSaveSpell = false;
+    const mod = calcSpellAttackMod(charId);
+    if(mod !== '') currentForm.data.modifier = String(mod);
+  } else if(sp && sp.saveType){
     currentForm.data.isSaveSpell = true;
     currentForm.data.saveType = sp.saveType;
     currentForm.data.halfOnSave = sp.halfOnSave || false;
@@ -2926,24 +2988,35 @@ function openLiveLootForm(combatId){
     alert('Este monstruo no tiene loot table definida. Si es ad-hoc, agregalo manualmente al inventario del jugador.');
     return;
   }
+  const presentChars = LIVE_SESSION.meta.presentChars || CHARS;
+  const defaultLooter = presentChars[0] || CHARS[0];
   currentForm = {
     type:'loot',
     data:{
       combatId,
       monsterPresetId: preset.id,
       monsterName: getCombatantName(p),
-      roll: '',
-      modifier: '',
-      drops: [],          // resultados al rolar
-      assignments: {}     // {dropIdx: charId} para tracking de a quién se asignó cada drop
+      looter: defaultLooter,
+      numRolls: 1,
+      rolls: [{ value:'', drops:[] }],
+      assignments: {}   // key `${rollIdx}_${itemIdx}` → charId
     }
   };
   renderNoteForm();
-  // scroll al form
   setTimeout(()=>{
     const el = document.getElementById('note-form-container');
     if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
   }, 50);
+}
+
+/* Devuelve true si el patrón de qty requiere tirada (ej: '1d4', '2d6 pies') */
+function _lootQtyIsDice(qty){
+  return /^\d+d\d+/.test(String(qty||'1').trim());
+}
+
+/* Formatea el label de un drop para inventario */
+function _lootDropLabel(itemName, qtyVal, monsterName){
+  return `${itemName} ×${qtyVal} (loot de ${monsterName})`;
 }
 
 function renderLootForm(){
@@ -2951,7 +3024,6 @@ function renderLootForm(){
   const preset = MONSTERS.find(x => x.id === d.monsterPresetId);
   if(!preset) return '<div class="note-form"><div class="form-title">Error: monstruo no encontrado.</div></div>';
 
-  // Tabla de loot del monstruo
   const lootTableHTML = `
     <table class="loot-table">
       <thead><tr><th>Item posible</th><th>Necesitás</th><th>Cantidad</th></tr></thead>
@@ -2968,157 +3040,222 @@ function renderLootForm(){
           </tr>`;
         }).join('')}
       </tbody>
-    </table>
-  `;
+    </table>`;
+
+  const looterName = d.looter ? d.looter.charAt(0).toUpperCase()+d.looter.slice(1) : '—';
 
   return `
     <div class="note-form loot-form">
       <div class="form-title">🎲 Loot — ${liveEscape(d.monsterName)}</div>
-      <p class="muted" style="font-size:0.82rem;margin-bottom:0.6rem">El jugador tira d20 físico. Lo que salga determina qué se salva del cuerpo. NAT 1 = pifia (nada). NAT 20 = se desbloquea trofeo único.</p>
+      <p class="muted" style="font-size:0.82rem;margin-bottom:0.6rem">Tirá el d20 físico e ingresá el resultado. Para cantidades con dados (ej: 1d4), también ingresá el resultado de esa tirada.</p>
 
       ${lootTableHTML}
 
-      <div class="form-grid" style="margin-top:0.8rem">
+      <div class="form-grid loot-config-grid" style="margin-top:0.9rem">
         <div class="form-row">
-          <label>Tirada d20</label>
-          <input type="number" min="1" max="20" class="form-input" value="${liveEscape(d.roll)}" oninput="updateFormField('roll', this.value)" placeholder="1-20">
+          <label>Looter</label>
+          <select class="form-input" onchange="updateLootLooter(this.value)">
+            ${CHARS.map(c=>`<option value="${c}" ${d.looter===c?'selected':''}>${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('')}
+          </select>
         </div>
         <div class="form-row">
-          <label>Modificador (Survival, etc.)</label>
-          <input type="number" class="form-input" value="${liveEscape(d.modifier)}" oninput="updateFormField('modifier', this.value)" placeholder="+0">
-        </div>
-        <div class="form-row">
-          <label>Total</label>
-          <div class="form-total-display"><span id="loot-form-total">—</span></div>
+          <label>Cantidad de tiradas</label>
+          <input type="number" min="1" max="10" class="form-input" style="width:80px"
+            value="${d.numRolls}" oninput="updateLootNumRolls(parseInt(this.value)||1)">
         </div>
       </div>
 
-      <div id="loot-form-result" class="loot-result" style="margin-top:0.5rem"></div>
+      <div id="loot-rolls-section" class="loot-rolls-section">
+        ${d.rolls.map((r,i)=>renderLootRollRow(i,r,preset)).join('')}
+      </div>
 
       <div class="form-btns">
         <button class="btn-cancel" onclick="closeNoteForm()">Cancelar</button>
-        <button class="btn-primary" onclick="saveLootNote()">Guardar como nota en stream</button>
+        <button class="btn-primary" id="loot-assign-all-btn" onclick="assignAllLootToLooter()">✓ Asignar todo a ${looterName}</button>
+        <button class="btn-secondary" onclick="saveLootNote()">Guardar en stream</button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-function updateLootFormResult(){
+function renderLootRollRow(rollIdx, r, preset){
+  const d = currentForm.data;
+  const roll = parseInt(r.value);
+  const isNat1 = roll === 1;
+  const isNat20 = roll === 20;
+  const hasRoll = !isNaN(roll) && roll >= 1 && roll <= 20;
+
+  let dropsHTML = '';
+  if(hasRoll && !isNat1){
+    if(r.drops.length === 0){
+      dropsHTML = `<div class="loot-empty" style="font-size:0.82rem;padding:0.4rem 0">No cae nada con esta tirada.</div>`;
+    } else {
+      dropsHTML = r.drops.map(drop=>{
+        const assignKey = `${rollIdx}_${drop.idx}`;
+        const assignedTo = d.assignments[assignKey];
+        const isDice = _lootQtyIsDice(drop.item.qty);
+        const qtyDisplay = isDice
+          ? `<span class="loot-qty-label">${liveEscape(drop.item.qty)}</span> = <input type="number" min="0" class="loot-qty-input" value="${drop.qtyVal!==''?drop.qtyVal:''}" placeholder="?" oninput="updateLootQtyValue(${rollIdx},${drop.idx},this.value)" style="width:60px">`
+          : `<span class="loot-qty-label">${liveEscape(drop.item.qty||'1')}</span>`;
+        return `<div class="loot-drop ${assignedTo?'loot-drop-assigned':''}">
+          <span class="loot-drop-name">✓ ${liveEscape(drop.item.name)}</span>
+          <span class="loot-drop-qty">${qtyDisplay}</span>
+          ${assignedTo
+            ? `<span class="loot-drop-who">→ ${assignedTo.charAt(0).toUpperCase()+assignedTo.slice(1)} ✓</span>`
+            : `<select class="loot-indiv-sel" id="loot-sel-${rollIdx}-${drop.idx}">
+                ${CHARS.map(c=>`<option value="${c}" ${d.looter===c?'selected':''}>${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('')}
+               </select>
+               <button class="btn-small" onclick="assignSingleLoot(${rollIdx},${drop.idx})">+ Asignar</button>`}
+        </div>`;
+      }).join('');
+    }
+  } else if(isNat1){
+    dropsHTML = `<div class="loot-nat loot-nat1" style="font-size:0.82rem;margin:0.3rem 0">✗ NAT 1 — Pifia. No se salva nada.</div>`;
+  }
+
+  return `<div class="loot-roll-row">
+    <div class="loot-roll-header">
+      <label class="loot-roll-label">Tirada ${rollIdx+1}</label>
+      <input type="number" min="1" max="20" class="form-input loot-roll-input"
+        value="${liveEscape(r.value)}" placeholder="d20"
+        oninput="updateLootRollValue(${rollIdx},this.value)">
+      ${hasRoll ? `<span class="loot-roll-badge ${isNat1?'loot-nat1':''} ${isNat20?'loot-nat20':''}">${isNat1?'NAT 1':isNat20?'★ NAT 20':roll}</span>` : ''}
+    </div>
+    ${dropsHTML ? `<div class="loot-roll-drops">${dropsHTML}</div>` : ''}
+  </div>`;
+}
+
+function updateLootLooter(charId){
+  if(!currentForm || currentForm.type !== 'loot') return;
+  currentForm.data.looter = charId;
+  const btn = document.getElementById('loot-assign-all-btn');
+  if(btn) btn.textContent = `✓ Asignar todo a ${charId.charAt(0).toUpperCase()+charId.slice(1)}`;
+  // Actualizar selects individuales para pre-seleccionar el nuevo looter
+  const preset = MONSTERS.find(x => x.id === currentForm.data.monsterPresetId);
+  const section = document.getElementById('loot-rolls-section');
+  if(section && preset){
+    section.innerHTML = currentForm.data.rolls.map((r,i)=>renderLootRollRow(i,r,preset)).join('');
+  }
+}
+
+function updateLootNumRolls(n){
   if(!currentForm || currentForm.type !== 'loot') return;
   const d = currentForm.data;
+  n = Math.max(1, Math.min(10, n||1));
+  d.numRolls = n;
+  while(d.rolls.length < n) d.rolls.push({ value:'', drops:[] });
+  d.rolls = d.rolls.slice(0, n);
+  const preset = MONSTERS.find(x => x.id === d.monsterPresetId);
+  const section = document.getElementById('loot-rolls-section');
+  if(section && preset) section.innerHTML = d.rolls.map((r,i)=>renderLootRollRow(i,r,preset)).join('');
+}
+
+function updateLootRollValue(rollIdx, value){
+  if(!currentForm || currentForm.type !== 'loot') return;
+  const d = currentForm.data;
+  const r = d.rolls[rollIdx];
+  if(!r) return;
+  r.value = value;
+  const roll = parseInt(value);
   const preset = MONSTERS.find(x => x.id === d.monsterPresetId);
   if(!preset) return;
-  const totalEl = document.getElementById('loot-form-total');
-  const resultEl = document.getElementById('loot-form-result');
-  if(!totalEl || !resultEl) return;
-
-  const roll = parseInt(d.roll);
-  const modV = parseInt(d.modifier) || 0;
-  if(isNaN(roll) || roll < 1 || roll > 20){
-    totalEl.textContent = '—';
-    resultEl.innerHTML = '';
-    d.drops = [];
-    return;
+  if(!isNaN(roll) && roll >= 2 && roll <= 20){
+    const newDrops = [];
+    preset.loot.forEach((it, idx)=>{
+      const isNat20Item = it.minRoll >= 20;
+      const isGuaranteed = it.minRoll === 0;
+      let passes;
+      if(isGuaranteed) passes = true;
+      else if(isNat20Item) passes = (roll === 20);
+      else passes = (roll >= it.minRoll);
+      if(passes){
+        const prev = r.drops.find(x => x.idx === idx);
+        const isDice = _lootQtyIsDice(it.qty);
+        const qtyVal = prev ? prev.qtyVal : (isDice ? '' : (it.qty || '1'));
+        newDrops.push({ idx, item: it, qtyVal, qtyIsDice: isDice });
+      }
+    });
+    r.drops = newDrops;
+  } else {
+    r.drops = [];
   }
-  const total = roll + modV;
-  totalEl.textContent = total + (modV !== 0 ? ` (${roll}${modV>=0?'+':''}${modV})` : '');
-
-  // Nat 1: pifia
-  if(roll === 1){
-    d.drops = [];
-    resultEl.innerHTML = `
-      <div class="loot-nat loot-nat1">✗ NAT 1 — Pifia. El cuerpo se destroza al intentar saquearlo. <strong>No se salva nada</strong> automáticamente.</div>
-      <div class="loot-override-note">A menos que vos como DM lo decidas narrativamente. En ese caso, sumá el item a mano al inventario del personaje.</div>`;
-    return;
-  }
-
-  // Evaluar drops (computados ahora — cantidades roladas solo la primera vez para no cambiar al re-render)
-  const newDrops = [];
-  preset.loot.forEach((it, idx)=>{
-    const isNat20Item = it.minRoll >= 20;
-    const isGuaranteed = it.minRoll === 0;
-    let passes;
-    if(isGuaranteed) passes = true;                  // siempre cae (no es NAT 1 — eso ya cortó antes)
-    else if(isNat20Item) passes = (roll === 20);     // solo nat 20 natural
-    else passes = (total >= it.minRoll);
-    if(passes){
-      // Si ya estaba rolado para este idx, conservar la cantidad (no re-rolar)
-      const prev = d.drops.find(x => x.idx === idx);
-      const qtyResult = prev ? prev.qty : rollQty(it.qty || '1');
-      newDrops.push({ idx, item: it, qty: qtyResult });
-    }
-  });
-  d.drops = newDrops;
-
-  if(newDrops.length === 0){
-    resultEl.innerHTML = `<div class="loot-empty">No se salvó nada con esa tirada (total ${total}). El monstruo se llevó sus secretos.</div>`;
-    return;
-  }
-
-  const dropsHTML = newDrops.map(drop=>{
-    const assignedTo = d.assignments[drop.idx];
-    return `<div class="loot-drop">
-      <span class="loot-drop-name">✓ ${liveEscape(drop.item.name)} × <strong>${liveEscape(drop.qty.label)}</strong></span>
-      <div class="loot-drop-assign">
-        <select id="loot-assign-${drop.idx}" ${assignedTo?'disabled':''}>
-          ${CHARS.map(c=>`<option value="${c}" ${assignedTo===c?'selected':''}>Para ${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('')}
-        </select>
-        ${assignedTo
-          ? `<button class="btn-small" disabled style="opacity:0.6">✓ Agregado a ${assignedTo.charAt(0).toUpperCase()+assignedTo.slice(1)}</button>`
-          : `<button class="btn-small" onclick="assignLootFromForm(${drop.idx})">+ A su mochila</button>`}
-      </div>
-      ${drop.item.note ? `<div class="loot-drop-note">${liveEscape(drop.item.note)}</div>` : ''}
-    </div>`;
-  }).join('');
-  const nat20Msg = roll === 20 ? `<div class="loot-nat loot-nat20">★ NAT 20 — Crítico. Encontrás incluso lo que normalmente sería inalcanzable.</div>` : '';
-  resultEl.innerHTML = nat20Msg + `<div class="loot-drops-list">${dropsHTML}</div>`;
+  const section = document.getElementById('loot-rolls-section');
+  if(section && preset) section.innerHTML = d.rolls.map((ro,i)=>renderLootRollRow(i,ro,preset)).join('');
 }
 
-function assignLootFromForm(dropIdx){
+function updateLootQtyValue(rollIdx, itemIdx, value){
+  if(!currentForm || currentForm.type !== 'loot') return;
+  const r = currentForm.data.rolls[rollIdx];
+  if(!r) return;
+  const drop = r.drops.find(x => x.idx === itemIdx);
+  if(drop) drop.qtyVal = value;
+}
+
+function assignSingleLoot(rollIdx, itemIdx){
   if(!currentForm || currentForm.type !== 'loot') return;
   const d = currentForm.data;
-  const drop = d.drops.find(x => x.idx === dropIdx);
+  const r = d.rolls[rollIdx];
+  if(!r) return;
+  const drop = r.drops.find(x => x.idx === itemIdx);
   if(!drop) return;
-  const sel = document.getElementById('loot-assign-'+dropIdx);
-  if(!sel) return;
-  const dest = sel.value;
-  const label = `${drop.item.name} ×${drop.qty.label} (loot de ${d.monsterName})`;
+  const sel = document.getElementById(`loot-sel-${rollIdx}-${itemIdx}`);
+  const dest = sel ? sel.value : d.looter;
+  const qtyDisplay = drop.qtyIsDice ? (drop.qtyVal || '?') : (drop.item.qty || '1');
+  const label = _lootDropLabel(drop.item.name, qtyDisplay, d.monsterName);
   const list = load('inv_'+dest, DEFAULT_INVENTORY[dest] || []);
   list.push(label);
   save('inv_'+dest, list);
   renderInventory(dest);
-  // Marcar como asignado y re-renderizar el bloque de drops
-  d.assignments[dropIdx] = dest;
-  updateLootFormResult();
+  d.assignments[`${rollIdx}_${itemIdx}`] = dest;
+  const preset = MONSTERS.find(x => x.id === d.monsterPresetId);
+  const section = document.getElementById('loot-rolls-section');
+  if(section && preset) section.innerHTML = d.rolls.map((ro,i)=>renderLootRollRow(i,ro,preset)).join('');
+}
+
+function assignAllLootToLooter(){
+  if(!currentForm || currentForm.type !== 'loot') return;
+  const d = currentForm.data;
+  const dest = d.looter;
+  let assigned = 0;
+  d.rolls.forEach((r, rollIdx)=>{
+    r.drops.forEach(drop=>{
+      const key = `${rollIdx}_${drop.idx}`;
+      if(d.assignments[key]) return;
+      const qtyDisplay = drop.qtyIsDice ? (drop.qtyVal || '?') : (drop.item.qty || '1');
+      const label = _lootDropLabel(drop.item.name, qtyDisplay, d.monsterName);
+      const list = load('inv_'+dest, DEFAULT_INVENTORY[dest] || []);
+      list.push(label);
+      save('inv_'+dest, list);
+      renderInventory(dest);
+      d.assignments[key] = dest;
+      assigned++;
+    });
+  });
+  if(assigned === 0) return;
+  const preset = MONSTERS.find(x => x.id === d.monsterPresetId);
+  const section = document.getElementById('loot-rolls-section');
+  if(section && preset) section.innerHTML = d.rolls.map((r,i)=>renderLootRollRow(i,r,preset)).join('');
 }
 
 function saveLootNote(){
   if(!currentForm || currentForm.type !== 'loot') return;
   const d = currentForm.data;
-  const roll = parseInt(d.roll);
-  const modV = parseInt(d.modifier) || 0;
-  const total = (isNaN(roll) ? 0 : roll) + modV;
-
-  // Armar descripción narrativa de la tirada
-  let lootSummary;
-  if(isNaN(roll)){
-    lootSummary = 'Sin tirada registrada.';
-  } else if(roll === 1){
-    lootSummary = `NAT 1 — pifia. No se salva nada del cuerpo.`;
-  } else if(d.drops.length === 0){
-    lootSummary = `Tirada ${total}. No se salvó nada del cuerpo.`;
-  } else {
-    const items = d.drops.map(drop=>{
-      const who = d.assignments[drop.idx];
-      return `• ${drop.item.name} × ${drop.qty.label}${who ? ` → ${who.charAt(0).toUpperCase()+who.slice(1)}` : ' (sin asignar)'}`;
+  const rollLines = d.rolls.map((r, i)=>{
+    const roll = parseInt(r.value);
+    if(isNaN(roll)) return `Tirada ${i+1}: sin registrar`;
+    if(roll === 1) return `Tirada ${i+1}: NAT 1 — pifia`;
+    if(r.drops.length === 0) return `Tirada ${i+1}: ${roll} — nada`;
+    const items = r.drops.map(drop=>{
+      const who = d.assignments[`${i}_${drop.idx}`];
+      const qty = drop.qtyIsDice ? (drop.qtyVal||'?') : (drop.item.qty||'1');
+      return `  • ${drop.item.name} ×${qty}${who?` → ${who.charAt(0).toUpperCase()+who.slice(1)}`:''}`;
     }).join('\n');
-    lootSummary = `Tirada ${total}${modV?` (d20=${roll} + ${modV})`:''}.${roll===20?' ★ NAT 20':''}\n${items}`;
-  }
+    return `Tirada ${i+1}: ${roll}${roll===20?' ★ NAT 20':''}\n${items}`;
+  }).join('\n');
 
   pushNote({
     type:'combat',
     subtype:'loot',
-    notes:`Loot de ${d.monsterName}\n${lootSummary}`
+    notes:`Loot de ${d.monsterName} (looter: ${d.looter})\n${rollLines}`
   });
   closeNoteForm();
   renderNotesStream();
@@ -3674,7 +3811,7 @@ function buildGroupedStream(notes){
   // notas sueltas (pre-narrativa) — newest first
   if(preNarrative.length > 0){
     const preHtml = preNarrative.slice().reverse().map(n => renderNoteCard(n)).join('');
-    parts.push(`<div class="narrative-chapter chapter-pre">
+    parts.push(`<div class="narrative-chapter chapter-pre open">
       <div class="narrative-chapter-hdr chapter-pre-hdr">
         <span class="chap-icon">·</span>
         <span class="chap-title muted" style="font-style:italic">Sin evento narrativo</span>
@@ -3689,7 +3826,7 @@ function buildGroupedStream(notes){
     const childrenHtml = ch.children.length > 0
       ? ch.children.slice().reverse().map(n => renderNoteCard(n)).join('')
       : '';
-    parts.push(`<div class="narrative-chapter ${isPureNarrative?'chapter-pure':''}">
+    parts.push(`<div class="narrative-chapter open ${isPureNarrative?'chapter-pure':''}">
       ${renderNarrativeChapterHeader(ch.narrative, isPureNarrative)}
       ${childrenHtml ? `<div class="narrative-chapter-body">${childrenHtml}</div>` : ''}
     </div>`);
@@ -3778,7 +3915,7 @@ function renderNarrativeChapterHeader(n, isPureNarrative){
   const pureLabel = isPureNarrative
     ? `<span class="chap-pure-badge">Solo narrativo</span>`
     : '';
-  return `<div class="narrative-chapter-hdr" id="chap-${n.id}">
+  return `<div class="narrative-chapter-hdr" id="chap-${n.id}" onclick="event.target.closest('button')||this.closest('.narrative-chapter').classList.toggle('open')">
     <span class="chap-icon">✦</span>
     <div class="chap-title-block">
       <span class="chap-title">${liveEscape(n.title||'Evento narrativo')}</span>
@@ -3794,6 +3931,7 @@ function renderNarrativeChapterHeader(n, isPureNarrative){
       <button class="note-reorder" onclick="moveChapter('${n.id}','down')" title="Bajar capítulo">↓</button>
     </div>
     <button class="note-del dm-only" onclick="deleteNote('${n.id}')" title="Borrar narrativa">✕</button>
+    <span class="chap-chevron">▾</span>
   </div>`;
 }
 

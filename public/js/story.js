@@ -51,7 +51,10 @@ function renderStory(chapters, acts, el) {
       return `
         <div class="timeline-act">
           <div class="timeline-dot"></div>
-          <div class="act-title">${act.title}</div>
+          <div class="act-title" onclick="this.closest('.timeline-act').classList.toggle('open')">
+            <span>${act.title}</span>
+            <span class="act-chevron">▾</span>
+          </div>
           <div class="act-body">
             ${bodyHtml}
             ${highlightHtml}
