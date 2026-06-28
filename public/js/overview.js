@@ -1,34 +1,31 @@
 /* ── OVERVIEW: tarjetas de estado del grupo en la página inicial ── */
 
-function renderOverviewSituation(){
+async function renderOverviewSituation(){
   const el = document.getElementById('overview-situation');
   if(!el) return;
-  const doneEvents = (DEFAULT_CAMPAIGN_EVENTS||[]).filter(e=>e.status==='done');
-  if(!doneEvents.length){ el.innerHTML = '<p class="muted">Sin eventos completados aún.</p>'; return; }
 
-  const savedId = load('overview_event_id', null);
-  const event = doneEvents.find(e=>e.id===savedId) || doneEvents[doneEvents.length-1];
+  try {
+    const res  = await fetch('/api/story');
+    const data = await res.json();
+    const acts = (data.acts || []).sort((a,b) => {
+      if(b.chapter !== a.chapter) return b.chapter - a.chapter;
+      return b.order - a.order;
+    });
+    const act = acts[0];
+    if(!act){ el.innerHTML = '<p class="muted">Sin historia cargada aún.</p>'; return; }
 
-  const dmPicker = window.DM_MODE ? `
-    <div class="dm-only" style="margin-top:0.8rem">
-      <select id="overview-event-select" onchange="setOverviewEvent(this.value)"
-        style="background:var(--bg3);border:1px solid var(--border2);color:var(--cream);font-family:var(--font-body);font-size:0.85rem;padding:0.3rem 0.5rem;width:100%">
-        ${doneEvents.map(e=>`<option value="${e.id}" ${e.id===event.id?'selected':''}>${e.title}${e.session?' — S'+e.session:''}</option>`).join('')}
-      </select>
-    </div>` : '';
+    const preview = (act.body || []).map(p => `<p style="font-size:0.9rem;color:var(--cream);line-height:1.6;margin-bottom:0.5rem">${p}</p>`).join('');
 
-  el.innerHTML = `
-    <div class="card card-gold">
-      <div style="font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;color:var(--gold-dim);margin-bottom:0.4rem">ÚLTIMO EVENTO — S${event.session||'?'}</div>
-      <div style="font-family:var(--font-title);font-size:1rem;color:var(--gold);margin-bottom:0.5rem">${event.title}</div>
-      <p style="font-size:0.9rem;color:var(--cream);line-height:1.6">${event.description||''}</p>
-      ${dmPicker}
-    </div>`;
-}
-
-function setOverviewEvent(id){
-  save('overview_event_id', id);
-  renderOverviewSituation();
+    el.innerHTML = `
+      <div class="card card-gold">
+        <div style="font-family:var(--font-title);font-size:0.65rem;letter-spacing:0.1em;color:var(--gold-dim);margin-bottom:0.4rem">CAPÍTULO ${act.chapter}</div>
+        <div style="font-family:var(--font-title);font-size:1rem;color:var(--gold);margin-bottom:0.5rem">${act.title}</div>
+        ${preview}
+        ${act.highlight ? `<div style="font-size:0.85rem;color:var(--gold-dim);font-style:italic;margin-top:0.5rem;border-left:2px solid var(--gold-dim);padding-left:0.6rem">${act.highlight}</div>` : ''}
+      </div>`;
+  } catch(e) {
+    el.innerHTML = '<p class="muted">Error al cargar la historia.</p>';
+  }
 }
 
 function updateOverview(){

@@ -155,6 +155,14 @@ function getSpellSlotsForLevel(c, level){
   return {};
 }
 
+function getSpellUnlockLevel(c, spellLevel){
+  const table = (c === 'tyrell') ? HALF_CASTER_SLOTS : FULL_CASTER_SLOTS;
+  for(let charLvl = 1; charLvl <= 20; charLvl++){
+    if(table[charLvl] && table[charLvl][spellLevel]) return charLvl;
+  }
+  return null;
+}
+
 /* ── Recurso max dinámico por nivel ── */
 function getResourceMax(c, key, level){
   level = level || getCharLevel(c);

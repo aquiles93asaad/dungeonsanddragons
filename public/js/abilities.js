@@ -478,7 +478,7 @@ function renderCharAbilities(c){
           ${schoolBadge(s.school)}
           ${circleBadge}
           ${s.shape?`<span class="spell-shape">${s.shape}</span>`:''}
-          <span class="spell-level">Nivel ${s.level}${isLocked?' 🔒':''}</span>
+          <span class="spell-level" ${isLocked ? `title="Se desbloquea cuando el personaje es nivel ${getSpellUnlockLevel(c, s.level) || '?'}"` : ''}>Nivel ${s.level}${isLocked?' 🔒':''}</span>
           <span class="badge-no-disponible">No disponible</span>
         </div>
         <div class="spell-desc">${s.desc}</div>

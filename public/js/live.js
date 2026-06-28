@@ -755,6 +755,7 @@ function getDefaultFormData(type){
       recklessAttack: false,
       // class-ability fields
       abilityKey: '', beastId: '', beastName: '', beastHP: '', healAmount: '', targetId: '', windOption: '',
+      flurryRoll1: '', flurryRoll2: '', flurryDmg1: '', flurryDmg2: '', targetAC: '',
       notes: ''
     };
   }
@@ -1042,14 +1043,27 @@ function renderAbilitySpecificFields(c, abilityKey, d, lvl, combatant){
     const dex  = abilityMod(ABILITY_SCORES.relyo.dex);
     const prof  = getCharProfBonus('relyo');
     const atk  = dex + prof;
+    const r1 = parseInt(d.flurryRoll1||0); const hit1 = r1 > 0 && (r1 === 20 || r1 + atk >= (d.targetAC||0));
+    const r2 = parseInt(d.flurryRoll2||0); const hit2 = r2 > 0 && (r2 === 20 || r2 + atk >= (d.targetAC||0));
     return `<div class="ability-specific-block">
       <div class="ability-stat-line">Bonus Action post-ataque: 2 ataques adicionales con artes marciales.</div>
-      <div class="ability-grid-2">
-        <div><label>Golpe 1 — Tirada d20</label><input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll1||'')}" oninput="updateFormField('flurryRoll1',this.value)"></div>
-        <div><label>Golpe 2 — Tirada d20</label><input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll2||'')}" oninput="updateFormField('flurryRoll2',this.value)"></div>
-      </div>
-      <div class="ability-stat-line muted">Modificador de ataque: +${atk} (DEX ${dex>=0?'+':''}${dex} + Prof ${prof}) · Daño: 1d${die}+${dex>=0?dex:dex} (unarmed)</div>
+      <div class="ability-stat-line muted" style="margin-bottom:0.4rem">Modificador de ataque: +${atk} (DEX ${dex>=0?'+':''}${dex} + Prof ${prof}) · Daño: 1d${die}+${dex} unarmed</div>
       ${renderCombatantsTargetPicker(d, 'Objetivo', 'targetId')}
+      <div class="form-row"><label>AC del objetivo (para calcular hit)</label>
+        <input type="number" class="form-input" min="1" max="30" placeholder="AC" value="${liveEscape(d.targetAC||'')}" oninput="updateFormField('targetAC',this.value)">
+      </div>
+      <div class="ability-grid-2">
+        <div>
+          <label>Golpe 1 — d20${r1>0?(hit1?' ✅ HIT':' ❌ MISS'):''}</label>
+          <input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll1||'')}" oninput="updateFormField('flurryRoll1',this.value)">
+          ${hit1?`<input type="number" class="form-input" min="0" placeholder="Daño golpe 1" value="${liveEscape(d.flurryDmg1||'')}" oninput="updateFormField('flurryDmg1',this.value)" style="margin-top:0.3rem">`:''}
+        </div>
+        <div>
+          <label>Golpe 2 — d20${r2>0?(hit2?' ✅ HIT':' ❌ MISS'):''}</label>
+          <input type="number" class="form-input" min="1" max="20" placeholder="1-20" value="${liveEscape(d.flurryRoll2||'')}" oninput="updateFormField('flurryRoll2',this.value)">
+          ${hit2?`<input type="number" class="form-input" min="0" placeholder="Daño golpe 2" value="${liveEscape(d.flurryDmg2||'')}" oninput="updateFormField('flurryDmg2',this.value)" style="margin-top:0.3rem">`:''}
+        </div>
+      </div>
     </div>`;
   }
 
@@ -1191,7 +1205,7 @@ function renderAbilitySpecificFields(c, abilityKey, d, lvl, combatant){
 }
 
 function renderCombatantsTargetPicker(d, label, field){
-  const all = LIVE_SESSION.combat.participants;
+  const all = LIVE_SESSION.combat && LIVE_SESSION.combat.participants;
   if(!all || all.length === 0) return '';
   const opts = `<option value="">— elegir objetivo —</option>` +
     all.map(p=>`<option value="${p.id}" ${d[field]===p.id?'selected':''}>${liveEscape(getCombatantName(p))} (HP ${getCombatantHP(p)})</option>`).join('');
@@ -1219,7 +1233,7 @@ function saveClassAbilityNote(){
   const meta = ABILITY_META[key];
   if(!meta){ alert('Elegí una habilidad.'); return; }
 
-  const combatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
+  const combatant = LIVE_SESSION.combat && LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===c);
   let noteText = '';
 
   // ── Furia ──
@@ -1250,9 +1264,16 @@ function saveClassAbilityNote(){
       const dex = abilityMod(ABILITY_SCORES.relyo.dex);
       const prof = getCharProfBonus('relyo');
       const atk = dex + prof;
-      const r1 = d.flurryRoll1 ? `Golpe 1: d20=${d.flurryRoll1} (+${atk} = ${parseInt(d.flurryRoll1)+atk})` : '';
-      const r2 = d.flurryRoll2 ? `Golpe 2: d20=${d.flurryRoll2} (+${atk} = ${parseInt(d.flurryRoll2)+atk})` : '';
-      noteText = `👊 Lluvia de Golpes (Flurry of Blows): 2 ataques desarmados adicionales. Daño: 1d${die}+${dex}. ${r1} ${r2}`.trim();
+      const ac = parseInt(d.targetAC||0);
+      const roll1 = parseInt(d.flurryRoll1||0); const hit1 = roll1 > 0 && (roll1===20 || !ac || roll1+atk>=ac);
+      const roll2 = parseInt(d.flurryRoll2||0); const hit2 = roll2 > 0 && (roll2===20 || !ac || roll2+atk>=ac);
+      const dmg1 = hit1 ? (parseInt(d.flurryDmg1)||0) : 0;
+      const dmg2 = hit2 ? (parseInt(d.flurryDmg2)||0) : 0;
+      const totalDmg = dmg1 + dmg2;
+      if(totalDmg > 0 && d.targetId) changeCombatantHP(d.targetId, -totalDmg);
+      const r1txt = roll1 ? `Golpe 1: d20=${roll1}+${atk}=${roll1+atk} → ${hit1?`HIT (${dmg1} daño)`:'MISS'}` : '';
+      const r2txt = roll2 ? `Golpe 2: d20=${roll2}+${atk}=${roll2+atk} → ${hit2?`HIT (${dmg2} daño)`:'MISS'}` : '';
+      noteText = `👊 Lluvia de Golpes: 2 ataques desarmados (1d${die}+${dex}). ${r1txt} ${r2txt}${totalDmg>0?' — '+totalDmg+' daño total aplicado.':''}`.trim();
     } else if(key === 'patient-defense'){
       noteText = `🛡 Defensa Paciente (Patient Defense): Relyo en Dodge hasta su próximo turno. Los atacantes tienen desventaja. 🎲 Tirá 2d20 y elegí el menor.`;
       if(combatant){ applyCondition(combatant.id, 'dodge', 1, 'Patient Defense', combatant.id); }
@@ -2827,7 +2848,7 @@ function saveActionNote(){
                       (preset && preset.cantripsData||[]).find(s=>s.name===d.cantripName);
     const effect = spellData && spellData.effect;
     // Concentración en el caster
-    const casterCombatant = LIVE_SESSION.combat.participants.find(p=>p.kind==='player' && p.refId===d.character);
+    const casterCombatant = LIVE_SESSION.combat && LIVE_SESSION.combat.participants.find(p=>p.kind==='player' && p.refId===d.character);
     if(effect && effect.casterCondition === 'concentration' && casterCombatant){
       if(casterCombatant.concentration){
         // Ya concentrado — advertir pero no bloquear (el DM decidió lanzarlo)
@@ -2923,7 +2944,7 @@ function saveActionNote(){
   }
 
   const trigId = d.triggeringCombatantId ||
-    (LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===d.character)||{}).id;
+    (LIVE_SESSION.combat && LIVE_SESSION.combat.participants.find(p=>p.kind==='player'&&p.refId===d.character)||{}).id;
   closeNoteForm();
   if(trigId) markActed(trigId);
   saveLiveSession();

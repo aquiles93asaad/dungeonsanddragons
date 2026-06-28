@@ -78,6 +78,11 @@ function initApp() {
         .forEach(btn => { if (btn.textContent === cond) btn.classList.add('active'); });
     });
 
+    // Nivel en el subtítulo de la ficha
+    const lvl = cs.level || (CLASS_PRESETS[c] && CLASS_PRESETS[c].level) || 1;
+    const classEl = document.querySelector(`#char-${c} .char-class`);
+    if(classEl) classEl.textContent = classEl.textContent.replace(/Nivel \d+/, 'Nivel ' + lvl);
+
     renderInventory(c);
 
     // Notas desde CHAR_STATE
