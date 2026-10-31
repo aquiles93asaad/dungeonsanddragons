@@ -104,6 +104,23 @@ function getCharProfBonus(c){
 
 const SPELLCASTING_STAT = { rac:'str', relyo:'wis', tyrell:'cha', boyd:'wis', esdas:'int' };
 
+/* ── CA por personaje ──
+   Según armadura/feature y los atributos actuales: un ASI en DEX/CON/WIS la actualiza sola
+   (hoja y combat tracker). Con los atributos de hoy da lo mismo que el HTML fijo de antes (14/15/18/14/15).
+   Rac y Relyo: Unarmored Defense · Tyrell: armadura pesada (no usa DEX) · Boyd: cuero (11) + DEX + escudo (+2)
+   · Esdas: Mage Armor (13 + DEX). En el tracker el DM la puede pisar por combatiente. */
+const AC_FORMULA = {
+  rac:    s => 10 + abilityMod(s.dex) + abilityMod(s.con),
+  relyo:  s => 10 + abilityMod(s.dex) + abilityMod(s.wis),
+  tyrell: () => 18,
+  boyd:   s => 11 + abilityMod(s.dex) + 2,
+  esdas:  s => 13 + abilityMod(s.dex)
+};
+function getCharAC(c, scores){
+  const f = AC_FORMULA[c];
+  return f ? f(scores || getAbilityScores(c)) : 10;
+}
+
 function calcSpellAttackMod(charId){
   const stat = SPELLCASTING_STAT[charId];
   if(!stat) return '';

@@ -105,8 +105,8 @@
     "semantic_hash": "e53fec257db03fdf4e77c324c19c8968"
   },
   "public/js/abilities.js": {
-    "mtime": 1793405640.353112,
-    "ast_hash": "991b2cc530ef7087006895657638c861",
+    "mtime": 1793413043.1590354,
+    "ast_hash": "3b58eb82c66e6792fc1564bc9b205bf8",
     "semantic_hash": ""
   },
   "public/js/bestiary.js": {
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "public/js/data.js": {
-    "mtime": 1782680046.8123295,
-    "ast_hash": "405165fb658c748892f8dffb78a27e8c",
+    "mtime": 1793412961.9463303,
+    "ast_hash": "9cbd767be7b236109fc9b5878213f589",
     "semantic_hash": ""
   },
   "public/js/dm-auth.js": {
@@ -140,8 +140,8 @@
     "semantic_hash": "0ed53fed05aff8a891c489a5e354387e"
   },
   "public/js/init.js": {
-    "mtime": 1793400143.5599375,
-    "ast_hash": "af086de6bd6a4f942dcff5dda28d547d",
+    "mtime": 1793412949.9403317,
+    "ast_hash": "23baf455cf8f85605d67d3210063f0c0",
     "semantic_hash": ""
   },
   "public/js/items.js": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "public/js/live.js": {
-    "mtime": 1793405923.3277848,
-    "ast_hash": "b87ce9606f50505c6a12f719a0857498",
+    "mtime": 1793413056.4526072,
+    "ast_hash": "0cea66aa0ce12989d2e1d34a07681716",
     "semantic_hash": ""
   },
   "public/js/money.js": {
@@ -180,13 +180,13 @@
     "semantic_hash": "0630234e1ee34350d2622a767547c780"
   },
   "public/js/socket-client.js": {
-    "mtime": 1781295956.4517076,
-    "ast_hash": "b4fc022bb0bdf4aa95ed75190330e8fe",
-    "semantic_hash": "b4fc022bb0bdf4aa95ed75190330e8fe"
+    "mtime": 1793412949.9414299,
+    "ast_hash": "b3d062a6470f5a4e238140fba2aa5c53",
+    "semantic_hash": ""
   },
   "public/js/storage.js": {
-    "mtime": 1793400098.1314452,
-    "ast_hash": "25287756cd52f634bb67a4df46b0a239",
+    "mtime": 1793412949.9399176,
+    "ast_hash": "c14312d4f324c7830d35118ce40338e5",
     "semantic_hash": ""
   },
   "routes/api.js": {
@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793405984.639827,
-    "ast_hash": "01ac000a494e745722de3e47f6f96540",
+    "mtime": 1793413145.3312023,
+    "ast_hash": "535233856f07d47a8e636ef9e8e20c73",
     "semantic_hash": ""
   },
   "public/CLAUDE.md": {
@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1793399891.6844378,
-    "ast_hash": "9fea22a7ecf2729ecfc38320babb22fb",
+    "mtime": 1793412635.4403236,
+    "ast_hash": "37968478cbb85cc76aef3bef5e602cbc",
     "semantic_hash": ""
   },
   "db/seed-data/campaign-events.js": {

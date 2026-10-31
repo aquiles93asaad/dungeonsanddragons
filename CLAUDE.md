@@ -416,7 +416,7 @@ Los 5 personajes: **rac** (Bárbaro), **relyo** (Monje), **tyrell** (Paladín), 
 - **Jugado hasta la Sesión 8** (11/09/2026). Todo lo jugado está cargado en la base: eventos (`campaignevents`), stream de cada sesión (`sessions` #1–#8), Historia (`storychapters`/`storyacts`, capítulos 1–8), NPCs, hilos, lugares, items e inventarios.
 - **Dónde están:** en Solmira, tras rechazar la invasión Fell (S7) y la muerte de Aldren Solmiren. Decidieron ir hacia Jabal Thalos pasando por **SolNeth**. Al amanecer siguiente a la S8 es el funeral de Aldren.
 - **Main quest:** el ritual de las dos gemas para revertir el Fell. La de espacio y tiempo está en una mazmorra enana de Jabal Thalos; la de naturaleza, en la Ciudad del Oro, bajo el Lago del Oeste. Esdas tiene los dos tomos.
-- **Nivel 4:** subieron después de la pelea con Saren (S7/S8) pero **todavía no está aplicado en la base**, y nadie eligió su ASI/dote. Se va a aplicar desde la app (mejora pendiente).
+- **Nivel 4:** subieron después de la pelea con Saren (S7/S8) pero **todavía no está aplicado en la base**, y nadie eligió su ASI/dote. Se aplica con "▲ Subir nivel grupal" (Sesión Live): cada hoja queda con la mejora de característica pendiente, que se elige debajo de los atributos.
 - **Subclases:** Esdas → Adivinación (`committedSchool: divination`). Relyo → Camino de la Sombra (registrado como hilo; la app no tiene campo de subclase de monje). Rac, Tyrell y Boyd: sin subclase todavía.
 - **Monedero:** el grupo tiene 55 de plata; Relyo, 8 de oro propios.
 - **Sesión Live:** antes de jugar la Sesión 9, verificar que el número en el header sea **9** (el navegador quedó en 8). Si el número ya está archivado, el header muestra un aviso con botón "Usar #N+1", y Finalizar pide confirmación explícita antes de sobrescribir una sesión archivada.
@@ -479,6 +479,17 @@ El modal mueve el nodo real del DOM (no clona) → cualquier edición es la fuen
 
 ---
 
+## Subida de nivel y mejoras de característica (ASI)
+
+- **`applyLevelUp(c)`** (`abilities.js`) es el único camino: lo usan el botón "↑ Subir" de la hoja y "▲ Subir nivel grupal" de la Sesión Live. Nivel, HP máx (promedio del dado + CON) y HP actual.
+- **Mejoras pendientes = niveles de ASI alcanzados (4, 8, 12, 16, 19) − mejoras registradas** en `CHAR_STATE.asi.history` (clave `asi_<c>`, se sincroniza a MongoDB). Se derivan: no hay contador que se desincronice.
+- **Panel en la hoja** (debajo de los atributos, DM): +2 a uno · +1 a dos · dote (con +1 opcional para medias dotes). Muestra qué cambia (CA, HP máx retroactivo por CON, iniciativa, DC de hechizos). Tope 20 con override del DM; "Resuelta sin cambios" para lo aplicado a mano. Los jugadores ven el aviso de pendiente.
+- **✎ Editar características** (DM): edición libre para bonus narrativos/correcciones; queda en el historial como `manual` y no consume mejoras.
+- Los **atributos, la CA y la iniciativa** de la hoja se pintan desde los datos (`renderCharStats`, llamado por `renderCharAbilities`) — el HTML de `index.html` es solo el valor inicial.
+- **CA** = `getCharAC(c)` en `data.js` (fórmula por armadura/feature: Unarmored Defense de Rac/Relyo, cuero+escudo de Boyd, Mage Armor de Esdas, Tyrell fija 18). La usan la hoja y el combat tracker; el DM la puede pisar por combatiente en el tracker.
+
+---
+
 ## Sistema de condiciones
 
 15 condiciones en MongoDB. Las de los hechizos (Restrained, Prone, Frightened, Paralyzed, Incapacitated, Unconscious de Sueño…) se aplican solas al fallar la salvación y se quitan si se rompe la concentración del caster. Los avisos tácticos (ventaja/desventaja) salen de `mechanical` de cada condición; Dodge e Inconsciente (PJ a 0 HP) también avisan.
@@ -492,7 +503,7 @@ Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds. Lo que du
 - **Sin `import/export`** en frontend — todo scope global.
 - **Prefijo `ard_`** en localStorage para datos del cliente (HP, inventario, notas, retratos).
 - El **estado del servidor** (levels, slots, money) persiste en MongoDB via API.
-- **`save()` con claves de personaje** (`hp_`, `hp_max_`, `char_level_`, `slots_`, `resource_`, `inv_`, etc.) actualiza `CHAR_STATE` automáticamente (`_CHAR_STATE_FIELDS` en `storage.js`). `syncCharState()` y los getters leen `CHAR_STATE`: escribir esas claves por fuera de `save()` hace que el cambio no llegue a MongoDB y se pierda al recargar.
+- **`save()` con claves de personaje** (`hp_`, `hp_max_`, `char_level_`, `slots_`, `resource_`, `inv_`, `ability_scores_`, `asi_`, etc.) actualiza `CHAR_STATE` automáticamente (`_CHAR_STATE_FIELDS` en `storage.js`). `syncCharState()` y los getters leen `CHAR_STATE`: escribir esas claves por fuera de `save()` hace que el cambio no llegue a MongoDB y se pierda al recargar.
 - **`dm-only` con CSS**, no con JS condicional — el estado de rol es reactivo sin re-renders.
 - **`body.app-locked` en el HTML** antes de que cargue JS — no hay flash de contenido sin auth.
 - **Tokens sin expiración** — la sesión del servidor (cookie) sí expira en 8h.

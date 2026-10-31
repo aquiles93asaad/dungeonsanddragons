@@ -147,3 +147,26 @@
 .ov-hp-bar{height:4px;background:var(--bg3);margin-bottom:0.4rem}
 .ov-hp-fill{height:100%;background:var(--green-bright);transition:width 0.3s}
 .ov-hp-text{font-size:0.8rem;color:var(--muted)}
+
+/* ── Mejoras de característica (ASI) / edición de atributos ── */
+.asi-panel{margin:-1rem 0 1.5rem}
+.asi-pending{font-size:0.85rem;color:var(--gold);padding:0.5rem 0.7rem;border:1px solid var(--gold-dim);background:var(--bg2)}
+.asi-box{background:var(--bg2);border:1px solid var(--gold-dim);padding:0.8rem 0.9rem;display:flex;flex-direction:column;gap:0.55rem;margin-top:0.5rem}
+.asi-title{font-family:var(--font-title);font-size:0.75rem;letter-spacing:0.08em;color:var(--gold)}
+.asi-modes{display:flex;gap:0.3rem;flex-wrap:wrap}
+.asi-mode{background:var(--bg3);border:1px solid var(--border2);color:var(--muted);padding:0.3rem 0.7rem;cursor:pointer;font-size:0.8rem}
+.asi-mode.on{border-color:var(--gold);color:var(--gold)}
+.asi-fields{display:flex;gap:0.4rem;flex-wrap:wrap}
+.asi-fields .form-input{flex:1 1 160px}
+.asi-feat-desc{flex:1 1 100%;min-height:52px}
+.asi-preview{font-size:0.82rem;color:var(--cream);line-height:1.5}
+.asi-effects{color:var(--gold);margin-top:0.2rem}
+.asi-btns{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:flex-end}
+.asi-over20{font-size:0.75rem;color:var(--muted);margin-right:auto}
+.asi-history{font-size:0.78rem;color:var(--muted);margin-top:0.4rem}
+.asi-actions{text-align:right;margin-top:0.2rem}
+.asi-edit-link{background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.75rem;padding:0}
+.asi-edit-link:hover{color:var(--gold)}
+.asi-edit-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0.4rem}
+.asi-edit-grid label{display:flex;flex-direction:column;gap:0.2rem;font-family:var(--font-title);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em}
+@media (max-width:700px){ .asi-edit-grid{grid-template-columns:repeat(3,1fr)} }

@@ -136,6 +136,7 @@ async function loadCharState() {
         if(cs.activeCantrips)                 save('active_cantrips_'+c,  cs.activeCantrips);
         if(cs.committedSchool)                save('committed_school_'+c, cs.committedSchool);
         if(cs.abilityScores)                  save('ability_scores_'+c,   cs.abilityScores);
+        if(cs.asi)                            save('asi_'+c,              cs.asi);
         if(cs.slots)     Object.entries(cs.slots).forEach(([lvl,v])  => save('slots_'+c+'_'+lvl, v));
         if(cs.resources) Object.entries(cs.resources).forEach(([k,v]) => save('resource_'+c+'_'+k, v));
       });

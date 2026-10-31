@@ -112,6 +112,37 @@ function setResourcePool(c, key, val){
 }
 
 /* ── LEVEL UP ── */
+/* Sube un nivel sin diálogos: nivel, HP máx (promedio del dado + CON) y HP actual por el mismo delta.
+   La usan el botón de la hoja y el "Subir nivel grupal" de la Sesión Live. */
+function applyLevelUp(c){
+  const oldLevel = getCharLevel(c);
+  const newLevel = oldLevel + 1;
+  const hpGain = hpGainOnLevelUp(c);
+  const oldMax = getHPMax(c);
+  const newMax = oldMax + hpGain;
+  // HP actual sube por el mismo delta (queda al mismo daño)
+  const newCurHP = Math.min(newMax, load('hp_'+c, oldMax) + hpGain);
+
+  save('char_level_'+c, newLevel);
+  save('hp_max_'+c, newMax);
+  save('hp_'+c, newCurHP);
+
+  // DOM de HP en la hoja: input max + span max + value
+  const inp = document.getElementById(c+'-hp');
+  const spanMax = document.getElementById(c+'-hp-max');
+  if(inp){ inp.max = newMax; inp.value = newCurHP; }
+  if(spanMax) spanMax.textContent = newMax;
+  if(inp) updateHP(c); // recalcula la barra y guarda
+
+  // Línea de clase ("Nivel N")
+  const classEl = document.querySelector(`#char-${c} .char-class`);
+  if(classEl) classEl.textContent = classEl.textContent.replace(/Nivel \d+/, 'Nivel '+newLevel);
+
+  // Re-render de abilities (prof bonus, saves, skills, slots, panel de mejoras)
+  renderCharAbilities(c);
+  return { oldLevel, newLevel, hpGain, oldMax, newMax, asi: ASI_LEVELS.includes(newLevel) };
+}
+
 function levelUpCharacter(c){
   const oldLevel = getCharLevel(c);
   const newLevel = oldLevel + 1;
@@ -121,65 +152,38 @@ function levelUpCharacter(c){
   const die = HIT_DIE_BY_CHAR[c];
   const conMod = abilityMod(ABILITY_SCORES[c].con);
   const hpGain = hpGainOnLevelUp(c);
-
   const oldProf = getCharProfBonus(c);
   const newProf = 2 + Math.floor((newLevel-1)/4);
   const profChange = newProf > oldProf;
-
   const oldMax = getHPMax(c);
-  const newMax = oldMax + hpGain;
-
   const charLabel = c.charAt(0).toUpperCase()+c.slice(1);
   const className = preset.className;
 
   const confirmMsg = [
     `¿Subir a ${charLabel} a Nivel ${newLevel}?`,
     '',
-    `HP máximo: ${oldMax} → ${newMax} (+${hpGain})`,
+    `HP máximo: ${oldMax} → ${oldMax + hpGain} (+${hpGain})`,
     `  · ${className}: 1d${die} promedio = ${hitDieAvg(die)}`,
     `  · CON mod: ${conMod>=0?'+':''}${conMod}`,
     profChange ? `Proficiency bonus: +${oldProf} → +${newProf}` : `Proficiency bonus: +${oldProf} (sin cambios)`,
-  ].join('\n');
+    ASI_LEVELS.includes(newLevel) ? `\n⬆ Nv ${newLevel} trae una Mejora de característica (o dote): se elige después, en la hoja.` : ''
+  ].filter(Boolean).join('\n');
 
   if(!confirm(confirmMsg)) return;
+  applyLevelUp(c);
 
-  // 1) Guardar nuevo nivel
-  save('char_level_'+c, newLevel);
-
-  // 2) Guardar nuevo HP max
-  save('hp_max_'+c, newMax);
-
-  // 3) HP actual sube por el mismo delta (queda al mismo % de daño)
-  const curHP = load('hp_'+c, oldMax);
-  const newCurHP = Math.min(newMax, curHP + hpGain);
-  save('hp_'+c, newCurHP);
-
-  // 4) Actualizar el DOM de HP en la hoja: input max + span max + value
-  const inp = document.getElementById(c+'-hp');
-  const spanMax = document.getElementById(c+'-hp-max');
-  if(inp){ inp.max = newMax; inp.value = newCurHP; }
-  if(spanMax) spanMax.textContent = newMax;
-  updateHP(c); // recalcula la barra y guarda
-
-  // 5) Actualizar el char-class line (reemplaza "Nivel N")
-  const classEl = document.querySelector(`#char-${c} .char-class`);
-  if(classEl) classEl.textContent = classEl.textContent.replace(/Nivel \d+/, 'Nivel '+newLevel);
-
-  // 6) Re-render de abilities (recalcula prof bonus, saves, skills, level display)
-  renderCharAbilities(c);
-
-  // 7) Aviso de cosas para revisar manualmente
+  // Aviso de cosas para revisar manualmente
   const hints = [`${charLabel} ahora es ${className} Nivel ${newLevel}.`, ''];
   if(profChange) hints.push(`✓ Proficiency bonus subió a +${newProf}.`);
-  if([4, 8, 12, 16, 19].includes(newLevel)) hints.push('• ASI (Ability Score Improvement) o Feat: elegí +2 a una stat, +1 a dos, o un feat.');
-  if(c==='tyrell' && newLevel===6) hints.push('• Paladín: ASI extra a Nv 6.');
+  if(ASI_LEVELS.includes(newLevel)) hints.push('• ⬆ Mejora de característica pendiente: +2 a una, +1 a dos, o una dote — elegila en la hoja, debajo de los atributos.');
+  if(c==='tyrell' && newLevel===6) hints.push('• Paladín: Aura of Protection (+CHA a los saves propios y de aliados a 10 ft).');
   if(c==='tyrell' && newLevel===3) hints.push('• Paladín: Sacred Oath (subclass). Divine Health. Channel Divinity.');
   if(c==='rac' && newLevel===3) hints.push('• Bárbaro: Primal Path (subclass: Berserker, Totem, etc.).');
   if(c==='relyo' && newLevel===3) hints.push('• Monje: Monastic Tradition (subclass). Deflect Missiles.');
   if(c==='boyd' && newLevel===3) hints.push('• Druida: 2nd-level spells unlocked. Circle de Bosque suma hechizos.');
   if(c==='esdas' && newLevel===3) hints.push('• Wizard: 2nd-level spells unlocked. +2 hechizos al spellbook (gratis).');
   if([5,11,17].includes(newLevel)) hints.push('• Cantrips de daño suben un dado (a menos que Esdas siga sin escuela elegida).');
-  if(['rac','relyo','tyrell','boyd','esdas'].includes(c) && newLevel===5){
+  if(newLevel===5){
     if(c==='rac') hints.push('• Bárbaro: Extra Attack. Fast Movement. Rage uses = 4.');
     if(c==='relyo') hints.push('• Monje: Extra Attack. Stunning Strike. Ki = 5.');
     if(c==='tyrell') hints.push('• Paladín: Extra Attack. 2nd-level spell slots.');
@@ -187,6 +191,240 @@ function levelUpCharacter(c){
     if(c==='esdas') hints.push('• Wizard: 3rd-level spell slots.');
   }
   setTimeout(()=>alert(hints.join('\n')), 100);
+}
+
+/* ── CARACTERÍSTICAS Y MEJORAS (ASI) ──
+   Los atributos, la CA y la iniciativa de la hoja se pintan desde los datos (antes eran HTML fijo).
+   Mejoras pendientes = niveles de ASI alcanzados − mejoras registradas en el historial (asi_<c>).
+   El historial guarda { kind:'asi'|'feat'|'skip'|'manual', level, changes, feat, featDesc, at };
+   las ediciones manuales del DM ('manual') no consumen mejoras. */
+const ABILITY_KEYS = ['str','dex','con','int','wis','cha'];
+const ASI_LEVELS = [4, 8, 12, 16, 19];   // 5E: Bárbaro, Monje, Paladín, Druida y Wizard
+const ASI_FORM = {};       // picker abierto por personaje (estado de UI, no se guarda)
+const SCORES_EDIT = {};    // edición manual abierta por personaje
+
+function getASIState(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  const st = (cs && cs.asi) || load('asi_'+c, null) || {};
+  return { history: Array.isArray(st.history) ? st.history : [] };
+}
+function usedASIs(c){ return getASIState(c).history.filter(h => h.kind !== 'manual').length; }
+function getPendingASI(c){
+  const earned = ASI_LEVELS.filter(l => l <= getCharLevel(c)).length;
+  return Math.max(0, earned - usedASIs(c));
+}
+/* Nivel de la mejora que se está eligiendo (la primera sin resolver) */
+function nextASILevel(c){ return ASI_LEVELS[usedASIs(c)] || getCharLevel(c); }
+
+function getASIForm(c){
+  if(!ASI_FORM[c]) ASI_FORM[c] = { mode:'plus2', a:'', b:'', feat:'', featAbility:'', featDesc:'', allowOver20:false };
+  return ASI_FORM[c];
+}
+function setASIForm(c, field, value, keepFocus){
+  const f = getASIForm(c);
+  f[field] = value;
+  if(field === 'mode'){ f.a = ''; f.b = ''; f.featAbility = ''; }
+  if(keepFocus){
+    const el = document.getElementById('asi-preview-'+c);
+    if(el) el.innerHTML = renderASIPreview(c);
+  } else renderCharStats(c);
+}
+/* Cambios de atributos que propone el picker: {dex:2} · {dex:1, wis:1} · dote {cha:1} o {} */
+function asiChanges(c){
+  const f = getASIForm(c);
+  if(f.mode === 'feat') return f.featAbility ? { [f.featAbility]: 1 } : {};
+  if(f.mode === 'split') return (f.a && f.b && f.a !== f.b) ? { [f.a]: 1, [f.b]: 1 } : null;
+  return f.a ? { [f.a]: 2 } : null;
+}
+function scoresWith(c, changes){
+  const next = Object.assign({}, getAbilityScores(c));
+  Object.entries(changes || {}).forEach(([k, v]) => { next[k] = (next[k] || 10) + v; });
+  return next;
+}
+
+/* Cambia los atributos y propaga lo que no se recalcula solo:
+   si cambia el mod de CON, el HP máx cambia retroactivamente (± 1 por nivel) y el HP actual igual.
+   CA, iniciativa, saves, skills, ataques y DC de hechizos se derivan de los atributos. */
+function setAbilityScores(c, newScores){
+  const old = getAbilityScores(c);
+  const level = getCharLevel(c);
+  const conDelta = abilityMod(newScores.con) - abilityMod(old.con);
+  save('ability_scores_'+c, newScores);
+  if(conDelta){
+    const newMax = Math.max(1, getHPMax(c) + conDelta * level);
+    const next = Math.max(0, Math.min(newMax, load('hp_'+c, getHPMax(c)) + conDelta * level));
+    save('hp_max_'+c, newMax);
+    save('hp_'+c, next);
+    const inp = document.getElementById(c+'-hp');
+    const spanMax = document.getElementById(c+'-hp-max');
+    if(inp){ inp.max = newMax; inp.value = next; updateHP(c); }
+    if(spanMax) spanMax.textContent = newMax;
+  }
+  if(typeof updateOverview === 'function') updateOverview();
+  return { conDelta, hpDelta: conDelta * level };
+}
+
+function applyASI(c){
+  const f = getASIForm(c);
+  const changes = asiChanges(c);
+  if(f.mode === 'feat' && !f.feat.trim()){ alert('Escribí el nombre de la dote.'); return; }
+  if(f.mode !== 'feat' && !changes){ alert(f.mode === 'split' ? 'Elegí dos atributos distintos.' : 'Elegí el atributo.'); return; }
+  const next = scoresWith(c, changes);
+  const over = Object.keys(changes).filter(k => next[k] > 20);
+  if(over.length && !f.allowOver20){ alert(`${over.map(k=>k.toUpperCase()).join(', ')} quedaría en más de 20 (el máximo por reglas). Marcá "Permitir superar 20" si es decisión del DM.`); return; }
+  const level = nextASILevel(c);
+  setAbilityScores(c, next);
+  const history = getASIState(c).history.concat([{
+    kind: f.mode === 'feat' ? 'feat' : 'asi', level, changes,
+    feat: f.mode === 'feat' ? f.feat.trim() : '', featDesc: f.mode === 'feat' ? (f.featDesc||'').trim() : '',
+    at: new Date().toISOString()
+  }]);
+  save('asi_'+c, { history });
+  delete ASI_FORM[c];
+  renderCharAbilities(c);
+}
+
+/* La mejora ya se aplicó a mano o se decidió no tomarla: se registra sin tocar atributos */
+function resolveASIWithoutChanges(c){
+  if(!confirm('¿Marcar esta mejora como resuelta sin cambiar atributos? (ej: ya se aplicó a mano o el DM decidió otra cosa)')) return;
+  const history = getASIState(c).history.concat([{ kind:'skip', level: nextASILevel(c), changes:{}, at: new Date().toISOString() }]);
+  save('asi_'+c, { history });
+  delete ASI_FORM[c];
+  renderCharAbilities(c);
+}
+
+/* Edición libre del DM (bonus narrativos, correcciones). No consume mejoras pendientes. */
+function openScoresEditor(c){ SCORES_EDIT[c] = Object.assign({}, getAbilityScores(c)); renderCharStats(c); }
+function closeScoresEditor(c){ delete SCORES_EDIT[c]; renderCharStats(c); }
+function setScoreDraft(c, k, v){ if(SCORES_EDIT[c]) SCORES_EDIT[c][k] = parseInt(v); }
+function saveManualScores(c){
+  const draft = SCORES_EDIT[c]; if(!draft) return;
+  const bad = ABILITY_KEYS.filter(k => !(draft[k] >= 1 && draft[k] <= 30));
+  if(bad.length){ alert(`Valores inválidos en ${bad.map(k=>k.toUpperCase()).join(', ')} (1-30).`); return; }
+  const old = getAbilityScores(c);
+  const changes = {};
+  ABILITY_KEYS.forEach(k => { if(draft[k] !== old[k]) changes[k] = draft[k] - old[k]; });
+  if(Object.keys(changes).length){
+    setAbilityScores(c, Object.assign({}, old, draft));
+    const history = getASIState(c).history.concat([{ kind:'manual', level: getCharLevel(c), changes, at: new Date().toISOString() }]);
+    save('asi_'+c, { history });
+  }
+  delete SCORES_EDIT[c];
+  renderCharAbilities(c);
+}
+
+function asiHistoryLabel(h){
+  const ch = Object.entries(h.changes||{}).map(([k,v]) => `${v>0?'+':''}${v} ${k.toUpperCase()}`).join(', ');
+  if(h.kind === 'feat') return `Nv ${h.level}: dote ${h.feat}${ch ? ` (${ch})` : ''}`;
+  if(h.kind === 'skip') return `Nv ${h.level}: resuelta fuera de la app`;
+  if(h.kind === 'manual') return `✎ DM (Nv ${h.level}): ${ch}`;
+  return `Nv ${h.level}: ${ch}`;
+}
+
+/* Qué cambia si se aplica lo elegido: atributos, CA, HP máx, iniciativa, DC de hechizos */
+function renderASIPreview(c){
+  const changes = asiChanges(c);
+  if(!changes || !Object.keys(changes).length){
+    return getASIForm(c).mode === 'feat'
+      ? '<span class="muted">La dote se registra en el historial; si da +1 a un atributo, elegilo arriba. Sus otros efectos se aplican a mano.</span>'
+      : '<span class="muted">Elegí cómo repartir la mejora.</span>';
+  }
+  const old = getAbilityScores(c), next = scoresWith(c, changes);
+  const lines = Object.keys(changes).map(k => {
+    const om = abilityMod(old[k]), nm = abilityMod(next[k]);
+    return `<div>${k.toUpperCase()} ${old[k]} → <strong>${next[k]}</strong>${nm !== om ? ` (mod ${fmtMod(om)} → <strong>${fmtMod(nm)}</strong>)` : ' (mismo modificador)'}${next[k] > 20 ? ' <span class="form-warn">supera 20</span>' : ''}</div>`;
+  });
+  const effects = [];
+  const oldAC = getCharAC(c, old), newAC = getCharAC(c, next);
+  if(newAC !== oldAC) effects.push(`CA ${oldAC} → ${newAC}`);
+  const conD = abilityMod(next.con) - abilityMod(old.con);
+  if(conD) effects.push(`HP máx ${conD>0?'+':''}${conD * getCharLevel(c)} (CON retroactivo, ${getCharLevel(c)} niveles)`);
+  if(abilityMod(next.dex) !== abilityMod(old.dex)) effects.push(`Iniciativa ${fmtMod(abilityMod(old.dex))} → ${fmtMod(abilityMod(next.dex))}`);
+  const sc = SPELLCASTING_STAT[c];
+  if(sc && ['tyrell','boyd','esdas'].includes(c) && abilityMod(next[sc]) !== abilityMod(old[sc])){
+    const prof = getCharProfBonus(c);
+    effects.push(`DC de hechizos ${8+prof+abilityMod(old[sc])} → ${8+prof+abilityMod(next[sc])}`);
+  }
+  return lines.join('') + (effects.length ? `<div class="asi-effects">${effects.join(' · ')}</div>` : '') +
+    '<div class="muted" style="font-size:0.75rem">Saves, skills y ataques se recalculan solos.</div>';
+}
+
+function renderASIPicker(c, pending){
+  const f = getASIForm(c);
+  const scores = getAbilityScores(c);
+  const opt = (sel, exclude) => '<option value="">— atributo —</option>' +
+    ABILITY_KEYS.map(k => `<option value="${k}" ${sel===k?'selected':''} ${exclude===k?'disabled':''}>${k.toUpperCase()} (${scores[k]})</option>`).join('');
+  const modeBtn = (m, label) => `<button type="button" class="asi-mode${f.mode===m?' on':''}" onclick="setASIForm('${c}','mode','${m}')">${label}</button>`;
+  let fields;
+  if(f.mode === 'plus2'){
+    fields = `<select class="form-input" onchange="setASIForm('${c}','a',this.value)">${opt(f.a)}</select>`;
+  } else if(f.mode === 'split'){
+    fields = `<select class="form-input" onchange="setASIForm('${c}','a',this.value)">${opt(f.a, f.b)}</select>
+      <select class="form-input" onchange="setASIForm('${c}','b',this.value)">${opt(f.b, f.a)}</select>`;
+  } else {
+    fields = `<input class="form-input" placeholder="Dote (ej: Tough, War Caster, Alert)" value="${(f.feat||'').replace(/"/g,'&quot;')}" oninput="setASIForm('${c}','feat',this.value,true)">
+      <select class="form-input" onchange="setASIForm('${c}','featAbility',this.value)" title="Medias dotes: +1 a un atributo">${opt(f.featAbility).replace('— atributo —','+1 a un atributo (opcional)')}</select>
+      <textarea class="form-input asi-feat-desc" placeholder="Qué hace (queda en el historial)" oninput="setASIForm('${c}','featDesc',this.value,true)">${(f.featDesc||'').replace(/</g,'&lt;')}</textarea>`;
+  }
+  return `<div class="asi-title">⬆ Mejora de característica · Nv ${nextASILevel(c)}${pending > 1 ? ` <span class="muted">(${pending} pendientes)</span>` : ''}</div>
+    <div class="asi-modes">${modeBtn('plus2','+2 a uno')}${modeBtn('split','+1 a dos')}${modeBtn('feat','Dote')}</div>
+    <div class="asi-fields">${fields}</div>
+    <div class="asi-preview" id="asi-preview-${c}">${renderASIPreview(c)}</div>
+    <div class="asi-btns">
+      <label class="asi-over20"><input type="checkbox" ${f.allowOver20?'checked':''} onchange="setASIForm('${c}','allowOver20',this.checked)"> Permitir superar 20 (DM)</label>
+      <button class="btn-small" onclick="resolveASIWithoutChanges('${c}')" title="Ya se aplicó a mano o el DM decidió otra cosa">Resuelta sin cambios</button>
+      <button class="btn-rest btn-levelup" onclick="applyASI('${c}')">Aplicar</button>
+    </div>`;
+}
+
+function renderScoresEditor(c){
+  const draft = SCORES_EDIT[c];
+  return `<div class="asi-box dm-only">
+    <div class="asi-title">✎ Editar características <span class="muted">(bonus narrativos, correcciones — no usa mejoras pendientes)</span></div>
+    <div class="asi-edit-grid">${ABILITY_KEYS.map(k => `<label>${k.toUpperCase()}<input class="form-input" type="number" min="1" max="30" value="${draft[k]}" oninput="setScoreDraft('${c}','${k}',this.value)"></label>`).join('')}</div>
+    <div class="asi-btns"><button class="btn-small" onclick="closeScoresEditor('${c}')">Cancelar</button><button class="btn-rest btn-levelup" onclick="saveManualScores('${c}')">Guardar</button></div>
+  </div>`;
+}
+
+function renderASIPanel(c){
+  const pending = getPendingASI(c);
+  const history = getASIState(c).history;
+  const parts = [];
+  if(pending > 0){
+    parts.push(`<div class="asi-pending player-only">⬆ Mejora de característica pendiente (Nv ${nextASILevel(c)}) — elegila con el DM.</div>`);
+    parts.push(`<div class="asi-box dm-only">${renderASIPicker(c, pending)}</div>`);
+  }
+  if(SCORES_EDIT[c]) parts.push(renderScoresEditor(c));
+  if(history.length) parts.push(`<div class="asi-history">Mejoras: ${history.map(h => `<span title="${(h.featDesc||'').replace(/"/g,'&quot;')}">${asiHistoryLabel(h)}</span>`).join(' · ')}</div>`);
+  if(!SCORES_EDIT[c]) parts.push(`<div class="asi-actions dm-only"><button class="asi-edit-link" onclick="openScoresEditor('${c}')">✎ Editar características</button></div>`);
+  return parts.join('');
+}
+
+/* Pinta atributos, CA e iniciativa de la hoja desde los datos + el panel de mejoras debajo de la grilla */
+function renderCharStats(c){
+  const sheet = document.getElementById('char-'+c);
+  if(!sheet) return;
+  const scores = getAbilityScores(c);
+  const grid = sheet.querySelector('.stats-grid');
+  if(grid){
+    grid.innerHTML = ABILITY_KEYS.map(k =>
+      `<div class="stat-box"><span class="stat-name">${k.toUpperCase()}</span><span class="stat-score">${scores[k]}</span><span class="stat-mod">${fmtMod(abilityMod(scores[k]))}</span></div>`).join('');
+  }
+  sheet.querySelectorAll('.vital-box').forEach(box => {
+    const label = ((box.querySelector('.vital-label')||{}).textContent || '').trim();
+    const span = box.querySelector('.vital-controls > span');
+    if(!span) return;
+    if(/^AC/.test(label)) span.textContent = getCharAC(c);
+    else if(/^Iniciativa/.test(label)) span.innerHTML = span.innerHTML.replace(/^[+-]\d+/, fmtMod(abilityMod(scores.dex)));
+  });
+  let panel = document.getElementById('asi-'+c);
+  if(!panel && grid){
+    panel = document.createElement('div');
+    panel.id = 'asi-'+c;
+    panel.className = 'asi-panel';
+    grid.insertAdjacentElement('afterend', panel);
+  }
+  if(panel) panel.innerHTML = renderASIPanel(c);
 }
 
 /* ── REST ── */
@@ -318,6 +556,7 @@ function schoolBadge(school){
 
 /* ── RENDER ── */
 function renderCharAbilities(c){
+  renderCharStats(c);   // atributos, CA, iniciativa y mejoras pendientes (siempre al día con los datos)
   const container = document.getElementById('abilities-'+c);
   if(!container) return;
   const preset = CLASS_PRESETS[c];

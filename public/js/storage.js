@@ -38,6 +38,7 @@ const _CHAR_STATE_FIELDS = [
   { prefix:'active_cantrips_',  field:'activeCantrips' },
   { prefix:'committed_school_', field:'committedSchool' },
   { prefix:'ability_scores_',   field:'abilityScores' },
+  { prefix:'asi_',              field:'asi' },
   { prefix:'slots_',            field:'slots',     sub:true },
   { prefix:'resource_',         field:'resources', sub:true }
 ];
@@ -76,7 +77,8 @@ function showSaved(){
 // Prefijos que corresponden a estado de personaje (excluye portrait_, npc_*, etc.)
 const _CHAR_SYNC_PREFIXES = [
   'hp_', 'char_level_', 'cond_', 'inv_', 'notes_',
-  'prepared_', 'active_cantrips_', 'committed_school_', 'slots_', 'resource_'
+  'prepared_', 'active_cantrips_', 'committed_school_', 'slots_', 'resource_',
+  'ability_scores_', 'asi_'
 ];
 
 function _charFromStateKey(key){
@@ -117,6 +119,7 @@ function syncCharState(c){
       activeCantrips: cs.activeCantrips || [],
       committedSchool:cs.committedSchool || null,
       abilityScores:  (typeof getAbilityScores !== 'undefined') ? getAbilityScores(c) : (cs.abilityScores || null),
+      asi:            cs.asi || null,   // historial de mejoras de característica / dotes
       slots:          {},
       resources:      {}
     };

@@ -237,13 +237,13 @@ function getCombatantHPMax(p){
   return p.hpMax;
 }
 
-/* CA base de los PJ (no está en data.js). Editable por combatiente desde el tracker. */
-const BASE_AC = { rac:14, relyo:15, tyrell:18, boyd:14, esdas:15 };
+/* CA base de los PJ: la de su armadura/feature con los atributos actuales (getCharAC en data.js).
+   Editable por combatiente desde el tracker. */
 function getCombatantBaseAC(p){
   if(p.kind==='player'){
     if(p.wildShape && p.wildShape.active && p.wildShape.ac) return p.wildShape.ac; // CA de la bestia
     const o = pcState(p.refId).acOverride;
-    return o != null ? o : (BASE_AC[p.refId] || 10);
+    return o != null ? o : getCharAC(p.refId);
   }
   return p.ac;
 }
@@ -4278,44 +4278,24 @@ function groupLevelUp(){
   const targets = levels.filter(x => x.lvl < 20);
   if(targets.length === 0){ alert('Todos los personajes ya están a Nivel 20.'); return; }
 
-  const summary = targets.map(x => `• ${x.c.charAt(0).toUpperCase()+x.c.slice(1)}: Nv ${x.lvl} → Nv ${x.lvl+1}`).join('\n');
-  const skipped = maxed.length ? `\n\nSe saltean (ya están a Nv 20):\n${maxed.map(x=>`• ${x.c.charAt(0).toUpperCase()+x.c.slice(1)}`).join('\n')}` : '';
+  const label = c => c.charAt(0).toUpperCase()+c.slice(1);
+  const summary = targets.map(x => `• ${label(x.c)}: Nv ${x.lvl} → Nv ${x.lvl+1}${ASI_LEVELS.includes(x.lvl+1) ? ' (⬆ mejora de característica)' : ''}`).join('\n');
+  const skipped = maxed.length ? `\n\nSe saltean (ya están a Nv 20):\n${maxed.map(x=>`• ${label(x.c)}`).join('\n')}` : '';
   if(!confirm(`¿Subir de nivel a TODOS los personajes?\n\n${summary}${skipped}\n\nHP máximo sube con el promedio del hit die + CON mod. Proficiency bonus se recalcula automáticamente.`)) return;
 
-  const newLevels = [];
-  targets.forEach(x => {
-    const c = x.c;
-    const oldLevel = getCharLevel(c);
-    const newLevel = oldLevel + 1;
-    const hpGain = hpGainOnLevelUp(c);
-    const oldMax = getHPMax(c);
-    const newMax = oldMax + hpGain;
-
-    save('char_level_'+c, newLevel);
-    save('hp_max_'+c, newMax);
-    const curHP = load('hp_'+c, oldMax);
-    save('hp_'+c, Math.min(newMax, curHP + hpGain));
-
-    const inp = document.getElementById(c+'-hp');
-    const spanMax = document.getElementById(c+'-hp-max');
-    if(inp){ inp.max = newMax; inp.value = load('hp_'+c, newMax); }
-    if(spanMax) spanMax.textContent = newMax;
-    if(typeof updateHP === 'function') updateHP(c);
-
-    const classEl = document.querySelector(`#char-${c} .char-class`);
-    if(classEl) classEl.textContent = classEl.textContent.replace(/Nivel \d+/, 'Nivel '+newLevel);
-
-    if(typeof renderCharAbilities === 'function') renderCharAbilities(c);
-    newLevels.push(`${c.charAt(0).toUpperCase()+c.slice(1)} → Nv ${newLevel}`);
-  });
+  // Mismo camino que el botón de la hoja (applyLevelUp en abilities.js)
+  const results = targets.map(x => Object.assign({ c: x.c }, applyLevelUp(x.c)));
+  const newLevels = results.map(r => `${label(r.c)} → Nv ${r.newLevel} (HP máx ${r.newMax})`);
+  const withASI = results.filter(r => r.asi).map(r => label(r.c));
+  const asiLine = withASI.length ? `\n\n⬆ Mejora de característica pendiente: ${withASI.join(', ')} — +2 a uno, +1 a dos o una dote. Se elige en cada hoja, debajo de los atributos.` : '';
 
   pushNote({
     type:'combat', subtype:'other',
-    notes:`▲ Subida de nivel grupal\n${newLevels.map(s=>'• '+s).join('\n')}\n\nRevisar features narrativos pendientes (subclases, channel divinity, etc.) en las hojas.`
+    notes:`▲ Subida de nivel grupal\n${newLevels.map(s=>'• '+s).join('\n')}${asiLine}\n\nRevisar features narrativos pendientes (subclases, channel divinity, etc.) en las hojas.`
   });
   renderNotesStream();
   renderPresentsGrid();
-  alert(`✓ Grupo subido de nivel.\n\n${newLevels.join('\n')}\n\nRevisá las hojas de personaje para features pendientes (subclases, cantrip damage, etc.).`);
+  alert(`✓ Grupo subido de nivel.\n\n${newLevels.join('\n')}${asiLine}\n\nRevisá las hojas de personaje para features pendientes (subclases, cantrip damage, etc.).`);
 }
 
 /* Renderiza badges de condiciones + concentración de un combatiente */
