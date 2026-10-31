@@ -143,6 +143,8 @@ async function loadCharState() {
     if(state.money){
       Object.entries(state.money).forEach(([owner, m]) => save('money_'+owner, m));
     }
+    // Sesión live guardada en MongoDB — initLive() la compara con la de localStorage y usa la más nueva
+    window.SERVER_LIVE_SESSION = state.liveSession || null;
     if(Array.isArray(state.wildShapeForms)){
       CAMPAIGN.wildShapeForms = state.wildShapeForms;
     } else {

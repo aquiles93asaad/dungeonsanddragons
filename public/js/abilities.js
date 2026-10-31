@@ -196,14 +196,13 @@ function longRest(c){
   // HP
   const inp = document.getElementById(c+'-hp');
   if(inp){ inp.value = getHPMax(c); updateHP(c); }
-  // Slots → patch CHAR_STATE + localStorage
+  // Slots → patch CHAR_STATE + localStorage. Todos los niveles según el nivel de personaje
+  // (preset.spellSlots solo trae los de Nv 1: los slots de Nv 2+ nunca se recuperaban).
   const newSlots = {};
-  if(preset.spellSlots){
-    Object.keys(preset.spellSlots).forEach(level => {
-      newSlots[level] = 0;
-      save('slots_'+c+'_'+level, 0);
-    });
-  }
+  Object.keys(getSpellSlotsForLevel(c)).forEach(level => {
+    newSlots[level] = 0;
+    save('slots_'+c+'_'+level, 0);
+  });
   _patchCharState(c, { slots: newSlots });
   // Resources → patch CHAR_STATE + localStorage
   const newResources = {};

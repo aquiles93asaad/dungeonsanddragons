@@ -407,18 +407,23 @@ El indicador de sesión (`#session-indicator`) arriba a la derecha muestra:
 3. **El dado físico del jugador manda.** El loot, tiradas, etc. usan el dado real del jugador. La app asiste, el DM tiene la última palabra.
 4. **Reglas D&D 5E como base.** Spell slots, descansos, recursos por clase: todo RAW. House rules explícitas marcadas (ej: Esdas multi-escuela).
 
-Los 5 personajes: **rac** (Bárbaro), **relyo** (Monje), **tyrell** (Paladín), **boyd** (Druida), **esdas** (Wizard). Nivel actual: 2.
+Los 5 personajes: **rac** (Bárbaro), **relyo** (Monje), **tyrell** (Paladín), **boyd** (Druida), **esdas** (Wizard). Nivel actual: 4 en mesa (en la base siguen en Nv 3 — ver Estado de la campaña).
 
 ---
 
 ## Estado de la campaña
 
-- Sesión 1: jugada (canon).
-- Sesión 2: jugada, corta y narrativa (conocer NPCs en Aether Grove), salió distinta a lo planeado.
-- Los personajes siguen en Nv 2.
-- Los eventos reales de S2 no están cargados — los presets son la versión planeada.
+- **Jugado hasta la Sesión 8** (11/09/2026). Todo lo jugado está cargado en la base: eventos (`campaignevents`), stream de cada sesión (`sessions` #1–#8), Historia (`storychapters`/`storyacts`, capítulos 1–8), NPCs, hilos, lugares, items e inventarios.
+- **Dónde están:** en Solmira, tras rechazar la invasión Fell (S7) y la muerte de Aldren Solmiren. Decidieron ir hacia Jabal Thalos pasando por **SolNeth**. Al amanecer siguiente a la S8 es el funeral de Aldren.
+- **Main quest:** el ritual de las dos gemas para revertir el Fell. La de espacio y tiempo está en una mazmorra enana de Jabal Thalos; la de naturaleza, en la Ciudad del Oro, bajo el Lago del Oeste. Esdas tiene los dos tomos.
+- **Nivel 4:** subieron después de la pelea con Saren (S7/S8) pero **todavía no está aplicado en la base**, y nadie eligió su ASI/dote. Se va a aplicar desde la app (mejora pendiente).
+- **Subclases:** Esdas → Adivinación (`committedSchool: divination`). Relyo → Camino de la Sombra (registrado como hilo; la app no tiene campo de subclase de monje). Rac, Tyrell y Boyd: sin subclase todavía.
+- **Monedero:** el grupo tiene 55 de plata; Relyo, 8 de oro propios.
+- **Sesión Live:** antes de jugar la Sesión 9, verificar que el número en el header sea **9** (el navegador quedó en 8). Si el número ya está archivado, el header muestra un aviso con botón "Usar #N+1", y Finalizar pide confirmación explícita antes de sobrescribir una sesión archivada.
 
-Fuentes de verdad narrativa (en `D&D/`): `Ardaetheros_Personajes_V1.md`, `_NPCs_V1.md`, `_Monstruos_V1.md`, `_Lugares_V1.md`, `_Eventos_V1.md`.
+**Fuente de verdad narrativa: la base de datos (MongoDB).** Los documentos de diseño viejos (`Ardaetheros_*_V1/V2.md`, Pendientes) se eliminaron por desactualizados. En `documentos/` quedan solo `EVOLUCION_PERSONAJES.md`, `dnd_campaign_v_1_worldbuilding_summary.md`, la guía de dados y los manuales de 5E.
+
+Las Sesiones 6, 7 y 8 no salieron de la Sesión Live: se reconstruyeron después (S6 desde audios resumidos, S7 desde el relato del DM, S8 desde la transcripción del audio). Las notas del stream de S7 y S8 están marcadas con `reconstructed: true`.
 
 ---
 
@@ -438,13 +443,25 @@ Fuentes de verdad narrativa (en `D&D/`): `Ardaetheros_Personajes_V1.md`, `_NPCs_
 
 ## Sistema de combate y loot (Sesión Live)
 
-`live.js` maneja `LIVE_SESSION = { meta, notes, combat }` (persiste en MongoDB via `/api/state`).
+`live.js` maneja `LIVE_SESSION = { meta, notes, combat, updatedAt }`. Persiste en localStorage (`ard_live_session`) y en MongoDB (`CampaignState.liveSession`, PUT `/api/state` con debounce de 1.5s, solo el DM). Al cargar gana la copia con `updatedAt` más nuevo — sobrevive a cambiar de dispositivo, borrar datos del navegador o reiniciar el server (el relay de Socket.IO es solo memoria).
 
-- **Combat tracker:** jugadores (HP desde hoja), monstruos (HP por instancia). Iniciativa, turnos, rounds, condiciones.
+- **Combat tracker:** jugadores (HP desde hoja), monstruos (HP por instancia). Iniciativa, rounds, condiciones, buffs, HP temporales, death saves, stat block del monstruo desplegable.
+- **Turnos:** `combat.currentId` = de quién es el turno (ordenado por iniciativa; se reordena al cambiar iniciativa o sumar combatientes). **Guardar una nota NO termina el turno** — lo hace "Fin de turno ▶". ⚔ abre el form para cualquiera en cualquier momento (reacciones, ataques de oportunidad), ⏭ saltea, ▶ da el turno fuera de orden.
+- **Economía de acciones** (recordatorio, no bloquea): cada nota registra acción / bonus / reacción / ataques en el combatiente (`turnUse`, `reactionUsed`). Saves y skill checks no gastan nada. Una acción de alguien que ya jugó su turno = reacción. Ataque Extra (Nv 5: Rac, Relyo, Tyrell) = 2 ataques → "Guardar + otro ataque".
+- **Estado por PJ** (`LIVE_SESSION.pcState[charId]`): buffs, HP temporales, death saves, CA manual, smite cargado, concentración fuera del tracker. Vive por personaje (no en el combatiente) → funciona fuera de combate. Monstruos: lo mismo en el propio combatiente.
+- **Daño** (`applyDamage`): HP temporales → Forma Salvaje (sobrante pasa a Boyd) → PJ a 0 HP = death saves (golpe estando caído = 1 fallo, crítico = 2; sobrante ≥ HP máx = muerte) → CON save de concentración. Monstruos: avisos al cruzar umbrales de HP que mencionan sus habilidades/fases.
+- **Input rápido de HP** en cada tarjeta: `7`/`-7` daño · `+5` curación · `t5` HP temporales (`t0` los quita).
 - **Quick-add:** Acción jugador / Conversación / Combate / Narrativa.
-  - **Acción jugador:** d20+mod vs AC/DC, hit/miss, consume spell slot, aplica daño automático.
+  - **Acción jugador** — se resuelve según `getActionMode()`: ataque (arma o spell attack, override ✓/✗ del DM, crítico = doble de dados, riders de Castigo Divino / smite cargado / Favor Divino), salvación (enemigos y aliados en el área, con competencia en saves del PJ), curación (cualquier PJ, caídos y fuera de combate), smite (Bonus Action que queda cargado al próximo golpe), Misil Mágico (dardos por objetivo), Rayo Abrasador (un ataque por rayo), Sueño (pool de HP), daño automático, buffs multi-objetivo y utilidad. El slot sale de la tabla por nivel de personaje (≥ nivel del hechizo); concentrado en el mismo hechizo → "efecto sostenido" sin gastar slot.
+  - **Acción de monstruo:** ataque (con Shield de Esdas, Desviar Proyectiles de Relyo y resistencia de Furia) o habilidad/hechizo con salvación sobre varios objetivos. "Guardar + otro ataque" para Multiattack.
   - **Narrativa:** vincula a evento de Campaña → transición de estado (planificado → en curso → hecho).
+- **Armas:** el bonus de daño = modificador del atributo del ataque (+ Furia en STR cuerpo a cuerpo, + Arma Mágica). Armas de monje y finesse usan el mayor entre STR y DEX; Relyo usa el dado de Artes Marciales si es mayor.
 - **Loot roll:** d20 del jugador → items con `minRoll` cumplido → asignados a mochila. `minRoll:0` = garantizado, `minRoll:20` = solo nat 20.
+
+### Campos de mecánica en los hechizos (`db/seed-data/class-presets.js`)
+El form lee estos campos; si faltan, infiere tiempo de lanzamiento y concentración del texto (`desc` que arranca con "Concentración", "Bonus Action", "Reaction").
+`castingTime` ('bonus' | 'reaction') · `concentration` · `smite` · `effect.targetConditionOnFail` · `missiles` · `rays` · `sleepPool` · `autoDamage` · `areaSave` · `weaponRider` · `buff` (`acBonus`, `acMin`, `rollBonus`, `tempHP`, `tempHPEachTurn`, `weaponAtkBonus`, `untilNextTurn`) · `maxTargets` / `targetsPerLevel`.
+**Después de editarlos hay que correr `node db/seed.js`** (hace upsert de los class presets; no toca el resto de las colecciones).
 
 ### Flujo Narrativa ↔ Eventos de Campaña
 - Elegir evento → prefill título/descripción (editables).
@@ -464,10 +481,9 @@ El modal mueve el nodo real del DOM (no clona) → cualquier edición es la fuen
 
 ## Sistema de condiciones
 
-15 condiciones en MongoDB. **Solo Restrained y Concentración tienen mecánica activa.**
-Los 13 restantes muestran badge visual pero no afectan cálculos aún.
+15 condiciones en MongoDB. Las de los hechizos (Restrained, Prone, Frightened, Paralyzed, Incapacitated, Unconscious de Sueño…) se aplican solas al fallar la salvación y se quitan si se rompe la concentración del caster. Los avisos tácticos (ventaja/desventaja) salen de `mechanical` de cada condición; Dodge e Inconsciente (PJ a 0 HP) también avisan.
 
-Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds.
+Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds. Lo que dura "hasta tu próximo turno" (Dodge, Ataque Imprudente, Shield) vence en `startTurn()` del combatiente.
 
 ---
 
@@ -476,6 +492,7 @@ Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds.
 - **Sin `import/export`** en frontend — todo scope global.
 - **Prefijo `ard_`** en localStorage para datos del cliente (HP, inventario, notas, retratos).
 - El **estado del servidor** (levels, slots, money) persiste en MongoDB via API.
+- **`save()` con claves de personaje** (`hp_`, `hp_max_`, `char_level_`, `slots_`, `resource_`, `inv_`, etc.) actualiza `CHAR_STATE` automáticamente (`_CHAR_STATE_FIELDS` en `storage.js`). `syncCharState()` y los getters leen `CHAR_STATE`: escribir esas claves por fuera de `save()` hace que el cambio no llegue a MongoDB y se pierda al recargar.
 - **`dm-only` con CSS**, no con JS condicional — el estado de rol es reactivo sin re-renders.
 - **`body.app-locked` en el HTML** antes de que cargue JS — no hay flash de contenido sin auth.
 - **Tokens sin expiración** — la sesión del servidor (cookie) sí expira en 8h.
@@ -489,7 +506,7 @@ Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds.
 - **Agregar NPC:** sumar a `public/data/npcs.js`, correr seed.
 - **Agregar monstruo:** sumar a `public/data/monsters.js`, correr seed.
 - **Agregar evento/hilo/lugar:** sumar al archivo correspondiente en `public/data/`, correr seed.
-- **Agregar hechizo/feature:** editar `public/data/class-presets.js`, correr seed.
+- **Agregar hechizo/feature:** editar `db/seed-data/class-presets.js` (con los campos de mecánica de arriba si aplica), correr `node db/seed.js`.
 - **Agregar jugador:** desde el panel DM en Campaña → sub-tab "Jugadores".
 - **Re-seedear todo:** `node db/seed.js` — limpia y re-crea todas las colecciones.
 - **El archivo `public/CLAUDE.md`** es la doc histórica de la app pre-migración (file://). No actualizar.

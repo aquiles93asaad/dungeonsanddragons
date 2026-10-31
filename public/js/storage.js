@@ -18,7 +18,46 @@ var _apiSyncEnabled = false;
 
 function save(key, val){
   try{ localStorage.setItem('ard_'+key, JSON.stringify(val)); showSaved(); } catch(e){}
+  _patchCharStateFromKey(key, val);
   if(_apiSyncEnabled) _maybeSyncToAPI(key);
+}
+
+// ── Clave de localStorage → campo de CHAR_STATE ──────────────────────────────
+// syncCharState() y los getters (getCharLevel, getHPMax) leen CHAR_STATE, no localStorage.
+// Si un save() no lo actualiza, el sync manda el valor viejo y al recargar se pierde el cambio
+// (level up, recursos, rests, loot). Por eso se parchea acá, para cualquier save().
+// Orden importa: 'hp_max_' antes que 'hp_'. sub:true → clave con sub-id (slots_rac_1, resource_rac_rage).
+const _CHAR_STATE_FIELDS = [
+  { prefix:'hp_max_',           field:'hpMax' },
+  { prefix:'hp_',               field:'hp' },
+  { prefix:'char_level_',       field:'level' },
+  { prefix:'cond_',             field:'conditions' },
+  { prefix:'inv_',              field:'inventory' },
+  { prefix:'notes_',            field:'notes' },
+  { prefix:'prepared_',         field:'prepared' },
+  { prefix:'active_cantrips_',  field:'activeCantrips' },
+  { prefix:'committed_school_', field:'committedSchool' },
+  { prefix:'ability_scores_',   field:'abilityScores' },
+  { prefix:'slots_',            field:'slots',     sub:true },
+  { prefix:'resource_',         field:'resources', sub:true }
+];
+
+function _patchCharStateFromKey(key, val){
+  if(typeof CHARS === 'undefined') return;
+  const def = _CHAR_STATE_FIELDS.find(f => key.startsWith(f.prefix));
+  if(!def) return;
+  const rest = key.slice(def.prefix.length);
+  const c = def.sub ? CHARS.find(ch => rest.startsWith(ch+'_')) : (CHARS.includes(rest) ? rest : null);
+  if(!c) return;
+  if(!window.CHAR_STATE) window.CHAR_STATE = {};
+  if(!window.CHAR_STATE[c]) window.CHAR_STATE[c] = {};
+  const cs = window.CHAR_STATE[c];
+  if(def.sub){
+    if(!cs[def.field]) cs[def.field] = {};
+    cs[def.field][rest.slice(c.length+1)] = val;
+  } else {
+    cs[def.field] = val;
+  }
 }
 
 function load(key, def){

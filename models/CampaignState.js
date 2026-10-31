@@ -17,6 +17,10 @@ const CampaignStateSchema = new Schema({
 
   wildShapeForms: { type: [Schema.Types.Mixed], default: [] },
   // formas salvajes custom agregadas por el DM (las base vienen del preset de Boyd)
+
+  liveSession: { type: Schema.Types.Mixed, default: null },
+  // LIVE_SESSION en curso { meta, notes, combat, updatedAt } — el DM la guarda con debounce.
+  // Respaldo de localStorage: se recupera al cambiar de dispositivo, borrar datos o reiniciar el server.
 }, { timestamps: true });
 
 module.exports = model('CampaignState', CampaignStateSchema);

@@ -1,13 +1,18 @@
-# Graph Report - .  (2026-06-12)
+# Graph Report - D&D  (2026-10-30)
 
 ## Corpus Check
-- 59 files · ~64,544 words
+- 59 files · ~77,643 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 590 nodes · 1212 edges · 48 communities (32 shown, 16 thin omitted)
-- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 168 edges (avg confidence: 0.8)
+- 884 nodes · 1984 edges · 53 communities (37 shown, 16 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 208 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `c0295124`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - [[_COMMUNITY_Character Abilities & Stats|Character Abilities & Stats]]
@@ -58,18 +63,23 @@
 - [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 52|Community 52]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `saveLiveSession()` - 34 edges
-2. `save()` - 32 edges
-3. `load()` - 32 edges
-4. `renderNoteForm()` - 31 edges
-5. `renderActionForm()` - 26 edges
-6. `liveEscape()` - 24 edges
-7. `getCombatant()` - 24 edges
-8. `pushNote()` - 24 edges
-9. `saveClassAbilityNote()` - 20 edges
-10. `renderCombatTracker()` - 20 edges
+1. `renderActionForm()` - 54 edges
+2. `saveLiveSession()` - 45 edges
+3. `saveActionNote()` - 44 edges
+4. `getCombatant()` - 42 edges
+5. `liveEscape()` - 41 edges
+6. `renderNoteForm()` - 36 edges
+7. `save()` - 35 edges
+8. `load()` - 32 edges
+9. `pushNote()` - 31 edges
+10. `renderCombatTracker()` - 29 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `connectDB()` --semantically_similar_to--> `seed()`  [INFERRED] [semantically similar]
@@ -89,163 +99,180 @@
 ## Hyperedges (group relationships)
 - **seed.js populates all Mongoose model collections in one script** — db_seed_seed, models_item_itemschema, models_condition_conditionschema, models_npc_npcschema, models_monster_monsterschema, models_campaignevent_campaigneventschema, models_campaignthread_campaignthreadschema, models_campaignlocation_campaignlocationschema, models_classpreset_classpresetschema, models_campaignstate_campaignstateschema, models_story_storyschema [EXTRACTED 1.00]
 - **DM and Player auth guards protect API routes via session checks** — middleware_requiredm_requiredm, middleware_requireplayer_requireplayer, concept_dm_auth_guard, concept_player_auth_guard [INFERRED 0.85]
+- **Spell slot system: CLASS_PRESETS → getSpellSlotsForLevel → loadSlotState → consumeSpellSlot** — data_classpresets_classpresets, js_data_getspellslotsforlevel, js_abilities_loadslotstate, js_abilities_consumespellslot [EXTRACTED 0.95]
 - **Auth gate: checkDMSession → setDMMode/setPlayerSession → unlockApp/showAppGate** — js_dmauth_checkdmsession, js_dmauth_setdmmode, js_dmauth_unlockapp, js_dmauth_showappgate [EXTRACTED 1.00]
+- **Dual persistence: localStorage write triggers API sync (DM only)** — js_storage_save, js_storage_maybeSyncToApi, js_storage_synccharstate, js_storage_syncmoney [EXTRACTED 1.00]
+- **Live session sync: DM save → socket emit → server relay → player receive → render** — js_live_savelivesession, js_socketclient_socket, server_livecache, js_socketclient_applysessionsync [EXTRACTED 1.00]
 
-## Communities (48 total, 16 thin omitted)
+## Communities (53 total, 16 thin omitted)
 
 ### Community 0 - "Character Abilities & Stats"
-Cohesion: 0.07
-Nodes (51): getCharSaveBonus(), getCharSkillBonus(), levelUpCharacter(), ABILITY_SCORES, _ABILITY_SCORES_FALLBACK, abilityMod(), calcSpellAttackMod(), calcSpellSaveDC() (+43 more)
+Cohesion: 0.10
+Nodes (23): renderAllAbilities(), fetchAPI(), initApp(), loadCharState(), loadReferenceData(), changeMoneyCoin(), COIN_TYPES, getMoney() (+15 more)
 
 ### Community 1 - "Campaign Events & Locations"
-Cohesion: 0.09
-Nodes (42): DEFAULT_CAMPAIGN_EVENTS (data), addCampaignEvent(), addCampaignLocation(), addCampaignThread(), addWildShapeForm(), API, attachDragHandlers(), bindDragFromHandleOnly() (+34 more)
+Cohesion: 0.08
+Nodes (22): ABILITY_SCORES, _ABILITY_SCORES_FALLBACK, CHARS, CLASS_PRESETS, CONCENTRATION_META, CONDITIONS, DEFAULT_CAMPAIGN_EVENTS, DEFAULT_CAMPAIGN_LOCATIONS (+14 more)
 
 ### Community 2 - "World Lore & Narrative"
-Cohesion: 0.09
-Nodes (24): Aether Grove (location), Fell Corruption (energy/faction), Solmira (location), Sunbound Druids (faction), Velo Elmyra (faction), DEFAULT_CAMPAIGN_LOCATIONS, DEFAULT_CAMPAIGN_THREADS, CLASS_PRESETS (+16 more)
+Cohesion: 0.08
+Nodes (42): addCampaignEvent(), addCampaignLocation(), addCampaignThread(), addWildShapeForm(), API, attachDragHandlers(), bindDragFromHandleOnly(), CAMPAIGN (+34 more)
 
 ### Community 3 - "Live Session Combat (Core)"
-Cohesion: 0.09
-Nodes (26): ABILITY_META, actCombatant(), calcWeaponDamageBonus(), CHAR_CLASS_ABILITIES, closeCharSheetModal(), combatantCardClick(), getAlivePlayers(), getAliveTargets() (+18 more)
+Cohesion: 0.06
+Nodes (44): attachDragHandlers(), bindDragFromHandleOnly(), campaign.js, _clearDirty(), Dirty-tracking system (_dirty, _isNew, _orderDirty), discardOrder(), fetchAPI(), initApp() (+36 more)
 
 ### Community 4 - "Live Session Combat (Add/Manage)"
-Cohesion: 0.14
-Nodes (32): addAdhocMonster(), addAllPlayersToCombat(), addMonsterFromBestiary(), addPlayerToCombat(), applyCondition(), cancelStartCombat(), changeCombatantHP(), changeWildShapeHP() (+24 more)
+Cohesion: 0.05
+Nodes (32): ABILITY_META, abilityEconomyKind(), BASE_AC, blowDamage(), blowOutcome(), CASTING_LABEL, CHAR_CLASS_ABILITIES, checkMonsterThresholds() (+24 more)
 
 ### Community 5 - "DB Migration Scripts"
+Cohesion: 0.19
+Nodes (17): changeMonsterHP(), deleteMonster(), filterMonsters(), _hpSyncTimers, loadMonsters(), MONSTERS, renderMonsters(), resetMonsterHP() (+9 more)
+
+### Community 6 - "DM Auth & Role System"
 Cohesion: 0.07
 Nodes (22): mongoose, Session, mongoose, StoryAct, acts, chapters, mongoose, seedStory() (+14 more)
 
-### Community 6 - "DM Auth & Role System"
-Cohesion: 0.12
-Nodes (25): checkDMSession(), dmLogout(), lockApp(), setDMMode(), setSessionIndicator(), showAppGate(), submitGateToken(), unlockApp() (+17 more)
-
 ### Community 7 - "Spell Slots & Resources"
-Cohesion: 0.16
-Nodes (21): changeResourcePool(), consumeSpellSlot(), getMaxSpellLevel(), isCantripActive(), isSpellPrepared(), loadResourceState(), loadSlotState(), renderAllAbilities() (+13 more)
+Cohesion: 0.05
+Nodes (107): getCondition(), addAdhocMonster(), addAllPlayersToCombat(), addBuff(), addDeathFailures(), addMonsterFromBestiary(), addPlayerToCombat(), advanceRound() (+99 more)
 
 ### Community 8 - "DB Seed & Init"
-Cohesion: 0.09
-Nodes (22): CampaignEvent, CampaignLocation, CampaignState, CampaignThread, ClassPreset, Condition, conds, events (+14 more)
+Cohesion: 0.06
+Nodes (45): Socket.IO live session relay pattern, connectDB(), mongoose, checkDMSession(), dmLogout(), lockApp(), setDMMode(), setSessionIndicator() (+37 more)
 
 ### Community 9 - "Conversation & Exchange UI"
-Cohesion: 0.13
-Nodes (22): addExchangeLine(), liveEscape(), moveExchangeLine(), removeExchangeLine(), renderActionNoteBody(), renderCombatantConditions(), renderCombatForm(), renderConversationForm() (+14 more)
+Cohesion: 0.07
+Nodes (28): requireDM middleware, requirePlayer middleware, CampaignState, Player, POST/GET/DELETE /api/players, GET/PUT /api/players/me/notes, POST /api/sessions/:number/notes, PUT /api/state/character/:charId (+20 more)
 
 ### Community 10 - "REST API Routes"
+Cohesion: 0.09
+Nodes (31): actCombatant(), addExchangeLine(), attackOutcome(), getCombatantAC(), getCombatantBaseAC(), getDefaultFormData(), isNat1(), isNat20() (+23 more)
+
+### Community 11 - "Character State Sync (CHAR_STATE)"
+Cohesion: 0.13
+Nodes (25): schoolBadge(), cantripRequiresAttack(), castingTag(), defaultSlotLevel(), getActionMode(), getAlivePlayers(), getFormSpellData(), getMaxAttacks() (+17 more)
+
+### Community 12 - "NPC & Bestiary Data"
+Cohesion: 0.07
+Nodes (20): CampaignEvent, CampaignLocation, CampaignState, CampaignThread, ClassPreset, Condition, conds, events (+12 more)
+
+### Community 13 - "Player Accounts & Notes"
+Cohesion: 0.22
+Nodes (13): liveEscape(), renderActionNoteBody(), renderConversationNoteBody(), renderLootForm(), renderLootRollRow(), renderNarrativeChapterHeader(), renderNarrativeForm(), renderNoteCard() (+5 more)
+
+### Community 14 - "Items Catalog"
 Cohesion: 0.10
 Nodes (19): dependencies, dotenv, express, express-session, mongoose, socket.io, description, devDependencies (+11 more)
 
-### Community 11 - "Character State Sync (CHAR_STATE)"
-Cohesion: 0.17
-Nodes (19): buildGroupedStream(), closeNoteForm(), deleteNote(), getCurrentNarrativeId(), groupLevelUp(), groupLongRest(), groupShortRest(), moveChapter() (+11 more)
-
-### Community 12 - "NPC & Bestiary Data"
-Cohesion: 0.11
-Nodes (18): CampaignEvent, CampaignLocation, CampaignState, CampaignThread, ClassPreset, Condition, crud, crypto (+10 more)
-
-### Community 13 - "Player Accounts & Notes"
-Cohesion: 0.23
-Nodes (16): breakConcentration(), getCombatantHP(), getCombatantHPMax(), getCombatantName(), isNat1(), isNat20(), openLiveLootForm(), renderNpcActionForm() (+8 more)
-
-### Community 14 - "Items Catalog"
-Cohesion: 0.13
-Nodes (13): connectDB(), mongoose, Render.com deploy config, app, connectDB, express, http, io (+5 more)
-
 ### Community 15 - "Money & Economy"
-Cohesion: 0.24
-Nodes (13): CHAR_STATE priority chain (MongoDB→localStorage→hardcoded), longRest(), changeVital(), updateHP(), ABILITY_SCORES Proxy, getAbilityScores(), getCharLevel(), getHPMax() (+5 more)
+Cohesion: 0.23
+Nodes (15): diceOnly(), dmgTypeOptions(), getAliveMonsters(), getAttackRiders(), getCombatantHPMax(), isWeaponAttack(), renderAttackBlock(), renderAttackRiders() (+7 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.27
-Nodes (12): CATEGORY_LABELS, clearItemForm(), customItems, filterItems(), initItems, initItems(), renderItemCard(), renderItemsList() (+4 more)
+Cohesion: 0.16
+Nodes (10): Singleton Document Pattern, seed(), CampaignStateSchema, { Schema, model }, ConditionSchema, { Schema, model }, MonsterSchema, { Schema, model } (+2 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.20
-Nodes (9): Singleton Document Pattern, loadDataFile(), seed(), CampaignStateSchema, { Schema, model }, ConditionSchema, { Schema, model }, { Schema, model } (+1 more)
+Cohesion: 0.26
+Nodes (14): CATEGORY_LABELS, clearItemForm(), deleteItem(), filterItems(), initItems, initItems(), openEditItem(), renderItemCard() (+6 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.33
-Nodes (10): initApp(), changeMoneyCoin(), COIN_TYPES, getMoney(), getMoneyTotalSP(), MONEY_DEFAULTS, renderAllMoney(), renderMoney() (+2 more)
+Cohesion: 0.25
+Nodes (8): fixSessionDates.js, fixStoryActsS3.js, updateS2S3.js, Session, StoryAct, StoryChapter, run() fixStoryActsS3, run() updateS2S3
 
 ### Community 19 - "Community 19"
-Cohesion: 0.36
-Nodes (8): addItem(), delItem(), renderInventory(), saveNotes(), toggleCondition(), getAbilityScores(), assignLootFromForm(), load()
+Cohesion: 0.25
+Nodes (9): CampaignEvent.order, CampaignLocation.order, CampaignThread.order, crudRouter (crudFactory), crudFactory sort param, reorderEvents.js, CampaignEvent, CampaignLocation (+1 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.22
-Nodes (9): advanceRound(), applyConcentration(), cantripRequiresAttack(), checkRoundComplete(), forceNextRound(), markActed(), saveActionNote(), saveSkipTurnNote() (+1 more)
+Cohesion: 0.29
+Nodes (12): getItem(), calcWeaponAttackMod(), calcWeaponDamageBonus(), charBuffBonus(), isMonkWeapon(), normalizeDamageType(), parseDamageBonus(), selectMonsterAttack() (+4 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.32
-Nodes (7): _CHAR_SYNC_PREFIXES, _charFromStateKey(), _charSyncTimers, _maybeSyncToAPI(), showSaved(), syncMoney(), GET/PUT /api/state
-
-### Community 22 - "Community 22"
 Cohesion: 0.29
 Nodes (5): CampaignEvent, mongoose, ORDER, CampaignEventSchema, { Schema, model }
 
-### Community 23 - "Community 23"
-Cohesion: 0.33
-Nodes (5): loadStory(), renderStory(), GET /api/story, crudRouter(), { Router }
-
-### Community 24 - "Community 24"
+### Community 22 - "Community 22"
 Cohesion: 0.33
 Nodes (4): DM Authentication Guard, Player Authentication Guard, requireDM(), requirePlayer()
 
-### Community 25 - "Community 25"
+### Community 23 - "Community 23"
+Cohesion: 0.05
+Nodes (39): API de datos (`/api`), Archivos clave, Ardaetheros — Compañero de Campaña D&D 5E, Arquitectura general, Campos de mecánica en los hechizos (`db/seed-data/class-presets.js`), Clases CSS, Comunidades principales (navegación rápida), Convenciones importantes (+31 more)
+
+### Community 24 - "Community 24"
 Cohesion: 0.53
 Nodes (4): applyImage(), closeImageModal(), openImageModal(), setPortrait()
 
-### Community 26 - "Community 26"
-Cohesion: 0.47
-Nodes (4): fetchAPI(), loadCharState(), loadReferenceData(), GET /api/presets-map
-
-### Community 27 - "Community 27"
+### Community 25 - "Community 25"
 Cohesion: 0.33
 Nodes (4): PlayerSchema, { Schema, model }, Player, { Router }
 
-### Community 28 - "Community 28"
+### Community 26 - "Community 26"
 Cohesion: 0.40
 Nodes (5): checkDMSession, setDMMode, setSessionIndicator, showAppGate, unlockApp
 
-### Community 29 - "Community 29"
-Cohesion: 0.40
-Nodes (4): LIVE_SESSION, applySessionSync(), socket live:sync handler, socket live:welcome handler
+### Community 27 - "Community 27"
+Cohesion: 0.07
+Nodes (27): Ardaetheros — Compañero de Campaña D&D 5E, Carga de datos pendiente (de mesa), Combat tracker — mejoras de acción (acordadas, a implementar), Convenciones de localStorage (prefijo `ard_`), Cómo correrlo, data.js — el corazón de los datos, DONE (cambios completados — referencia histórica), En código (buscar `// TODO` en data.js) (+19 more)
 
-### Community 31 - "Community 31"
+### Community 28 - "Community 28"
 Cohesion: 0.60
 Nodes (4): applyHPSync(), applySessionSync(), isLivePageActive(), _socket
 
-### Community 32 - "Community 32"
+### Community 31 - "Community 31"
+Cohesion: 0.17
+Nodes (21): changeResourcePool(), consumeSpellSlot(), getMaxSpellLevel(), isCantripActive(), loadResourceState(), loadSlotState(), longRest(), _patchCharState() (+13 more)
+
+### Community 33 - "Community 33"
+Cohesion: 0.38
+Nodes (11): levelUpCharacter(), changeVital(), updateHP(), getHPMax(), hitDieAvg(), hpGainOnLevelUp(), applyHealing(), changeCombatantHP() (+3 more)
+
+### Community 34 - "Community 34"
+Cohesion: 0.33
+Nodes (9): archivedSessionLabel(), checkArchivedSessionNumber(), fetchArchivedSession(), finalizeSession(), onSessionNumberInput(), renderArchivedWarning(), renderLiveHeader(), updateLiveMeta() (+1 more)
+
+### Community 45 - "Community 45"
+Cohesion: 0.24
+Nodes (11): localStorage ↔ MongoDB dual persistence, _CHAR_STATE_FIELDS, _CHAR_SYNC_PREFIXES, _charFromStateKey(), _charSyncTimers, _maybeSyncToAPI, _maybeSyncToAPI(), _patchCharStateFromKey() (+3 more)
+
+### Community 46 - "Community 46"
+Cohesion: 0.24
+Nodes (18): getCharSaveBonus(), getCharSkillBonus(), isSpellPrepared(), abilityMod(), calcSpellAttackMod(), calcSpellSaveDC(), getCantripDamageDice(), getCharLevel() (+10 more)
+
+### Community 47 - "Community 47"
+Cohesion: 0.15
+Nodes (15): buffMaxTargets(), computeSleep(), ensureRays(), getHealTargets(), missileCount(), missileDamagePerDart(), rayCount(), renderBuffBlock() (+7 more)
+
+### Community 48 - "Community 48"
+Cohesion: 0.36
+Nodes (12): addItem(), delItem(), _getInventory(), renderInventory(), saveNotes(), _setInventory(), toggleCondition(), toggleInvTransfer() (+4 more)
+
+### Community 50 - "Community 50"
 Cohesion: 0.50
 Nodes (3): Item known field — player visibility control, ItemSchema, { Schema, model }
 
-## Ambiguous Edges - Review These
-- `fixSessionDates.js` → `CampaignEvent.js`  [AMBIGUOUS]
-  db/fixSessionDates.js · relation: references
-- `fixStoryActsS3.js` → `CampaignEvent.js`  [AMBIGUOUS]
-  db/fixStoryActsS3.js · relation: references
-
 ## Knowledge Gaps
-- **160 isolated node(s):** `version`, `configurations`, `mongoose`, `mongoose`, `Session` (+155 more)
+- **225 isolated node(s):** `version`, `configurations`, `bgIsolation`, `allow`, `mongoose` (+220 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What is the exact relationship between `fixSessionDates.js` and `CampaignEvent.js`?**
-  _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
-- **What is the exact relationship between `fixStoryActsS3.js` and `CampaignEvent.js`?**
-  _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
-- **Why does `updateEvent()` connect `Campaign Events & Locations` to `Community 22`?**
-  _High betweenness centrality (0.210) - this node is a cross-community bridge._
-- **Why does `load()` connect `Community 19` to `Character Abilities & Stats`, `Campaign Events & Locations`, `World Lore & Narrative`, `Live Session Combat (Core)`, `Live Session Combat (Add/Manage)`, `Spell Slots & Resources`, `Player Accounts & Notes`, `Money & Economy`, `Community 18`, `Community 21`, `Community 30`?**
-  _High betweenness centrality (0.170) - this node is a cross-community bridge._
-- **Why does `renderEvents()` connect `Campaign Events & Locations` to `Character State Sync (CHAR_STATE)`, `Live Session Combat (Add/Manage)`?**
-  _High betweenness centrality (0.145) - this node is a cross-community bridge._
-- **Are the 24 inferred relationships involving `save()` (e.g. with `changeResourcePool()` and `consumeSpellSlot()`) actually correct?**
-  _`save()` has 24 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 23 inferred relationships involving `load()` (e.g. with `isCantripActive()` and `isSpellPrepared()`) actually correct?**
-  _`load()` has 23 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 9 inferred relationships involving `renderActionForm()` (e.g. with `schoolBadge()` and `calcSpellAttackMod()`) actually correct?**
+  _`renderActionForm()` has 9 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 4 inferred relationships involving `saveActionNote()` (e.g. with `consumeSpellSlot()` and `abilityMod()`) actually correct?**
+  _`saveActionNote()` has 4 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `version`, `configurations`, `bgIsolation` to the rest of the system?**
+  _228 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Character Abilities & Stats` be split into smaller, more focused modules?**
+  _Cohesion score 0.10080645161290322 - nodes in this community are weakly interconnected._
+- **Should `Campaign Events & Locations` be split into smaller, more focused modules?**
+  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+- **Should `World Lore & Narrative` be split into smaller, more focused modules?**
+  _Cohesion score 0.08067375886524823 - nodes in this community are weakly interconnected._
+- **Should `Live Session Combat (Core)` be split into smaller, more focused modules?**
+  _Cohesion score 0.06009783368273934 - nodes in this community are weakly interconnected._

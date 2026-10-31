@@ -16,7 +16,8 @@ connectDB();
 // Archivos estáticos — van antes del session middleware (no necesitan sesión)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.json());
+// 5mb: la sesión live y el archivo de sesión (Finalizar) mandan el stream completo — el default de 100kb no alcanza
+app.use(express.json({ limit: '5mb' }));
 
 // Render (y cualquier reverse proxy) — necesario para cookies secure y req.ip correctos
 app.set('trust proxy', 1);

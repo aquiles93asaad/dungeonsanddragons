@@ -1,297 +1,307 @@
 {
-  "/Users/akhilasaad/Desktop/D&D/.claude/launch.json": {
+  ".claude/launch.json": {
     "mtime": 1781294365.157044,
     "ast_hash": "9e3154ad27c438caec1b3cead99f1c31",
     "semantic_hash": "9e3154ad27c438caec1b3cead99f1c31"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/connect.js": {
+  "db/connect.js": {
     "mtime": 1780423058.4389734,
     "ast_hash": "509d5770028a2c3706220631cab410ea",
     "semantic_hash": "509d5770028a2c3706220631cab410ea"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/seed.js": {
-    "mtime": 1780423205.0738423,
-    "ast_hash": "9467774d570cd04fd8fc650afaf70f77",
-    "semantic_hash": "9467774d570cd04fd8fc650afaf70f77"
+  "db/seed.js": {
+    "mtime": 1782681417.063096,
+    "ast_hash": "68065804146af509a9c8d22f68a7aba9",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/db/seedStory.js": {
+  "db/seedStory.js": {
     "mtime": 1780424110.10837,
     "ast_hash": "b40e9f3992039dc8d363c52e58a9d77a",
     "semantic_hash": "b40e9f3992039dc8d363c52e58a9d77a"
   },
-  "/Users/akhilasaad/Desktop/D&D/middleware/requireDM.js": {
+  "middleware/requireDM.js": {
     "mtime": 1780427377.782884,
     "ast_hash": "04a3076361cdfa496b4784d833d83a92",
     "semantic_hash": "04a3076361cdfa496b4784d833d83a92"
   },
-  "/Users/akhilasaad/Desktop/D&D/middleware/requirePlayer.js": {
+  "middleware/requirePlayer.js": {
     "mtime": 1780429300.340807,
     "ast_hash": "f70c434eb13c17a0b87e1d332d17c298",
     "semantic_hash": "f70c434eb13c17a0b87e1d332d17c298"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/CampaignEvent.js": {
+  "models/CampaignEvent.js": {
     "mtime": 1781221029.7178175,
     "ast_hash": "197a70319e50a360eb47d0ead4958427",
     "semantic_hash": "197a70319e50a360eb47d0ead4958427"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/CampaignLocation.js": {
+  "models/CampaignLocation.js": {
     "mtime": 1781221038.4427233,
     "ast_hash": "b3cb6fc67967ef0f374ec7a72f99bcca",
     "semantic_hash": "b3cb6fc67967ef0f374ec7a72f99bcca"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/CampaignState.js": {
-    "mtime": 1780932936.818935,
-    "ast_hash": "4c3a2115a849a5afc9717eb7964f1031",
-    "semantic_hash": "4c3a2115a849a5afc9717eb7964f1031"
+  "models/CampaignState.js": {
+    "mtime": 1793400140.2878928,
+    "ast_hash": "76fb39327d69b4bf94f8861a94c200f9",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/models/CampaignThread.js": {
+  "models/CampaignThread.js": {
     "mtime": 1781221034.4263723,
     "ast_hash": "529e0c79a89f15fb31ff8d0e86cde797",
     "semantic_hash": "529e0c79a89f15fb31ff8d0e86cde797"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/ClassPreset.js": {
+  "models/ClassPreset.js": {
     "mtime": 1780423129.2156394,
     "ast_hash": "f4ff1e5fe1fc1cb9e00d0d2498247b42",
     "semantic_hash": "f4ff1e5fe1fc1cb9e00d0d2498247b42"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Condition.js": {
+  "models/Condition.js": {
     "mtime": 1780423102.996477,
     "ast_hash": "335313e50bce494d07a3c866d03b71dd",
     "semantic_hash": "335313e50bce494d07a3c866d03b71dd"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Item.js": {
+  "models/Item.js": {
     "mtime": 1780428190.3364246,
     "ast_hash": "1bf35f386a78d7986b30c5acc85b9517",
     "semantic_hash": "1bf35f386a78d7986b30c5acc85b9517"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Monster.js": {
-    "mtime": 1780423112.6152837,
-    "ast_hash": "53ba48eb23f6f3351525bb5b25f54a62",
-    "semantic_hash": "53ba48eb23f6f3351525bb5b25f54a62"
+  "models/Monster.js": {
+    "mtime": 1781301104.9265008,
+    "ast_hash": "3cf42366fe38f69ae68413a57cb6ebf0",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Npc.js": {
+  "models/Npc.js": {
     "mtime": 1780423106.5989847,
     "ast_hash": "f7ddff3c9641e25d6ea73ae5d39dffb2",
     "semantic_hash": "f7ddff3c9641e25d6ea73ae5d39dffb2"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Player.js": {
+  "models/Player.js": {
     "mtime": 1780423148.4754813,
     "ast_hash": "b4f1dd9349d26a63e8f7605f9aceaeea",
     "semantic_hash": "b4f1dd9349d26a63e8f7605f9aceaeea"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Session.js": {
+  "models/Session.js": {
     "mtime": 1780423133.6585977,
     "ast_hash": "6ddd6d7a243b6e07d3c9474a77b440fd",
     "semantic_hash": "6ddd6d7a243b6e07d3c9474a77b440fd"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/Story.js": {
+  "models/Story.js": {
     "mtime": 1780423137.995212,
     "ast_hash": "a6f0bdedd868dd5f2ee48fd1d091a84c",
     "semantic_hash": "a6f0bdedd868dd5f2ee48fd1d091a84c"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/StoryAct.js": {
+  "models/StoryAct.js": {
     "mtime": 1780424065.783663,
     "ast_hash": "c7659632fa2266f2fedcedf0b73e11cc",
     "semantic_hash": "c7659632fa2266f2fedcedf0b73e11cc"
   },
-  "/Users/akhilasaad/Desktop/D&D/models/StoryChapter.js": {
+  "models/StoryChapter.js": {
     "mtime": 1780424061.124647,
     "ast_hash": "9750b2d40150996bba7fa4f396bd8343",
     "semantic_hash": "9750b2d40150996bba7fa4f396bd8343"
   },
-  "/Users/akhilasaad/Desktop/D&D/package.json": {
+  "package.json": {
     "mtime": 1780559042.4680088,
     "ast_hash": "e53fec257db03fdf4e77c324c19c8968",
     "semantic_hash": "e53fec257db03fdf4e77c324c19c8968"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/data/campaign-events.js": {
-    "mtime": 1781289488.3831735,
-    "ast_hash": "9cf06d9b5b6b6469abe76a357e50c795",
-    "semantic_hash": "9cf06d9b5b6b6469abe76a357e50c795"
+  "public/js/abilities.js": {
+    "mtime": 1793405640.353112,
+    "ast_hash": "991b2cc530ef7087006895657638c861",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/data/campaign-locations.js": {
-    "mtime": 1780397647.1065152,
-    "ast_hash": "ce91ee2d16c70508929cc634f658a4b5",
-    "semantic_hash": "ce91ee2d16c70508929cc634f658a4b5"
+  "public/js/bestiary.js": {
+    "mtime": 1781301165.8632164,
+    "ast_hash": "d50df940fd20767593636167206d3e5a",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/data/campaign-threads.js": {
-    "mtime": 1780397647.105655,
-    "ast_hash": "922a0f6b123bee6a8031319d443d2c94",
-    "semantic_hash": "922a0f6b123bee6a8031319d443d2c94"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/data/class-presets.js": {
-    "mtime": 1780933484.1144993,
-    "ast_hash": "5e2da23fad9ed47979dadd0a8170286a",
-    "semantic_hash": "5e2da23fad9ed47979dadd0a8170286a"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/data/conditions.js": {
-    "mtime": 1780397647.1050205,
-    "ast_hash": "167c81ca0d76d93c0daf81e5bca63b64",
-    "semantic_hash": "167c81ca0d76d93c0daf81e5bca63b64"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/data/items.js": {
-    "mtime": 1780428236.2223368,
-    "ast_hash": "9af1ad5a5e698e880c4a56f4ac4a47d8",
-    "semantic_hash": "9af1ad5a5e698e880c4a56f4ac4a47d8"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/data/monsters.js": {
-    "mtime": 1780706284.042981,
-    "ast_hash": "765fcd21cf21eab7e881e4dc6afdc123",
-    "semantic_hash": "765fcd21cf21eab7e881e4dc6afdc123"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/data/npcs.js": {
-    "mtime": 1780397647.1052918,
-    "ast_hash": "558a3da4daa7aa6a50439d2ccc57fe85",
-    "semantic_hash": "558a3da4daa7aa6a50439d2ccc57fe85"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/js/abilities.js": {
-    "mtime": 1781294306.7153819,
-    "ast_hash": "e19d235fd37756b29b7bc8a2205b3e51",
-    "semantic_hash": "e19d235fd37756b29b7bc8a2205b3e51"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/js/bestiary.js": {
-    "mtime": 1780265473.2985914,
-    "ast_hash": "f29a7b56ab0796f72c0a6c908f8806a0",
-    "semantic_hash": "f29a7b56ab0796f72c0a6c908f8806a0"
-  },
-  "/Users/akhilasaad/Desktop/D&D/public/js/campaign.js": {
+  "public/js/campaign.js": {
     "mtime": 1781286312.9749749,
     "ast_hash": "a1f40851f99d0fc664e5c33723acb25b",
     "semantic_hash": "a1f40851f99d0fc664e5c33723acb25b"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/characters.js": {
-    "mtime": 1781296225.3413336,
-    "ast_hash": "5902faf4e9f431f78fc6f3ec9a909aa0",
-    "semantic_hash": "5902faf4e9f431f78fc6f3ec9a909aa0"
+  "public/js/characters.js": {
+    "mtime": 1782544771.5648463,
+    "ast_hash": "2d84a11fbf5640fc87e861b29f5a724e",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/data.js": {
-    "mtime": 1781295935.8177001,
-    "ast_hash": "5828720ad4a8eb86da46233fea4d720a",
-    "semantic_hash": "5828720ad4a8eb86da46233fea4d720a"
+  "public/js/data.js": {
+    "mtime": 1782680046.8123295,
+    "ast_hash": "405165fb658c748892f8dffb78a27e8c",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/dm-auth.js": {
+  "public/js/dm-auth.js": {
     "mtime": 1780430852.7421553,
     "ast_hash": "8e65e93df3e8e9cc80abf793ac4ae2bf",
     "semantic_hash": "8e65e93df3e8e9cc80abf793ac4ae2bf"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/images.js": {
+  "public/js/images.js": {
     "mtime": 1780139273.1052067,
     "ast_hash": "0ed53fed05aff8a891c489a5e354387e",
     "semantic_hash": "0ed53fed05aff8a891c489a5e354387e"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/init.js": {
-    "mtime": 1781295917.4274216,
-    "ast_hash": "663a7889b459e2a4a72bd300f1a17ba5",
-    "semantic_hash": "663a7889b459e2a4a72bd300f1a17ba5"
+  "public/js/init.js": {
+    "mtime": 1793400143.5599375,
+    "ast_hash": "af086de6bd6a4f942dcff5dda28d547d",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/items.js": {
-    "mtime": 1780383460.4176524,
-    "ast_hash": "64640729fa4ac2c1111887d9002de4d7",
-    "semantic_hash": "64640729fa4ac2c1111887d9002de4d7"
+  "public/js/items.js": {
+    "mtime": 1781307153.078017,
+    "ast_hash": "6f5cbd6c6b82bbcbfa5611fbee699f0f",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/live.js": {
-    "mtime": 1781289053.1264048,
-    "ast_hash": "0ebb3e13c87768915ad45b0f76243325",
-    "semantic_hash": "0ebb3e13c87768915ad45b0f76243325"
+  "public/js/live.js": {
+    "mtime": 1793405923.3277848,
+    "ast_hash": "b87ce9606f50505c6a12f719a0857498",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/money.js": {
+  "public/js/money.js": {
     "mtime": 1780428894.0490606,
     "ast_hash": "8568a4e8d178982b0d242562ad2ce3f7",
     "semantic_hash": "8568a4e8d178982b0d242562ad2ce3f7"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/navigation.js": {
-    "mtime": 1780354459.000582,
-    "ast_hash": "d99589e925f569c9a5e1d2bcc1c75f41",
-    "semantic_hash": "d99589e925f569c9a5e1d2bcc1c75f41"
+  "public/js/navigation.js": {
+    "mtime": 1781307557.325773,
+    "ast_hash": "ef49120a2d09d1a35c84fa4e32091693",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/npcs.js": {
-    "mtime": 1780261902.4140532,
-    "ast_hash": "3d19af0123dc265256d7880c1343054f",
-    "semantic_hash": "3d19af0123dc265256d7880c1343054f"
+  "public/js/npcs.js": {
+    "mtime": 1781307113.9763129,
+    "ast_hash": "2d87d86f6824b138b57bdeaa71a13470",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/overview.js": {
-    "mtime": 1780248694.980359,
-    "ast_hash": "aba479b369b4699f3d3696c4af935d93",
-    "semantic_hash": "aba479b369b4699f3d3696c4af935d93"
+  "public/js/overview.js": {
+    "mtime": 1782679349.3632143,
+    "ast_hash": "16f46db9bec32d5cb195b04c57e90ed4",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/players.js": {
+  "public/js/players.js": {
     "mtime": 1780430868.4210527,
     "ast_hash": "0630234e1ee34350d2622a767547c780",
     "semantic_hash": "0630234e1ee34350d2622a767547c780"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/socket-client.js": {
+  "public/js/socket-client.js": {
     "mtime": 1781295956.4517076,
     "ast_hash": "b4fc022bb0bdf4aa95ed75190330e8fe",
     "semantic_hash": "b4fc022bb0bdf4aa95ed75190330e8fe"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/storage.js": {
-    "mtime": 1781295945.8714669,
-    "ast_hash": "797eebf47286644e9b7b28817ff52d8c",
-    "semantic_hash": "797eebf47286644e9b7b28817ff52d8c"
+  "public/js/storage.js": {
+    "mtime": 1793400098.1314452,
+    "ast_hash": "25287756cd52f634bb67a4df46b0a239",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/routes/api.js": {
+  "routes/api.js": {
     "mtime": 1781221045.6214635,
     "ast_hash": "cd7340ffe24e9a704104256df8c87307",
     "semantic_hash": "cd7340ffe24e9a704104256df8c87307"
   },
-  "/Users/akhilasaad/Desktop/D&D/routes/auth.js": {
+  "routes/auth.js": {
     "mtime": 1780430317.113799,
     "ast_hash": "74cb44387435be98af638ad5a02a7720",
     "semantic_hash": "74cb44387435be98af638ad5a02a7720"
   },
-  "/Users/akhilasaad/Desktop/D&D/routes/crudFactory.js": {
+  "routes/crudFactory.js": {
     "mtime": 1781221054.3704185,
     "ast_hash": "ccec955b2a8cb47445c4202e87364ab8",
     "semantic_hash": "ccec955b2a8cb47445c4202e87364ab8"
   },
-  "/Users/akhilasaad/Desktop/D&D/server.js": {
-    "mtime": 1781292441.2621055,
-    "ast_hash": "f55e9e078fe46da86d400f89d94c5794",
-    "semantic_hash": "f55e9e078fe46da86d400f89d94c5794"
+  "server.js": {
+    "mtime": 1793400141.8524427,
+    "ast_hash": "16ab62dbb66bbf0216264b97339ee52c",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/CLAUDE.md": {
-    "mtime": 1781220168.5127306,
-    "ast_hash": "7fc57089e04cfa475998c9eb0c665790",
-    "semantic_hash": "7fc57089e04cfa475998c9eb0c665790"
+  "CLAUDE.md": {
+    "mtime": 1793405984.639827,
+    "ast_hash": "01ac000a494e745722de3e47f6f96540",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/public/CLAUDE.md": {
+  "public/CLAUDE.md": {
     "mtime": 1780391293.4874444,
     "ast_hash": "b5744fb6a276939853fa2021a039ef86",
     "semantic_hash": "b5744fb6a276939853fa2021a039ef86"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/index.html": {
-    "mtime": 1781285738.1599534,
-    "ast_hash": "b6cdc092ce9af3da85fb96d6ca965f9f",
-    "semantic_hash": "b6cdc092ce9af3da85fb96d6ca965f9f"
+  "public/index.html": {
+    "mtime": 1782679387.0896363,
+    "ast_hash": "bdd89ee9095738ea470c19946583cf34",
+    "semantic_hash": ""
   },
-  "/Users/akhilasaad/Desktop/D&D/render.yaml": {
+  "render.yaml": {
     "mtime": 1780559048.5140162,
     "ast_hash": "d5e1003cd7cb7216ecf8fe19f8b8b806",
     "semantic_hash": "d5e1003cd7cb7216ecf8fe19f8b8b806"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/fixSessionDates.js": {
+  "db/fixSessionDates.js": {
     "mtime": 1781286199.736062,
     "ast_hash": "b0bba0ef3dccdd285b6813260a2831f5",
     "semantic_hash": "b0bba0ef3dccdd285b6813260a2831f5"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/fixStoryActsS3.js": {
+  "db/fixStoryActsS3.js": {
     "mtime": 1781220148.5118291,
     "ast_hash": "2180ea7e0ba8618ec644efb50cfe137a",
     "semantic_hash": "2180ea7e0ba8618ec644efb50cfe137a"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/reorderEvents.js": {
+  "db/reorderEvents.js": {
     "mtime": 1781285148.2344925,
     "ast_hash": "77c29d4889547209f260c172522f541b",
     "semantic_hash": "77c29d4889547209f260c172522f541b"
   },
-  "/Users/akhilasaad/Desktop/D&D/db/updateS2S3.js": {
+  "db/updateS2S3.js": {
     "mtime": 1781219889.8048172,
     "ast_hash": "ae8b29a4656f4d125f1a006712cba170",
     "semantic_hash": "ae8b29a4656f4d125f1a006712cba170"
   },
-  "/Users/akhilasaad/Desktop/D&D/public/js/story.js": {
-    "mtime": 1781285752.8579924,
-    "ast_hash": "11643b43950bb1656ff6004b89350ed2",
-    "semantic_hash": "11643b43950bb1656ff6004b89350ed2"
+  "public/js/story.js": {
+    "mtime": 1782679169.79029,
+    "ast_hash": "245398c0731081f913e8c5e1f644323f",
+    "semantic_hash": ""
+  },
+  ".claude/settings.json": {
+    "mtime": 1782532898.009529,
+    "ast_hash": "3af33fd7e52e050ec1386fd69f1c58dd",
+    "semantic_hash": ""
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1793399891.6844378,
+    "ast_hash": "9fea22a7ecf2729ecfc38320babb22fb",
+    "semantic_hash": ""
+  },
+  "db/seed-data/campaign-events.js": {
+    "mtime": 1781304162.093179,
+    "ast_hash": "56f50df9c4514bc74ee1ad9c98b60eef",
+    "semantic_hash": ""
+  },
+  "db/seed-data/campaign-locations.js": {
+    "mtime": 1781304162.1007035,
+    "ast_hash": "7173c143436b009e7f57086cf6cbc9b4",
+    "semantic_hash": ""
+  },
+  "db/seed-data/campaign-threads.js": {
+    "mtime": 1781304162.0972989,
+    "ast_hash": "eeffd8149a5a28d09469961160eb66b0",
+    "semantic_hash": ""
+  },
+  "db/seed-data/class-presets.js": {
+    "mtime": 1793405737.1427395,
+    "ast_hash": "a60b4a7cbde33a11879d7dd09bac7c36",
+    "semantic_hash": ""
+  },
+  "db/seed-data/conditions.js": {
+    "mtime": 1781304387.2957273,
+    "ast_hash": "178632d11ab7965fc29c8ccf5be3c60d",
+    "semantic_hash": ""
+  },
+  "db/seed-data/items.js": {
+    "mtime": 1781305759.7726848,
+    "ast_hash": "060710eef729fc95003a35ec9012acb0",
+    "semantic_hash": ""
+  },
+  "db/seed-data/monsters.js": {
+    "mtime": 1781305912.062615,
+    "ast_hash": "9142a17744153e47e5125b124ceb4b53",
+    "semantic_hash": ""
+  },
+  "db/seed-data/npcs.js": {
+    "mtime": 1781304320.9350154,
+    "ast_hash": "40e6547c116e43035d81463b4e41d430",
+    "semantic_hash": ""
   }
 }
