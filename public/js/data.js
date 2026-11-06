@@ -241,6 +241,12 @@ function getCantripDamageDice(cn, charLevel, c){
   return dmg;
 }
 
+/* Escuela de magia con la que se comprometió el personaje (Esdas: 'divination'), o null */
+function getCommittedSchool(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  return (cs && cs.committedSchool) || load('committed_school_'+c, null);
+}
+
 /* ── Comprometerse con una escuela (Esdas) ── */
 function commitToSchool(c, school){
   if(!confirm(`¿${c.charAt(0).toUpperCase()+c.slice(1)} se compromete con la escuela ${school}? Esto desbloquea el escalado de cantrips y los features de subclase. La decisión es permanente narrativamente (pero podés revertirla manualmente borrando la clave del localStorage).`)) return;

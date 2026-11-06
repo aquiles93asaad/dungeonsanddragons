@@ -160,7 +160,6 @@ body.dm-mode .player-only            { display: none !important; }
 - Botón "+ agregar item" en Items.
 - Botón "+ agregar item" en inventario del personaje.
 - Clases/habilidades aún no activadas (featureLevel > charLevel).
-- Hechizos locked.
 - Controles de Sesión Live: editar meta de sesión, location, finalizar, grupo, combate.
 
 **`.player-only`** → visible solo para jugadores (oculto para DM).
@@ -175,13 +174,13 @@ body:not(.dm-mode) .condition-btn    { pointer-events: none; opacity: 0.7; }
 /* Spell slots: no interactivos */
 body:not(.dm-mode) .slot-box         { pointer-events: none; }
 
-/* Cantrips: no toggle, inactivos ocultos */
+/* Cantrips: no toggle; los inactivos se ven con el badge "No disponible" */
 body:not(.dm-mode) .cantrip-active-btn { pointer-events: none; }
-body:not(.dm-mode) .cantrip-item.is-inactive { display: none !important; }
+body:not(.dm-mode) .cantrip-item.is-inactive .badge-no-disponible { display:inline-block; }
 
-/* Spells: no toggle prep, no preparados ocultos */
+/* Spells: no toggle prep; los jugadores ven TODOS (preparados normal, sin preparar "No disponible", de nivel superior "🔒 Nivel N del personaje") */
 body:not(.dm-mode) button.spell-prep-btn { pointer-events: none; }
-body:not(.dm-mode) .spell-item:not(.is-prepared):not(.is-always-prep) { display: none !important; }
+body:not(.dm-mode) .spell-item.no-disponible .badge-no-disponible { display:inline-block; }
 ```
 
 ---
@@ -486,7 +485,7 @@ El modal mueve el nodo real del DOM (no clona) → cualquier edición es la fuen
 - **Panel en la hoja** (debajo de los atributos, DM): +2 a uno · +1 a dos · dote (con +1 opcional para medias dotes). Muestra qué cambia (CA, HP máx retroactivo por CON, iniciativa, DC de hechizos). Tope 20 con override del DM; "Resuelta sin cambios" para lo aplicado a mano. Los jugadores ven el aviso de pendiente.
 - **✎ Editar características** (DM): edición libre para bonus narrativos/correcciones; queda en el historial como `manual` y no consume mejoras.
 - Los **atributos, la CA y la iniciativa** de la hoja se pintan desde los datos (`renderCharStats`, llamado por `renderCharAbilities`) — el HTML de `index.html` es solo el valor inicial.
-- **Hechizos:** se desbloquean solos cuando el personaje tiene slots de ese nivel (`getMaxSpellLevel`). El DM puede desbloquear uno antes con el 🔒 de la hoja (queda "🔓 DM", lista `unlockedSpells` sincronizada; se vuelve a bloquear tocando el badge). Lanzarlo sin slot de ese nivel pide confirmación en la Sesión Live. La hoja muestra **Preparados X/Y** (Paladín CHA + ½ nivel, Druida WIS + nivel, Wizard INT + nivel; los ★ no cuentan) — informativo, no bloquea. Los jugadores solo ven los hechizos preparados.
+- **Hechizos:** se desbloquean solos cuando el personaje tiene slots de ese nivel (`getMaxSpellLevel`). El DM puede desbloquear uno antes con el 🔒 de la hoja (queda "🔓 DM", lista `unlockedSpells` sincronizada; se vuelve a bloquear tocando el badge). Lanzarlo sin slot de ese nivel pide confirmación en la Sesión Live. La hoja muestra **Preparados X/Y** (Paladín CHA + ½ nivel, Druida WIS + nivel, Wizard INT + nivel; los ★ no cuentan) — informativo, no bloquea. **Todos los hechizos se ven (DM y jugadores)**, agrupados por nivel de hechizo: preparados normal, sin preparar con "No disponible", de nivel superior con "🔒 Nivel N del personaje" (esos grupos arrancan plegados). Los de la escuela del personaje (`getCommittedSchool`, Esdas = Adivinación) llevan "★ Su escuela" en la hoja y en el form de la Sesión Live, que además avisa Adivinación Experta desde Nv 6.
 - **CA** = `getCharAC(c)` en `data.js` (fórmula por armadura/feature: Unarmored Defense de Rac/Relyo, cuero+escudo de Boyd, Mage Armor de Esdas, Tyrell fija 18). La usan la hoja y el combat tracker; el DM la puede pisar por combatiente en el tracker.
 
 ---

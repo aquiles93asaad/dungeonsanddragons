@@ -621,8 +621,8 @@ module.exports = {
       {name:'Insight',nameEs:'Perspicacia',ability:'wis'}
     ],
     campaignNotes:[
-      { type:'warning', title:'Camino arcano — regla de campaña',
-        desc:'Esdas todavía no se comprometió con una Escuela de Magia. Puede APRENDER hechizos de cualquier escuela libremente, pero hasta que elija una Arcane Tradition paga el costo:\n\n• Pierde el feature de Arcane Tradition de nivel 2 (Sculpt Spells, Hypnotic Gaze, Portent, Minor Conjuration, etc.) hasta comprometerse.\n• Pierde el Savant de su escuela (mitad de oro y tiempo para copiar scrolls de esa escuela al spellbook).\n• Sus CANTRIPS DE DAÑO NO ESCALAN: Firebolt y Ray of Frost se quedan en 1 dado de daño hasta el nivel 17, en lugar de subir a 2d a Nv 5, 3d a Nv 11, 4d a Nv 17. Los demás cantrips no se ven afectados.\n\nCuando un evento narrativo lo empuje a comprometerse (un mentor, un descubrimiento profundo, una crisis), elige su escuela definitiva y recupera todos los bonos perdidos + la progresión normal de wizard a partir de ese punto.' }
+      { type:'info', title:'Camino arcano — Escuela de Adivinación',
+        desc:'Esdas se comprometió con la Escuela de Adivinación (usó Presagio en la última sesión). Con eso recupera lo que la regla de campaña le quitaba mientras era generalista:\n\n• El rasgo de Nv 2 de su escuela: Presagio (Portent).\n• El Savant de adivinación: mitad de oro y tiempo para copiar hechizos de adivinación al spellbook.\n• El escalado normal de sus cantrips de daño (2 dados a Nv 5, 3 a Nv 11, 4 a Nv 17).\n\nLa escuela no limita el spellbook: sigue aprendiendo y lanzando hechizos de cualquier escuela.' }
     ],
     resources:[
       { key:'arcane-recovery', name:'Arcane Recovery', nameEs:'Recuperación Arcana', kind:'uses', restoresOn:'long',
@@ -633,37 +633,33 @@ module.exports = {
         desc:'Full caster. Spell save DC = 8+prof+INT · Spell attack = prof+INT. Preparás INT mod + nivel wizard hechizos del spellbook por long rest. Necesitás spellbook + componente material o foco arcano. Spellbook arranca con 6 hechizos al Nv 1 y suma 2 por nivel.' },
       { level:1, name:'Arcane Recovery', nameEs:'Recuperación Arcana',
         desc:'Una vez por long rest, durante un short rest, recuperar slots cuya suma de niveles ≤ ½ nivel wizard redondeado hacia arriba.' },
-      // TODO subclass: cuando Esdas se comprometa con una escuela, agregar
-      // entries de level:2, 6, 10, 14 con los features de la Arcane
-      // Tradition elegida. La función commitToSchool() en este archivo
-      // ya marca el flag, pero los features de la escuela específica
-      // (Sculpt Spells de Evocation, Hypnotic Gaze de Enchantment, Portent
-      // de Divination, Minor Conjuration de Conjuration, etc.) hay que
-      // sumarlos manualmente al levelFeatures de esdas.
-      // Cuando se comprometa, también el escalado de cantrips de daño se
-      // desbloquea automáticamente (getCantripDamageDice ya lo respeta).
-      { level:2, name:'Arcane Tradition (indecisa)', nameEs:'Tradición Arcana (sin comprometer)',
-        desc:'Normalmente a Nv 2 el wizard elige su escuela definitiva (Evocation, Enchantment, Divination, Illusion, Abjuration, Conjuration, Necromancy, Transmutation, War Magic, Bladesinging, etc.). Esdas se mantiene generalista — ver "Camino arcano" arriba.' },
+      { level:2, name:'Arcane Tradition: School of Divination', nameEs:'Tradición Arcana: Escuela de Adivinación',
+        desc:'Esdas se comprometió con la Adivinación. Rasgos de la escuela: Divination Savant y Presagio (Nv 2), Adivinación Experta (Nv 6), El Tercer Ojo (Nv 10), Presagio Mayor (Nv 14).' },
+      { level:2, name:'Divination Savant', nameEs:'Erudito de la Adivinación',
+        desc:'El oro y el tiempo para copiar un hechizo de adivinación en el spellbook se reducen a la mitad.' },
+      { level:2, name:'Portent', nameEs:'Presagio',
+        desc:'Al terminar un descanso largo tirás 2d20 y anotás los resultados. Podés reemplazar cualquier tirada de ataque, salvación o prueba de característica tuya o de una criatura que veas por uno de esos resultados — decidilo antes de que se tire. Cada resultado se usa una vez, como máximo uno por turno. Los que no usaste se pierden en el siguiente descanso largo.' },
       { level:3, name:'Slots de nivel 2', nameEs:'Slots de nivel 2',
         desc:'Desbloqueás slots de hechizo de nivel 2. 2 slots a Nv 3. Hechizos de nivel 2 disponibles para aprender.' },
       { level:4, name:'ASI', nameEs:'Mejora de Stats', desc:'Elegís una de tres opciones:\n• +2 a una habilidad (máximo 20).\n• +1 a dos habilidades distintas (máximo 20 cada una).\n• Un Feat (rasgo especial) en lugar de la mejora de stats.' },
       { level:5, name:'Slots de nivel 3', nameEs:'Slots de nivel 3',
-        desc:'Desbloqueás slots de hechizo de nivel 3 (Fireball, Counterspell, etc.). Cantrips de daño suben a 2 dados (BLOQUEADO mientras no elija escuela).' },
-      { level:6, name:'Tradition Feature', nameEs:'Feature de Tradición',
-        desc:'Habilidad de subclase a Nv 6 (ej: Potent Cantrip de Evocation, Instinctive Charm de Enchantment). BLOQUEADO mientras no elija escuela.' },
+        desc:'Desbloqueás slots de hechizo de nivel 3 (Fireball, Counterspell, etc.). Cantrips de daño suben a 2 dados.' },
+      { level:6, name:'Expert Divination', nameEs:'Adivinación Experta',
+        desc:'Cuando lanzás un hechizo de adivinación de Nv 2 o más usando un slot, recuperás un slot gastado de nivel menor al del hechizo (máximo Nv 5).' },
       { level:7, name:'Slots de nivel 4', nameEs:'Slots de nivel 4', desc:'Desbloqueás slots de hechizo de nivel 4.' },
       { level:8, name:'ASI', nameEs:'Mejora de Stats', desc:'Elegís una de tres opciones:\n• +2 a una habilidad (máximo 20).\n• +1 a dos habilidades distintas (máximo 20 cada una).\n• Un Feat (rasgo especial) en lugar de la mejora de stats.' },
       { level:9, name:'Slots de nivel 5', nameEs:'Slots de nivel 5', desc:'Telequinesis real (5th-level Telekinesis) ahora disponible.' },
-      { level:10, name:'Tradition Feature', nameEs:'Feature de Tradición', desc:'Segundo feature de subclase. BLOQUEADO mientras no elija.' },
+      { level:10, name:'The Third Eye', nameEs:'El Tercer Ojo',
+        desc:'Acción: elegís un beneficio hasta quedar incapacitado o hacer un descanso corto o largo — visión en la oscuridad 60 ft · visión etérea 60 ft · leer cualquier idioma · ver lo invisible a 10 ft. No se puede volver a usar hasta descansar.' },
       { level:11, name:'Slots de nivel 6', nameEs:'Slots de nivel 6',
-        desc:'Cantrips de daño suben a 3 dados (BLOQUEADO mientras no elija escuela).' },
+        desc:'Cantrips de daño suben a 3 dados.' },
       { level:12, name:'ASI', nameEs:'Mejora de Stats', desc:'Elegís una de tres opciones:\n• +2 a una habilidad (máximo 20).\n• +1 a dos habilidades distintas (máximo 20 cada una).\n• Un Feat (rasgo especial) en lugar de la mejora de stats.' },
       { level:13, name:'Slots de nivel 7', nameEs:'Slots de nivel 7', desc:'Desbloqueás slots de nivel 7.' },
-      { level:14, name:'Tradition Feature', nameEs:'Feature de Tradición', desc:'Tercer feature de subclase. BLOQUEADO.' },
+      { level:14, name:'Greater Portent', nameEs:'Presagio Mayor', desc:'Presagio pasa a 3d20 por descanso largo.' },
       { level:15, name:'Slots de nivel 8', nameEs:'Slots de nivel 8', desc:'Desbloqueás slots de nivel 8.' },
       { level:16, name:'ASI', nameEs:'Mejora de Stats', desc:'Elegís una de tres opciones:\n• +2 a una habilidad (máximo 20).\n• +1 a dos habilidades distintas (máximo 20 cada una).\n• Un Feat (rasgo especial) en lugar de la mejora de stats.' },
       { level:17, name:'Slots de nivel 9', nameEs:'Slots de nivel 9',
-        desc:'Desbloqueás Wish y otros 9th. Cantrips de daño suben a 4 dados (BLOQUEADO).' },
+        desc:'Desbloqueás Wish y otros 9th. Cantrips de daño suben a 4 dados.' },
       { level:18, name:'Spell Mastery', nameEs:'Maestría de Hechizo',
         desc:'Elegís 1 hechizo de Nv 1 y 1 de Nv 2 del spellbook. Podés lanzar esos hechizos a su nivel base sin gastar slot.' },
       { level:19, name:'ASI', nameEs:'Mejora de Stats', desc:'Elegís una de tres opciones:\n• +2 a una habilidad (máximo 20).\n• +1 a dos habilidades distintas (máximo 20 cada una).\n• Un Feat (rasgo especial) en lugar de la mejora de stats.' },
@@ -698,12 +694,12 @@ module.exports = {
         requiresAttack:true,
         damageBase:'1d10', damageType:'fire',
         damageScaling:{ 5:'2d10', 11:'3d10', 17:'4d10' },
-        desc:'Acción. 120 ft. Spell attack. Si pega objeto inflamable no sostenido, se prende.\n⚠ Escalado BLOQUEADO mientras Esdas no se comprometa con una escuela.' },
+        desc:'Acción. 120 ft. Spell attack. Si pega objeto inflamable no sostenido, se prende.' },
       { name:'Ray of Frost', nameEs:'Rayo de Escarcha', school:'evocation', shape:'60 ft, ranged spell attack',
         requiresAttack:true,
         damageBase:'1d8', damageType:'cold',
         damageScaling:{ 5:'2d8', 11:'3d8', 17:'4d8' },
-        desc:'Acción. 60 ft. Spell attack. Si pega: daño cold + el objetivo pierde 10 ft de velocidad hasta el inicio de tu próximo turno.\n⚠ Escalado BLOQUEADO mientras Esdas no se comprometa con una escuela.' },
+        desc:'Acción. 60 ft. Spell attack. Si pega: daño cold + el objetivo pierde 10 ft de velocidad hasta el inicio de tu próximo turno.' },
       { name:'Mage Hand', nameEs:'Mano Mágica', school:'conjuration', shape:'30 ft',
         desc:'Acción. Mano espectral invisible flotante. Manipula objetos hasta 10 lb, abre puertas/cofres, vierte líquidos. No puede atacar ni activar magia. Dura 1 minuto. Esdas lo usa como base de su "telekinesis incompleta" — los límites del cantrip frustran sus intentos de hacerlo más fuerte.' }
     ],
@@ -924,7 +920,41 @@ module.exports = {
       { name:'Time Stop', nameEs:'Detener Tiempo', level:9, prepared:false, school:'transmutation', shape:'Self',
         desc:'1d4+1 turnos donde solo vos actuás. Termina si afectás otra criatura o un objeto cargado/llevado por otra.' },
       { name:'True Polymorph', nameEs:'Polimorfismo Verdadero', level:9, prepared:false, school:'transmutation', shape:'1 criatura/obj @ 30 ft · Concentración',
-        desc:'Concentración, 1 h. Transformar criatura a otra criatura (cualquier CR) o objeto. Permanente si concentración completa.' }
+        desc:'Concentración, 1 h. Transformar criatura a otra criatura (cualquier CR) o objeto. Permanente si concentración completa.' },
+      // ── Adivinación (su escuela) — agregados al comprometerse ──
+      { name:'Comprehend Languages', nameEs:'Comprensión Idiomática', level:1, prepared:false, school:'divination', shape:'Self · ritual',
+        desc:'Acción. 1 h. Entendés el sentido literal de cualquier idioma hablado que oigas y de cualquier texto que toques (1 min por página). No descifra mensajes secretos ni glifos. Ritual.' },
+      { name:'Detect Thoughts', nameEs:'Detectar Pensamientos', level:2, prepared:false, school:'divination', shape:'Self · 30 ft · Concentración',
+        desc:'Concentración, 1 min. Leés los pensamientos superficiales de una criatura a 30 ft (acción para cambiar de criatura). Podés sondear más hondo: WIS save o leés sus pensamientos profundos; si pasa, nota la intrusión.' },
+      { name:'Locate Object', nameEs:'Localizar Objeto', level:2, prepared:false, school:'divination', shape:'Self · 1000 ft · Concentración',
+        desc:'Concentración, 10 min. Sentís la dirección de un objeto conocido (o del más cercano de un tipo) a 1000 ft. Una capa fina de plomo lo bloquea.' },
+      { name:'See Invisibility', nameEs:'Ver lo Invisible', level:2, prepared:false, school:'divination', shape:'Self',
+        buffDesc:'👁 Ver lo Invisible activo — ve criaturas y objetos invisibles y el Plano Etéreo.',
+        desc:'Acción. 1 h. Ves criaturas y objetos invisibles como si fueran visibles, y podés ver dentro del Plano Etéreo (lo etéreo se ve translúcido).' },
+      { name:'Mind Spike', nameEs:'Púa Mental', level:2, prepared:false, school:'divination', shape:'1 criatura @ 60 ft · Concentración',
+        saveType:'wis', halfOnSave:true, damage:'3d8', damageType:'psychic',
+        effect:{ casterCondition:'concentration', duration:600 },
+        desc:'Concentración, 1 h. Una criatura a 60 ft: WIS save o 3d8 psíquico (mitad si pasa). Si falla, sabés dónde está mientras dure y no se te puede esconder (ni siendo invisible). +1d8 por slot extra. (Xanathar)' },
+      { name:'Clairvoyance', nameEs:'Clarividencia', level:3, prepared:false, school:'divination', shape:'Sensor @ 1 milla · Concentración',
+        desc:'Concentración, 10 min. Se lanza en 10 min. Creás un sensor invisible en un lugar conocido a 1 milla: ves u oís a través de él (elegís uno; acción para cambiar).' },
+      { name:'Tongues', nameEs:'Don de Lenguas', level:3, prepared:false, school:'divination', shape:'1 criatura · Toque',
+        buffDesc:'🗣 Don de Lenguas activo — entiende cualquier idioma y lo entiende cualquiera que hable al menos uno.',
+        desc:'Acción. 1 h. La criatura que tocás entiende cualquier idioma hablado, y al hablar la entiende cualquier criatura que conozca al menos un idioma.' },
+      { name:'Arcane Eye', nameEs:'Ojo Arcano', level:4, prepared:false, school:'divination', shape:'Ojo invisible @ 30 ft · Concentración',
+        desc:'Concentración, 1 h. Ojo invisible flotante con visión en la oscuridad 30 ft. Acción: lo movés 30 ft en cualquier dirección y ves lo que él ve. Pasa por agujeros de 1 pulgada.' },
+      { name:'Locate Creature', nameEs:'Localizar Criatura', level:4, prepared:false, school:'divination', shape:'Self · 1000 ft · Concentración',
+        desc:'Concentración, 1 h. Sentís la dirección de una criatura conocida (o de la más cercana de una especie) a 1000 ft. El agua corriente de 10 ft de ancho la bloquea.' },
+      { name:'Contact Other Plane', nameEs:'Contactar con Otro Plano', level:5, prepared:false, school:'divination', shape:'Self · ritual',
+        desc:'1 min. Contactás una entidad extraplanar: INT save DC 15 o recibís 6d6 psíquico y quedás loca hasta un descanso largo. Si pasás, hasta 5 preguntas de sí/no. Ritual.' },
+      { name:'Legend Lore', nameEs:'Conocimiento de Leyendas', level:5, prepared:false, school:'divination', shape:'Self · 10 min',
+        desc:'Se lanza en 10 min (incienso de 250 po). Obtenés información significativa sobre una persona, lugar u objeto de importancia legendaria; cuanto más sabés de antemano, más preciso es.' },
+      { name:'Rary\u2019s Telepathic Bond', nameEs:'Vínculo Telepático de Rary', level:5, prepared:false, school:'divination', shape:'Hasta 8 criaturas @ 30 ft · ritual',
+        desc:'Acción. 1 h. Hasta 8 criaturas voluntarias quedan conectadas telepáticamente a cualquier distancia en el mismo plano (deben compartir al menos un idioma para entenderse). Ritual.' },
+      { name:'Scrying', nameEs:'Escudriñamiento', level:5, prepared:false, school:'divination', shape:'1 criatura · mismo plano · Concentración',
+        desc:'Concentración, 10 min. Se lanza en 10 min. Ves y oís a una criatura en el mismo plano: WIS save (más fácil cuanto menos la conocés) o un sensor invisible la sigue.' },
+      { name:'Foresight', nameEs:'Presciencia', level:9, prepared:false, school:'divination', shape:'1 criatura · Toque',
+        buffDesc:'🔮 Presciencia activa — no puede ser sorprendida; ventaja en ataques, pruebas y salvaciones; los ataques contra ella tienen desventaja.',
+        desc:'1 min de lanzamiento. 8 h. La criatura que tocás no puede ser sorprendida y tiene ventaja en ataques, pruebas y salvaciones; los ataques contra ella tienen desventaja.' }
     ]
   }
 };

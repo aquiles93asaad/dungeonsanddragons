@@ -194,7 +194,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "db_connect",
-      "community": 8,
+      "community": 53,
       "norm_label": "connect.js"
     },
     {
@@ -204,7 +204,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "db_connect_mongoose",
-      "community": 8,
+      "community": 53,
       "norm_label": "mongoose"
     },
     {
@@ -214,7 +214,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "db_connect_connectdb",
-      "community": 8,
+      "community": 53,
       "norm_label": "connectdb()"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "js_abilities_getmaxspelllevel",
-      "community": 33,
+      "community": 32,
       "norm_label": "getmaxspelllevel()"
     },
     {
@@ -1504,7 +1504,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "js_abilities_patchcharstate",
-      "community": 33,
+      "community": 32,
       "norm_label": "_patchcharstate()"
     },
     {
@@ -1514,7 +1514,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "js_abilities_patchcharstateslot",
-      "community": 45,
+      "community": 32,
       "norm_label": "_patchcharstateslot()"
     },
     {
@@ -1534,7 +1534,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "js_abilities_togglespellslot",
-      "community": 45,
+      "community": 32,
       "norm_label": "togglespellslot()"
     },
     {
@@ -1544,7 +1544,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "js_abilities_consumespellslot",
-      "community": 45,
+      "community": 32,
       "norm_label": "consumespellslot()"
     },
     {
@@ -1594,7 +1594,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "js_abilities_applylevelup",
-      "community": 33,
+      "community": 32,
       "norm_label": "applylevelup()"
     },
     {
@@ -1654,7 +1654,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "js_abilities_getasistate",
-      "community": 32,
+      "community": 49,
       "norm_label": "getasistate()"
     },
     {
@@ -1664,7 +1664,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "js_abilities_usedasis",
-      "community": 32,
+      "community": 49,
       "norm_label": "usedasis()"
     },
     {
@@ -1674,7 +1674,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "js_abilities_getpendingasi",
-      "community": 32,
+      "community": 49,
       "norm_label": "getpendingasi()"
     },
     {
@@ -1684,7 +1684,7 @@
       "source_location": "L221",
       "_origin": "ast",
       "id": "js_abilities_nextasilevel",
-      "community": 32,
+      "community": 49,
       "norm_label": "nextasilevel()"
     },
     {
@@ -1694,7 +1694,7 @@
       "source_location": "L223",
       "_origin": "ast",
       "id": "js_abilities_getasiform",
-      "community": 32,
+      "community": 49,
       "norm_label": "getasiform()"
     },
     {
@@ -1704,7 +1704,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "js_abilities_setasiform",
-      "community": 32,
+      "community": 49,
       "norm_label": "setasiform()"
     },
     {
@@ -1714,7 +1714,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "js_abilities_asichanges",
-      "community": 32,
+      "community": 49,
       "norm_label": "asichanges()"
     },
     {
@@ -1724,7 +1724,7 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "js_abilities_scoreswith",
-      "community": 32,
+      "community": 49,
       "norm_label": "scoreswith()"
     },
     {
@@ -1744,7 +1744,7 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "js_abilities_applyasi",
-      "community": 32,
+      "community": 49,
       "norm_label": "applyasi()"
     },
     {
@@ -1754,7 +1754,7 @@
       "source_location": "L292",
       "_origin": "ast",
       "id": "js_abilities_resolveasiwithoutchanges",
-      "community": 32,
+      "community": 49,
       "norm_label": "resolveasiwithoutchanges()"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_location": "L301",
       "_origin": "ast",
       "id": "js_abilities_openscoreseditor",
-      "community": 32,
+      "community": 49,
       "norm_label": "openscoreseditor()"
     },
     {
@@ -1774,7 +1774,7 @@
       "source_location": "L302",
       "_origin": "ast",
       "id": "js_abilities_closescoreseditor",
-      "community": 32,
+      "community": 49,
       "norm_label": "closescoreseditor()"
     },
     {
@@ -1794,7 +1794,7 @@
       "source_location": "L304",
       "_origin": "ast",
       "id": "js_abilities_savemanualscores",
-      "community": 32,
+      "community": 49,
       "norm_label": "savemanualscores()"
     },
     {
@@ -1814,7 +1814,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "js_abilities_renderasipreview",
-      "community": 32,
+      "community": 49,
       "norm_label": "renderasipreview()"
     },
     {
@@ -1824,7 +1824,7 @@
       "source_location": "L356",
       "_origin": "ast",
       "id": "js_abilities_renderasipicker",
-      "community": 32,
+      "community": 49,
       "norm_label": "renderasipicker()"
     },
     {
@@ -1834,7 +1834,7 @@
       "source_location": "L384",
       "_origin": "ast",
       "id": "js_abilities_renderscoreseditor",
-      "community": 32,
+      "community": 49,
       "norm_label": "renderscoreseditor()"
     },
     {
@@ -1844,7 +1844,7 @@
       "source_location": "L393",
       "_origin": "ast",
       "id": "js_abilities_renderasipanel",
-      "community": 32,
+      "community": 49,
       "norm_label": "renderasipanel()"
     },
     {
@@ -1854,7 +1854,7 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "js_abilities_rendercharstats",
-      "community": 32,
+      "community": 49,
       "norm_label": "rendercharstats()"
     },
     {
@@ -1884,7 +1884,7 @@
       "source_location": "L474",
       "_origin": "ast",
       "id": "js_abilities_togglespellprepared",
-      "community": 33,
+      "community": 32,
       "norm_label": "togglespellprepared()"
     },
     {
@@ -1904,7 +1904,7 @@
       "source_location": "L512",
       "_origin": "ast",
       "id": "js_abilities_getunlockedspells",
-      "community": 33,
+      "community": 32,
       "norm_label": "getunlockedspells()"
     },
     {
@@ -1914,7 +1914,7 @@
       "source_location": "L516",
       "_origin": "ast",
       "id": "js_abilities_isspellunlocked",
-      "community": 33,
+      "community": 32,
       "norm_label": "isspellunlocked()"
     },
     {
@@ -1924,7 +1924,7 @@
       "source_location": "L519",
       "_origin": "ast",
       "id": "js_abilities_togglespellunlock",
-      "community": 33,
+      "community": 32,
       "norm_label": "togglespellunlock()"
     },
     {
@@ -1964,7 +1964,7 @@
       "source_location": "L560",
       "_origin": "ast",
       "id": "js_abilities_iscantripactive",
-      "community": 33,
+      "community": 45,
       "norm_label": "iscantripactive()"
     },
     {
@@ -1974,7 +1974,7 @@
       "source_location": "L570",
       "_origin": "ast",
       "id": "js_abilities_togglecantripactive",
-      "community": 33,
+      "community": 32,
       "norm_label": "togglecantripactive()"
     },
     {
@@ -2008,10 +2008,20 @@
       "norm_label": "schoolbadge()"
     },
     {
+      "label": "SPELL_GROUP_OPEN",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L614",
+      "_origin": "ast",
+      "id": "js_abilities_spell_group_open",
+      "community": 32,
+      "norm_label": "spell_group_open"
+    },
+    {
       "label": "renderCharAbilities()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L613",
+      "source_location": "L616",
       "_origin": "ast",
       "id": "js_abilities_rendercharabilities",
       "community": 32,
@@ -2021,7 +2031,7 @@
       "label": "renderAllAbilities()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L856",
+      "source_location": "L881",
       "_origin": "ast",
       "id": "js_abilities_renderallabilities",
       "community": 0,
@@ -2744,7 +2754,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "js_characters_changevital",
-      "community": 33,
+      "community": 48,
       "norm_label": "changevital()"
     },
     {
@@ -2754,7 +2764,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "js_characters_togglecondition",
-      "community": 45,
+      "community": 48,
       "norm_label": "togglecondition()"
     },
     {
@@ -2834,7 +2844,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "js_characters_savenotes",
-      "community": 45,
+      "community": 48,
       "norm_label": "savenotes()"
     },
     {
@@ -3034,7 +3044,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "js_data_getabilityscores",
-      "community": 32,
+      "community": 49,
       "norm_label": "getabilityscores()"
     },
     {
@@ -3144,7 +3154,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "js_data_getcharac",
-      "community": 1,
+      "community": 49,
       "norm_label": "getcharac()"
     },
     {
@@ -3258,13 +3268,23 @@
       "norm_label": "getcantripdamagedice()"
     },
     {
-      "label": "commitToSchool()",
+      "label": "getCommittedSchool()",
       "file_type": "code",
       "source_file": "public/js/data.js",
       "source_location": "L245",
       "_origin": "ast",
+      "id": "js_data_getcommittedschool",
+      "community": 1,
+      "norm_label": "getcommittedschool()"
+    },
+    {
+      "label": "commitToSchool()",
+      "file_type": "code",
+      "source_file": "public/js/data.js",
+      "source_location": "L251",
+      "_origin": "ast",
       "id": "js_data_committoschool",
-      "community": 45,
+      "community": 32,
       "norm_label": "committoschool()"
     },
     {
@@ -3664,7 +3684,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "js_live_loadlivesession",
-      "community": 30,
+      "community": 4,
       "norm_label": "loadlivesession()"
     },
     {
@@ -3674,7 +3694,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "js_live_migratenarrativelinks",
-      "community": 30,
+      "community": 4,
       "norm_label": "migratenarrativelinks()"
     },
     {
@@ -3684,7 +3704,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "js_live_getcurrentnarrativeid",
-      "community": 4,
+      "community": 54,
       "norm_label": "getcurrentnarrativeid()"
     },
     {
@@ -3704,7 +3724,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "js_live_scheduleliveserversave",
-      "community": 30,
+      "community": 4,
       "norm_label": "scheduleliveserversave()"
     },
     {
@@ -3724,7 +3744,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "js_live_liveescape",
-      "community": 10,
+      "community": 55,
       "norm_label": "liveescape()"
     },
     {
@@ -3744,7 +3764,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "js_live_nowtime",
-      "community": 4,
+      "community": 54,
       "norm_label": "nowtime()"
     },
     {
@@ -3754,7 +3774,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "js_live_nowiso",
-      "community": 4,
+      "community": 54,
       "norm_label": "nowiso()"
     },
     {
@@ -3764,7 +3784,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "js_live_updatelivemeta",
-      "community": 34,
+      "community": 4,
       "norm_label": "updatelivemeta()"
     },
     {
@@ -3774,7 +3794,7 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "js_live_getcombatant",
-      "community": 30,
+      "community": 34,
       "norm_label": "getcombatant()"
     },
     {
@@ -3784,7 +3804,7 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "js_live_gethealtargets",
-      "community": 58,
+      "community": 47,
       "norm_label": "gethealtargets()"
     },
     {
@@ -3794,7 +3814,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "js_live_getaliveplayers",
-      "community": 58,
+      "community": 47,
       "norm_label": "getaliveplayers()"
     },
     {
@@ -3814,7 +3834,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "js_live_getalivemonsters",
-      "community": 11,
+      "community": 47,
       "norm_label": "getalivemonsters()"
     },
     {
@@ -3834,7 +3854,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "js_live_pcstate",
-      "community": 30,
+      "community": 34,
       "norm_label": "pcstate()"
     },
     {
@@ -3844,7 +3864,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "js_live_stateof",
-      "community": 30,
+      "community": 35,
       "norm_label": "stateof()"
     },
     {
@@ -3854,7 +3874,7 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "js_live_getbuffs",
-      "community": 30,
+      "community": 35,
       "norm_label": "getbuffs()"
     },
     {
@@ -3864,7 +3884,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "js_live_gettemphp",
-      "community": 30,
+      "community": 35,
       "norm_label": "gettemphp()"
     },
     {
@@ -3874,7 +3894,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "js_live_settemphp",
-      "community": 30,
+      "community": 35,
       "norm_label": "settemphp()"
     },
     {
@@ -3884,7 +3904,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "js_live_getdeath",
-      "community": 4,
+      "community": 35,
       "norm_label": "getdeath()"
     },
     {
@@ -3894,7 +3914,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "js_live_isdead",
-      "community": 4,
+      "community": 35,
       "norm_label": "isdead()"
     },
     {
@@ -3904,7 +3924,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "js_live_isdying",
-      "community": 30,
+      "community": 35,
       "norm_label": "isdying()"
     },
     {
@@ -3914,7 +3934,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "js_live_getcombatanthp",
-      "community": 15,
+      "community": 35,
       "norm_label": "getcombatanthp()"
     },
     {
@@ -3934,7 +3954,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "js_live_getcombatantbaseac",
-      "community": 1,
+      "community": 34,
       "norm_label": "getcombatantbaseac()"
     },
     {
@@ -3944,7 +3964,7 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "js_live_getcombatantac",
-      "community": 15,
+      "community": 34,
       "norm_label": "getcombatantac()"
     },
     {
@@ -3954,7 +3974,7 @@
       "source_location": "L256",
       "_origin": "ast",
       "id": "js_live_setcombatantac",
-      "community": 30,
+      "community": 34,
       "norm_label": "setcombatantac()"
     },
     {
@@ -3964,7 +3984,7 @@
       "source_location": "L266",
       "_origin": "ast",
       "id": "js_live_getcombatantname",
-      "community": 30,
+      "community": 34,
       "norm_label": "getcombatantname()"
     },
     {
@@ -4064,7 +4084,7 @@
       "source_location": "L331",
       "_origin": "ast",
       "id": "js_live_cantaketurn",
-      "community": 4,
+      "community": 35,
       "norm_label": "cantaketurn()"
     },
     {
@@ -4094,7 +4114,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "js_live_startturn",
-      "community": 30,
+      "community": 35,
       "norm_label": "startturn()"
     },
     {
@@ -4164,7 +4184,7 @@
       "source_location": "L439",
       "_origin": "ast",
       "id": "js_live_actcombatant",
-      "community": 10,
+      "community": 34,
       "norm_label": "actcombatant()"
     },
     {
@@ -4174,7 +4194,7 @@
       "source_location": "L489",
       "_origin": "ast",
       "id": "js_live_skipcombatant",
-      "community": 30,
+      "community": 34,
       "norm_label": "skipcombatant()"
     },
     {
@@ -4204,7 +4224,7 @@
       "source_location": "L560",
       "_origin": "ast",
       "id": "js_live_forcenextround",
-      "community": 4,
+      "community": 30,
       "norm_label": "forcenextround()"
     },
     {
@@ -4244,7 +4264,7 @@
       "source_location": "L591",
       "_origin": "ast",
       "id": "js_live_openplayerpicker",
-      "community": 4,
+      "community": 30,
       "norm_label": "openplayerpicker()"
     },
     {
@@ -4294,7 +4314,7 @@
       "source_location": "L650",
       "_origin": "ast",
       "id": "js_live_endwildshape",
-      "community": 30,
+      "community": 34,
       "norm_label": "endwildshape()"
     },
     {
@@ -4304,7 +4324,7 @@
       "source_location": "L670",
       "_origin": "ast",
       "id": "js_live_endwildshapebtn",
-      "community": 4,
+      "community": 34,
       "norm_label": "endwildshapebtn()"
     },
     {
@@ -4314,7 +4334,7 @@
       "source_location": "L674",
       "_origin": "ast",
       "id": "js_live_changewildshapehp",
-      "community": 30,
+      "community": 34,
       "norm_label": "changewildshapehp()"
     },
     {
@@ -4344,7 +4364,7 @@
       "source_location": "L698",
       "_origin": "ast",
       "id": "js_live_combatantcardclick",
-      "community": 8,
+      "community": 4,
       "norm_label": "combatantcardclick()"
     },
     {
@@ -4364,7 +4384,7 @@
       "source_location": "L725",
       "_origin": "ast",
       "id": "js_live_setcharhp",
-      "community": 30,
+      "community": 34,
       "norm_label": "setcharhp()"
     },
     {
@@ -4374,7 +4394,7 @@
       "source_location": "L732",
       "_origin": "ast",
       "id": "js_live_applydamage",
-      "community": 30,
+      "community": 35,
       "norm_label": "applydamage()"
     },
     {
@@ -4384,7 +4404,7 @@
       "source_location": "L766",
       "_origin": "ast",
       "id": "js_live_applypcdamage",
-      "community": 30,
+      "community": 34,
       "norm_label": "applypcdamage()"
     },
     {
@@ -4394,7 +4414,7 @@
       "source_location": "L784",
       "_origin": "ast",
       "id": "js_live_applyhealing",
-      "community": 30,
+      "community": 34,
       "norm_label": "applyhealing()"
     },
     {
@@ -4404,7 +4424,7 @@
       "source_location": "L801",
       "_origin": "ast",
       "id": "js_live_changecombatanthp",
-      "community": 30,
+      "community": 34,
       "norm_label": "changecombatanthp()"
     },
     {
@@ -4414,7 +4434,7 @@
       "source_location": "L809",
       "_origin": "ast",
       "id": "js_live_setcombatanthp",
-      "community": 30,
+      "community": 34,
       "norm_label": "setcombatanthp()"
     },
     {
@@ -4424,7 +4444,7 @@
       "source_location": "L829",
       "_origin": "ast",
       "id": "js_live_quickhp",
-      "community": 30,
+      "community": 35,
       "norm_label": "quickhp()"
     },
     {
@@ -4434,7 +4454,7 @@
       "source_location": "L844",
       "_origin": "ast",
       "id": "js_live_startdying",
-      "community": 30,
+      "community": 34,
       "norm_label": "startdying()"
     },
     {
@@ -4444,7 +4464,7 @@
       "source_location": "L850",
       "_origin": "ast",
       "id": "js_live_killchar",
-      "community": 30,
+      "community": 34,
       "norm_label": "killchar()"
     },
     {
@@ -4454,7 +4474,7 @@
       "source_location": "L855",
       "_origin": "ast",
       "id": "js_live_adddeathfailures",
-      "community": 30,
+      "community": 34,
       "norm_label": "adddeathfailures()"
     },
     {
@@ -4464,7 +4484,7 @@
       "source_location": "L864",
       "_origin": "ast",
       "id": "js_live_rolldeathsave",
-      "community": 30,
+      "community": 34,
       "norm_label": "rolldeathsave()"
     },
     {
@@ -4474,7 +4494,7 @@
       "source_location": "L894",
       "_origin": "ast",
       "id": "js_live_stabilizechar",
-      "community": 30,
+      "community": 34,
       "norm_label": "stabilizechar()"
     },
     {
@@ -4484,7 +4504,7 @@
       "source_location": "L905",
       "_origin": "ast",
       "id": "js_live_promptconcentrationsave",
-      "community": 30,
+      "community": 35,
       "norm_label": "promptconcentrationsave()"
     },
     {
@@ -4514,7 +4534,7 @@
       "source_location": "L951",
       "_origin": "ast",
       "id": "js_live_checkmonsterthresholds",
-      "community": 30,
+      "community": 4,
       "norm_label": "checkmonsterthresholds()"
     },
     {
@@ -4584,7 +4604,7 @@
       "source_location": "L1017",
       "_origin": "ast",
       "id": "js_live_applyconcentration",
-      "community": 30,
+      "community": 34,
       "norm_label": "applyconcentration()"
     },
     {
@@ -4604,7 +4624,7 @@
       "source_location": "L1031",
       "_origin": "ast",
       "id": "js_live_breakconcentration",
-      "community": 30,
+      "community": 34,
       "norm_label": "breakconcentration()"
     },
     {
@@ -4614,7 +4634,7 @@
       "source_location": "L1056",
       "_origin": "ast",
       "id": "js_live_pushnote",
-      "community": 30,
+      "community": 54,
       "norm_label": "pushnote()"
     },
     {
@@ -4624,7 +4644,7 @@
       "source_location": "L1074",
       "_origin": "ast",
       "id": "js_live_deletenote",
-      "community": 30,
+      "community": 2,
       "norm_label": "deletenote()"
     },
     {
@@ -4634,7 +4654,7 @@
       "source_location": "L1104",
       "_origin": "ast",
       "id": "js_live_isnat20",
-      "community": 15,
+      "community": 10,
       "norm_label": "isnat20()"
     },
     {
@@ -4644,7 +4664,7 @@
       "source_location": "L1105",
       "_origin": "ast",
       "id": "js_live_isnat1",
-      "community": 15,
+      "community": 10,
       "norm_label": "isnat1()"
     },
     {
@@ -4664,7 +4684,7 @@
       "source_location": "L1116",
       "_origin": "ast",
       "id": "js_live_opennoteform",
-      "community": 10,
+      "community": 4,
       "norm_label": "opennoteform()"
     },
     {
@@ -4674,7 +4694,7 @@
       "source_location": "L1124",
       "_origin": "ast",
       "id": "js_live_closenoteform",
-      "community": 30,
+      "community": 54,
       "norm_label": "closenoteform()"
     },
     {
@@ -4684,7 +4704,7 @@
       "source_location": "L1129",
       "_origin": "ast",
       "id": "js_live_getdefaultformdata",
-      "community": 10,
+      "community": 4,
       "norm_label": "getdefaultformdata()"
     },
     {
@@ -4704,7 +4724,7 @@
       "source_location": "L1201",
       "_origin": "ast",
       "id": "js_live_updateformfield",
-      "community": 15,
+      "community": 10,
       "norm_label": "updateformfield()"
     },
     {
@@ -4714,7 +4734,7 @@
       "source_location": "L1223",
       "_origin": "ast",
       "id": "js_live_updateformassistance",
-      "community": 15,
+      "community": 10,
       "norm_label": "updateformassistance()"
     },
     {
@@ -4774,7 +4794,7 @@
       "source_location": "L1374",
       "_origin": "ast",
       "id": "js_live_abilityeconomykind",
-      "community": 4,
+      "community": 46,
       "norm_label": "abilityeconomykind()"
     },
     {
@@ -4784,7 +4804,7 @@
       "source_location": "L1379",
       "_origin": "ast",
       "id": "js_live_renderabilityinfobox",
-      "community": 4,
+      "community": 46,
       "norm_label": "renderabilityinfobox()"
     },
     {
@@ -4794,7 +4814,7 @@
       "source_location": "L1394",
       "_origin": "ast",
       "id": "js_live_monkstrikemod",
-      "community": 4,
+      "community": 46,
       "norm_label": "monkstrikemod()"
     },
     {
@@ -4804,7 +4824,7 @@
       "source_location": "L1395",
       "_origin": "ast",
       "id": "js_live_monkstrikedamagebonus",
-      "community": 4,
+      "community": 46,
       "norm_label": "monkstrikedamagebonus()"
     },
     {
@@ -4814,7 +4834,7 @@
       "source_location": "L1396",
       "_origin": "ast",
       "id": "js_live_ensureblows",
-      "community": 4,
+      "community": 46,
       "norm_label": "ensureblows()"
     },
     {
@@ -4834,7 +4854,7 @@
       "source_location": "L1406",
       "_origin": "ast",
       "id": "js_live_blowoutcome",
-      "community": 4,
+      "community": 46,
       "norm_label": "blowoutcome()"
     },
     {
@@ -4844,7 +4864,7 @@
       "source_location": "L1410",
       "_origin": "ast",
       "id": "js_live_blowdamage",
-      "community": 4,
+      "community": 46,
       "norm_label": "blowdamage()"
     },
     {
@@ -4854,7 +4874,7 @@
       "source_location": "L1411",
       "_origin": "ast",
       "id": "js_live_renderblowssummary",
-      "community": 4,
+      "community": 46,
       "norm_label": "renderblowssummary()"
     },
     {
@@ -4864,7 +4884,7 @@
       "source_location": "L1419",
       "_origin": "ast",
       "id": "js_live_renderblowsblock",
-      "community": 4,
+      "community": 46,
       "norm_label": "renderblowsblock()"
     },
     {
@@ -4884,7 +4904,7 @@
       "source_location": "L1607",
       "_origin": "ast",
       "id": "js_live_rendercombatantstargetpicker",
-      "community": 58,
+      "community": 47,
       "norm_label": "rendercombatantstargetpicker()"
     },
     {
@@ -4904,7 +4924,7 @@
       "source_location": "L1632",
       "_origin": "ast",
       "id": "js_live_resolveblows",
-      "community": 4,
+      "community": 46,
       "norm_label": "resolveblows()"
     },
     {
@@ -4944,7 +4964,7 @@
       "source_location": "L1813",
       "_origin": "ast",
       "id": "js_live_setsingletarget",
-      "community": 15,
+      "community": 34,
       "norm_label": "setsingletarget()"
     },
     {
@@ -4954,7 +4974,7 @@
       "source_location": "L1821",
       "_origin": "ast",
       "id": "js_live_syncdamagetotal",
-      "community": 15,
+      "community": 10,
       "norm_label": "syncdamagetotal()"
     },
     {
@@ -4964,7 +4984,7 @@
       "source_location": "L1825",
       "_origin": "ast",
       "id": "js_live_renderhealblock",
-      "community": 58,
+      "community": 47,
       "norm_label": "renderhealblock()"
     },
     {
@@ -4974,7 +4994,7 @@
       "source_location": "L1848",
       "_origin": "ast",
       "id": "js_live_rendercharbuffbanners",
-      "community": 30,
+      "community": 34,
       "norm_label": "rendercharbuffbanners()"
     },
     {
@@ -5224,7 +5244,7 @@
       "source_location": "L2014",
       "_origin": "ast",
       "id": "js_live_rendertargetconditionwarnings",
-      "community": 30,
+      "community": 34,
       "norm_label": "rendertargetconditionwarnings()"
     },
     {
@@ -5284,7 +5304,7 @@
       "source_location": "L2111",
       "_origin": "ast",
       "id": "js_live_getattackca",
-      "community": 30,
+      "community": 34,
       "norm_label": "getattackca()"
     },
     {
@@ -5294,7 +5314,7 @@
       "source_location": "L2118",
       "_origin": "ast",
       "id": "js_live_attackoutcome",
-      "community": 15,
+      "community": 10,
       "norm_label": "attackoutcome()"
     },
     {
@@ -5314,7 +5334,7 @@
       "source_location": "L2130",
       "_origin": "ast",
       "id": "js_live_attackdamagebreakdown",
-      "community": 57,
+      "community": 35,
       "norm_label": "attackdamagebreakdown()"
     },
     {
@@ -5324,7 +5344,7 @@
       "source_location": "L2144",
       "_origin": "ast",
       "id": "js_live_rageresists",
-      "community": 57,
+      "community": 35,
       "norm_label": "rageresists()"
     },
     {
@@ -5334,7 +5354,7 @@
       "source_location": "L2147",
       "_origin": "ast",
       "id": "js_live_deflectreduction",
-      "community": 57,
+      "community": 35,
       "norm_label": "deflectreduction()"
     },
     {
@@ -5374,7 +5394,7 @@
       "source_location": "L2244",
       "_origin": "ast",
       "id": "js_live_toggletarget",
-      "community": 15,
+      "community": 10,
       "norm_label": "toggletarget()"
     },
     {
@@ -5384,7 +5404,7 @@
       "source_location": "L2255",
       "_origin": "ast",
       "id": "js_live_rendersaveblock",
-      "community": 11,
+      "community": 15,
       "norm_label": "rendersaveblock()"
     },
     {
@@ -5434,7 +5454,7 @@
       "source_location": "L2389",
       "_origin": "ast",
       "id": "js_live_missilecount",
-      "community": 47,
+      "community": 56,
       "norm_label": "missilecount()"
     },
     {
@@ -5444,7 +5464,7 @@
       "source_location": "L2390",
       "_origin": "ast",
       "id": "js_live_missiledamageperdart",
-      "community": 47,
+      "community": 56,
       "norm_label": "missiledamageperdart()"
     },
     {
@@ -5454,7 +5474,7 @@
       "source_location": "L2394",
       "_origin": "ast",
       "id": "js_live_updatedarts",
-      "community": 15,
+      "community": 10,
       "norm_label": "updatedarts()"
     },
     {
@@ -5464,7 +5484,7 @@
       "source_location": "L2401",
       "_origin": "ast",
       "id": "js_live_rendermissilesummary",
-      "community": 47,
+      "community": 56,
       "norm_label": "rendermissilesummary()"
     },
     {
@@ -5474,7 +5494,7 @@
       "source_location": "L2412",
       "_origin": "ast",
       "id": "js_live_rendermissilesblock",
-      "community": 47,
+      "community": 56,
       "norm_label": "rendermissilesblock()"
     },
     {
@@ -5514,7 +5534,7 @@
       "source_location": "L2442",
       "_origin": "ast",
       "id": "js_live_rayoutcome",
-      "community": 15,
+      "community": 34,
       "norm_label": "rayoutcome()"
     },
     {
@@ -5604,7 +5624,7 @@
       "source_location": "L2533",
       "_origin": "ast",
       "id": "js_live_renderautodamageblock",
-      "community": 15,
+      "community": 55,
       "norm_label": "renderautodamageblock()"
     },
     {
@@ -5634,7 +5654,7 @@
       "source_location": "L2553",
       "_origin": "ast",
       "id": "js_live_renderbuffblock",
-      "community": 11,
+      "community": 47,
       "norm_label": "renderbuffblock()"
     },
     {
@@ -5654,7 +5674,7 @@
       "source_location": "L2584",
       "_origin": "ast",
       "id": "js_live_renderrollblock",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderrollblock()"
     },
     {
@@ -5668,20 +5688,40 @@
       "norm_label": "renderactionform()"
     },
     {
+      "label": "SCHOOL_ES",
+      "file_type": "code",
+      "source_file": "public/js/live.js",
+      "source_location": "L2831",
+      "_origin": "ast",
+      "id": "js_live_school_es",
+      "community": 4,
+      "norm_label": "school_es"
+    },
+    {
+      "label": "renderOwnSchoolBanner()",
+      "file_type": "code",
+      "source_file": "public/js/live.js",
+      "source_location": "L2833",
+      "_origin": "ast",
+      "id": "js_live_renderownschoolbanner",
+      "community": 1,
+      "norm_label": "renderownschoolbanner()"
+    },
+    {
       "label": "resetResolutionState()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2828",
+      "source_location": "L2843",
       "_origin": "ast",
       "id": "js_live_resetresolutionstate",
-      "community": 11,
+      "community": 10,
       "norm_label": "resetresolutionstate()"
     },
     {
       "label": "selectSpell()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2838",
+      "source_location": "L2853",
       "_origin": "ast",
       "id": "js_live_selectspell",
       "community": 11,
@@ -5691,7 +5731,7 @@
       "label": "selectCantrip()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2860",
+      "source_location": "L2875",
       "_origin": "ast",
       "id": "js_live_selectcantrip",
       "community": 11,
@@ -5701,7 +5741,7 @@
       "label": "selectWeaponData()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2878",
+      "source_location": "L2893",
       "_origin": "ast",
       "id": "js_live_selectweapondata",
       "community": 20,
@@ -5711,7 +5751,7 @@
       "label": "selectWeapon()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2903",
+      "source_location": "L2918",
       "_origin": "ast",
       "id": "js_live_selectweapon",
       "community": 20,
@@ -5721,7 +5761,7 @@
       "label": "selectMonsterAttack()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2913",
+      "source_location": "L2928",
       "_origin": "ast",
       "id": "js_live_selectmonsterattack",
       "community": 20,
@@ -5731,7 +5771,7 @@
       "label": "renderNpcForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2935",
+      "source_location": "L2950",
       "_origin": "ast",
       "id": "js_live_rendernpcform",
       "community": 10,
@@ -5741,7 +5781,7 @@
       "label": "speakerOptions()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2971",
+      "source_location": "L2986",
       "_origin": "ast",
       "id": "js_live_speakeroptions",
       "community": 4,
@@ -5751,7 +5791,7 @@
       "label": "speakerValue()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2985",
+      "source_location": "L3000",
       "_origin": "ast",
       "id": "js_live_speakervalue",
       "community": 4,
@@ -5761,7 +5801,7 @@
       "label": "updateExchangeField()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L2990",
+      "source_location": "L3005",
       "_origin": "ast",
       "id": "js_live_updateexchangefield",
       "community": 10,
@@ -5771,7 +5811,7 @@
       "label": "addExchangeLine()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3005",
+      "source_location": "L3020",
       "_origin": "ast",
       "id": "js_live_addexchangeline",
       "community": 10,
@@ -5781,7 +5821,7 @@
       "label": "removeExchangeLine()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3015",
+      "source_location": "L3030",
       "_origin": "ast",
       "id": "js_live_removeexchangeline",
       "community": 10,
@@ -5791,7 +5831,7 @@
       "label": "moveExchangeLine()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3025",
+      "source_location": "L3040",
       "_origin": "ast",
       "id": "js_live_moveexchangeline",
       "community": 10,
@@ -5801,37 +5841,37 @@
       "label": "renderConversationForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3034",
+      "source_location": "L3049",
       "_origin": "ast",
       "id": "js_live_renderconversationform",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderconversationform()"
     },
     {
       "label": "saveConversationNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3096",
+      "source_location": "L3111",
       "_origin": "ast",
       "id": "js_live_saveconversationnote",
-      "community": 30,
+      "community": 54,
       "norm_label": "saveconversationnote()"
     },
     {
       "label": "updateNpcActionAssistance()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3126",
+      "source_location": "L3141",
       "_origin": "ast",
       "id": "js_live_updatenpcactionassistance",
-      "community": 15,
+      "community": 10,
       "norm_label": "updatenpcactionassistance()"
     },
     {
       "label": "isNpcSaveMode()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3129",
+      "source_location": "L3144",
       "_origin": "ast",
       "id": "js_live_isnpcsavemode",
       "community": 15,
@@ -5841,7 +5881,7 @@
       "label": "renderNpcReactions()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3132",
+      "source_location": "L3147",
       "_origin": "ast",
       "id": "js_live_rendernpcreactions",
       "community": 46,
@@ -5851,7 +5891,7 @@
       "label": "renderNpcActionForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3151",
+      "source_location": "L3166",
       "_origin": "ast",
       "id": "js_live_rendernpcactionform",
       "community": 15,
@@ -5861,27 +5901,27 @@
       "label": "addBuff()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3274",
+      "source_location": "L3289",
       "_origin": "ast",
       "id": "js_live_addbuff",
-      "community": 30,
+      "community": 35,
       "norm_label": "addbuff()"
     },
     {
       "label": "saveNpcActionNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3280",
+      "source_location": "L3295",
       "_origin": "ast",
       "id": "js_live_savenpcactionnote",
-      "community": 30,
+      "community": 35,
       "norm_label": "savenpcactionnote()"
     },
     {
       "label": "renderSkipTurnForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3354",
+      "source_location": "L3369",
       "_origin": "ast",
       "id": "js_live_renderskipturnform",
       "community": 10,
@@ -5891,7 +5931,7 @@
       "label": "saveSkipTurnNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3371",
+      "source_location": "L3386",
       "_origin": "ast",
       "id": "js_live_saveskipturnnote",
       "community": 30,
@@ -5901,7 +5941,7 @@
       "label": "renderCombatForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3384",
+      "source_location": "L3399",
       "_origin": "ast",
       "id": "js_live_rendercombatform",
       "community": 10,
@@ -5911,17 +5951,17 @@
       "label": "renderNarrativeForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3411",
+      "source_location": "L3426",
       "_origin": "ast",
       "id": "js_live_rendernarrativeform",
-      "community": 10,
+      "community": 55,
       "norm_label": "rendernarrativeform()"
     },
     {
       "label": "selectNarrativeEvent()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3461",
+      "source_location": "L3476",
       "_origin": "ast",
       "id": "js_live_selectnarrativeevent",
       "community": 10,
@@ -5931,7 +5971,7 @@
       "label": "saveActionNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3479",
+      "source_location": "L3494",
       "_origin": "ast",
       "id": "js_live_saveactionnote",
       "community": 11,
@@ -5941,47 +5981,47 @@
       "label": "saveNpcNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3689",
+      "source_location": "L3704",
       "_origin": "ast",
       "id": "js_live_savenpcnote",
-      "community": 30,
+      "community": 54,
       "norm_label": "savenpcnote()"
     },
     {
       "label": "saveCombatNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3702",
+      "source_location": "L3717",
       "_origin": "ast",
       "id": "js_live_savecombatnote",
-      "community": 30,
+      "community": 54,
       "norm_label": "savecombatnote()"
     },
     {
       "label": "saveNarrativeNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3709",
+      "source_location": "L3724",
       "_origin": "ast",
       "id": "js_live_savenarrativenote",
-      "community": 30,
+      "community": 2,
       "norm_label": "savenarrativenote()"
     },
     {
       "label": "openLiveLootForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3739",
+      "source_location": "L3754",
       "_origin": "ast",
       "id": "js_live_openlivelootform",
-      "community": 30,
+      "community": 34,
       "norm_label": "openlivelootform()"
     },
     {
       "label": "_lootQtyIsDice()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3769",
+      "source_location": "L3784",
       "_origin": "ast",
       "id": "js_live_lootqtyisdice",
       "community": 4,
@@ -5991,7 +6031,7 @@
       "label": "_lootDropLabel()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3774",
+      "source_location": "L3789",
       "_origin": "ast",
       "id": "js_live_lootdroplabel",
       "community": 48,
@@ -6001,27 +6041,27 @@
       "label": "renderLootForm()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3778",
+      "source_location": "L3793",
       "_origin": "ast",
       "id": "js_live_renderlootform",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderlootform()"
     },
     {
       "label": "renderLootRollRow()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3836",
+      "source_location": "L3851",
       "_origin": "ast",
       "id": "js_live_renderlootrollrow",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderlootrollrow()"
     },
     {
       "label": "updateLootLooter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3883",
+      "source_location": "L3898",
       "_origin": "ast",
       "id": "js_live_updatelootlooter",
       "community": 4,
@@ -6031,7 +6071,7 @@
       "label": "updateLootNumRolls()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3896",
+      "source_location": "L3911",
       "_origin": "ast",
       "id": "js_live_updatelootnumrolls",
       "community": 4,
@@ -6041,7 +6081,7 @@
       "label": "updateLootRollValue()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3908",
+      "source_location": "L3923",
       "_origin": "ast",
       "id": "js_live_updatelootrollvalue",
       "community": 4,
@@ -6051,7 +6091,7 @@
       "label": "updateLootQtyValue()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3941",
+      "source_location": "L3956",
       "_origin": "ast",
       "id": "js_live_updatelootqtyvalue",
       "community": 4,
@@ -6061,7 +6101,7 @@
       "label": "assignSingleLoot()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3949",
+      "source_location": "L3964",
       "_origin": "ast",
       "id": "js_live_assignsingleloot",
       "community": 48,
@@ -6071,7 +6111,7 @@
       "label": "assignAllLootToLooter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3970",
+      "source_location": "L3985",
       "_origin": "ast",
       "id": "js_live_assignallloottolooter",
       "community": 4,
@@ -6081,17 +6121,17 @@
       "label": "saveLootNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L3995",
+      "source_location": "L4010",
       "_origin": "ast",
       "id": "js_live_savelootnote",
-      "community": 30,
+      "community": 54,
       "norm_label": "savelootnote()"
     },
     {
       "label": "renderLive()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4021",
+      "source_location": "L4036",
       "_origin": "ast",
       "id": "js_live_renderlive",
       "community": 30,
@@ -6101,167 +6141,167 @@
       "label": "renderLiveHeader()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4030",
+      "source_location": "L4045",
       "_origin": "ast",
       "id": "js_live_renderliveheader",
-      "community": 34,
+      "community": 4,
       "norm_label": "renderliveheader()"
     },
     {
       "label": "fetchArchivedSession()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4090",
+      "source_location": "L4105",
       "_origin": "ast",
       "id": "js_live_fetcharchivedsession",
-      "community": 34,
+      "community": 4,
       "norm_label": "fetcharchivedsession()"
     },
     {
       "label": "archivedSessionLabel()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4097",
+      "source_location": "L4112",
       "_origin": "ast",
       "id": "js_live_archivedsessionlabel",
-      "community": 34,
+      "community": 4,
       "norm_label": "archivedsessionlabel()"
     },
     {
       "label": "checkArchivedSessionNumber()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4103",
+      "source_location": "L4118",
       "_origin": "ast",
       "id": "js_live_checkarchivedsessionnumber",
-      "community": 34,
+      "community": 4,
       "norm_label": "checkarchivedsessionnumber()"
     },
     {
       "label": "onSessionNumberInput()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4112",
+      "source_location": "L4127",
       "_origin": "ast",
       "id": "js_live_onsessionnumberinput",
-      "community": 34,
+      "community": 4,
       "norm_label": "onsessionnumberinput()"
     },
     {
       "label": "renderArchivedWarning()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4119",
+      "source_location": "L4134",
       "_origin": "ast",
       "id": "js_live_renderarchivedwarning",
-      "community": 34,
+      "community": 4,
       "norm_label": "renderarchivedwarning()"
     },
     {
       "label": "useNextSessionNumber()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4131",
+      "source_location": "L4146",
       "_origin": "ast",
       "id": "js_live_usenextsessionnumber",
-      "community": 34,
+      "community": 4,
       "norm_label": "usenextsessionnumber()"
     },
     {
       "label": "getPresentChars()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4138",
+      "source_location": "L4153",
       "_origin": "ast",
       "id": "js_live_getpresentchars",
-      "community": 30,
+      "community": 4,
       "norm_label": "getpresentchars()"
     },
     {
       "label": "isCharPresent()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4145",
+      "source_location": "L4160",
       "_origin": "ast",
       "id": "js_live_ischarpresent",
-      "community": 30,
+      "community": 4,
       "norm_label": "ischarpresent()"
     },
     {
       "label": "togglePresentChar()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4149",
+      "source_location": "L4164",
       "_origin": "ast",
       "id": "js_live_togglepresentchar",
-      "community": 30,
+      "community": 4,
       "norm_label": "togglepresentchar()"
     },
     {
       "label": "renderPresentsGrid()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4161",
+      "source_location": "L4176",
       "_origin": "ast",
       "id": "js_live_renderpresentsgrid",
-      "community": 30,
+      "community": 54,
       "norm_label": "renderpresentsgrid()"
     },
     {
       "label": "openCharSheetModal()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4184",
+      "source_location": "L4199",
       "_origin": "ast",
       "id": "js_live_opencharsheetmodal",
-      "community": 8,
+      "community": 4,
       "norm_label": "opencharsheetmodal()"
     },
     {
       "label": "closeCharSheetModal()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4204",
+      "source_location": "L4219",
       "_origin": "ast",
       "id": "js_live_closecharsheetmodal",
-      "community": 8,
+      "community": 4,
       "norm_label": "closecharsheetmodal()"
     },
     {
       "label": "groupShortRest()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4229",
+      "source_location": "L4244",
       "_origin": "ast",
       "id": "js_live_groupshortrest",
-      "community": 30,
+      "community": 54,
       "norm_label": "groupshortrest()"
     },
     {
       "label": "groupLongRest()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4247",
+      "source_location": "L4262",
       "_origin": "ast",
       "id": "js_live_grouplongrest",
-      "community": 30,
+      "community": 54,
       "norm_label": "grouplongrest()"
     },
     {
       "label": "groupLevelUp()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4274",
+      "source_location": "L4289",
       "_origin": "ast",
       "id": "js_live_grouplevelup",
-      "community": 30,
+      "community": 54,
       "norm_label": "grouplevelup()"
     },
     {
       "label": "renderCombatantResources()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4304",
+      "source_location": "L4319",
       "_origin": "ast",
       "id": "js_live_rendercombatantresources",
       "community": 46,
@@ -6271,27 +6311,27 @@
       "label": "renderCombatantConditions()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4352",
+      "source_location": "L4367",
       "_origin": "ast",
       "id": "js_live_rendercombatantconditions",
-      "community": 30,
+      "community": 35,
       "norm_label": "rendercombatantconditions()"
     },
     {
       "label": "removeBuff()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4394",
+      "source_location": "L4409",
       "_origin": "ast",
       "id": "js_live_removebuff",
-      "community": 30,
+      "community": 35,
       "norm_label": "removebuff()"
     },
     {
       "label": "clearDodge()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4400",
+      "source_location": "L4415",
       "_origin": "ast",
       "id": "js_live_cleardodge",
       "community": 30,
@@ -6301,17 +6341,17 @@
       "label": "renderDeathSaves()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4408",
+      "source_location": "L4423",
       "_origin": "ast",
       "id": "js_live_renderdeathsaves",
-      "community": 4,
+      "community": 35,
       "norm_label": "renderdeathsaves()"
     },
     {
       "label": "STATBLOCK_OPEN",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4429",
+      "source_location": "L4444",
       "_origin": "ast",
       "id": "js_live_statblock_open",
       "community": 4,
@@ -6321,7 +6361,7 @@
       "label": "toggleStatBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4430",
+      "source_location": "L4445",
       "_origin": "ast",
       "id": "js_live_togglestatblock",
       "community": 4,
@@ -6331,7 +6371,7 @@
       "label": "renderMonsterStatBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4431",
+      "source_location": "L4446",
       "_origin": "ast",
       "id": "js_live_rendermonsterstatblock",
       "community": 4,
@@ -6341,7 +6381,7 @@
       "label": "renderCombatTracker()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4450",
+      "source_location": "L4465",
       "_origin": "ast",
       "id": "js_live_rendercombattracker",
       "community": 30,
@@ -6351,17 +6391,17 @@
       "label": "renderNotesStream()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4617",
+      "source_location": "L4632",
       "_origin": "ast",
       "id": "js_live_rendernotesstream",
-      "community": 30,
+      "community": 54,
       "norm_label": "rendernotesstream()"
     },
     {
       "label": "_streamNarratives",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4638",
+      "source_location": "L4653",
       "_origin": "ast",
       "id": "js_live_streamnarratives",
       "community": 4,
@@ -6371,67 +6411,67 @@
       "label": "buildGroupedStream()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4640",
+      "source_location": "L4655",
       "_origin": "ast",
       "id": "js_live_buildgroupedstream",
-      "community": 30,
+      "community": 54,
       "norm_label": "buildgroupedstream()"
     },
     {
       "label": "moveNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4711",
+      "source_location": "L4726",
       "_origin": "ast",
       "id": "js_live_movenote",
-      "community": 30,
+      "community": 54,
       "norm_label": "movenote()"
     },
     {
       "label": "moveChapter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4745",
+      "source_location": "L4760",
       "_origin": "ast",
       "id": "js_live_movechapter",
-      "community": 30,
+      "community": 54,
       "norm_label": "movechapter()"
     },
     {
       "label": "moveNoteToChapter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4772",
+      "source_location": "L4787",
       "_origin": "ast",
       "id": "js_live_movenotetochapter",
-      "community": 30,
+      "community": 54,
       "norm_label": "movenotetochapter()"
     },
     {
       "label": "renderNarrativeChapterHeader()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4780",
+      "source_location": "L4795",
       "_origin": "ast",
       "id": "js_live_rendernarrativechapterheader",
-      "community": 10,
+      "community": 55,
       "norm_label": "rendernarrativechapterheader()"
     },
     {
       "label": "renderNoteCard()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4806",
+      "source_location": "L4821",
       "_origin": "ast",
       "id": "js_live_rendernotecard",
-      "community": 10,
+      "community": 55,
       "norm_label": "rendernotecard()"
     },
     {
       "label": "speakerLabel()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4867",
+      "source_location": "L4882",
       "_origin": "ast",
       "id": "js_live_speakerlabel",
       "community": 4,
@@ -6441,57 +6481,57 @@
       "label": "renderConversationNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4879",
+      "source_location": "L4894",
       "_origin": "ast",
       "id": "js_live_renderconversationnotebody",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderconversationnotebody()"
     },
     {
       "label": "renderTargetResultsBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4894",
+      "source_location": "L4909",
       "_origin": "ast",
       "id": "js_live_rendertargetresultsblock",
-      "community": 10,
+      "community": 55,
       "norm_label": "rendertargetresultsblock()"
     },
     {
       "label": "renderNpcActionNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4931",
+      "source_location": "L4946",
       "_origin": "ast",
       "id": "js_live_rendernpcactionnotebody",
-      "community": 10,
+      "community": 55,
       "norm_label": "rendernpcactionnotebody()"
     },
     {
       "label": "renderActionNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4953",
+      "source_location": "L4968",
       "_origin": "ast",
       "id": "js_live_renderactionnotebody",
-      "community": 10,
+      "community": 55,
       "norm_label": "renderactionnotebody()"
     },
     {
       "label": "finalizeSession()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5008",
+      "source_location": "L5023",
       "_origin": "ast",
       "id": "js_live_finalizesession",
-      "community": 34,
+      "community": 4,
       "norm_label": "finalizesession()"
     },
     {
       "label": "resetLiveSession()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5207",
+      "source_location": "L5222",
       "_origin": "ast",
       "id": "js_live_resetlivesession",
       "community": 30,
@@ -6501,10 +6541,10 @@
       "label": "initLive()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5219",
+      "source_location": "L5234",
       "_origin": "ast",
       "id": "js_live_initlive",
-      "community": 30,
+      "community": 4,
       "norm_label": "initlive()"
     },
     {
@@ -7004,7 +7044,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "js_storage_save",
-      "community": 45,
+      "community": 32,
       "norm_label": "save()"
     },
     {
@@ -7034,7 +7074,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "js_storage_load",
-      "community": 33,
+      "community": 45,
       "norm_label": "load()"
     },
     {
@@ -7394,7 +7434,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "server",
-      "community": 8,
+      "community": 53,
       "norm_label": "server.js"
     },
     {
@@ -7404,7 +7444,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "server_http",
-      "community": 8,
+      "community": 53,
       "norm_label": "http"
     },
     {
@@ -7414,7 +7454,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "server_express",
-      "community": 8,
+      "community": 53,
       "norm_label": "express"
     },
     {
@@ -7424,7 +7464,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "server_session",
-      "community": 8,
+      "community": 53,
       "norm_label": "session"
     },
     {
@@ -7434,7 +7474,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "server_server",
-      "community": 8,
+      "community": 53,
       "norm_label": "{ server }"
     },
     {
@@ -7444,7 +7484,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "server_path",
-      "community": 8,
+      "community": 53,
       "norm_label": "path"
     },
     {
@@ -7454,7 +7494,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "server_connectdb",
-      "community": 8,
+      "community": 53,
       "norm_label": "connectdb"
     },
     {
@@ -7464,7 +7504,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "server_app",
-      "community": 8,
+      "community": 53,
       "norm_label": "app"
     },
     {
@@ -7474,7 +7514,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "server_io",
-      "community": 8,
+      "community": 53,
       "norm_label": "io"
     },
     {
@@ -7484,7 +7524,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "server_livecache",
-      "community": 8,
+      "community": 53,
       "norm_label": "livecache"
     },
     {
@@ -7671,7 +7711,7 @@
       "label": "Restricciones adicionales (no via dm-only, via CSS directo)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L169",
+      "source_location": "L168",
       "_origin": "ast",
       "id": "claude_restricciones_adicionales_no_via_dm_only_via_css_directo",
       "community": 23,
@@ -7681,7 +7721,7 @@
       "label": "Estructura de archivos",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L189",
+      "source_location": "L188",
       "_origin": "ast",
       "id": "claude_estructura_de_archivos",
       "community": 23,
@@ -7691,7 +7731,7 @@
       "label": "Orden de carga JS (NO cambiar sin cuidado)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L277",
+      "source_location": "L276",
       "_origin": "ast",
       "id": "claude_orden_de_carga_js_no_cambiar_sin_cuidado",
       "community": 23,
@@ -7701,7 +7741,7 @@
       "label": "API de datos (`/api`)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L293",
+      "source_location": "L292",
       "_origin": "ast",
       "id": "claude_api_de_datos_api",
       "community": 23,
@@ -7711,7 +7751,7 @@
       "label": "crudFactory \u2014 patr\u00f3n usado en casi todas las rutas",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L295",
+      "source_location": "L294",
       "_origin": "ast",
       "id": "claude_crudfactory_patr\u00f3n_usado_en_casi_todas_las_rutas",
       "community": 23,
@@ -7721,7 +7761,7 @@
       "label": "Rutas definidas",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L305",
+      "source_location": "L304",
       "_origin": "ast",
       "id": "claude_rutas_definidas",
       "community": 23,
@@ -7731,7 +7771,7 @@
       "label": "Items y el campo `known`",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L328",
+      "source_location": "L327",
       "_origin": "ast",
       "id": "claude_items_y_el_campo_known",
       "community": 23,
@@ -7741,7 +7781,7 @@
       "label": "Modelo Player",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L336",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "claude_modelo_player",
       "community": 23,
@@ -7751,7 +7791,7 @@
       "label": "Frontend \u2014 dm-auth.js",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L351",
+      "source_location": "L350",
       "_origin": "ast",
       "id": "claude_frontend_dm_auth_js",
       "community": 23,
@@ -7761,7 +7801,7 @@
       "label": "Frontend \u2014 players.js",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L369",
+      "source_location": "L368",
       "_origin": "ast",
       "id": "claude_frontend_players_js",
       "community": 23,
@@ -7771,7 +7811,7 @@
       "label": "Nav y tabs",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L383",
+      "source_location": "L382",
       "_origin": "ast",
       "id": "claude_nav_y_tabs",
       "community": 23,
@@ -7781,7 +7821,7 @@
       "label": "Filosof\u00eda de la campa\u00f1a (IMPORTANTE para decisiones de dise\u00f1o)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L403",
+      "source_location": "L402",
       "_origin": "ast",
       "id": "claude_filosof\u00eda_de_la_campa\u00f1a_importante_para_decisiones_de_dise\u00f1o",
       "community": 23,
@@ -7791,7 +7831,7 @@
       "label": "Estado de la campa\u00f1a",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L414",
+      "source_location": "L413",
       "_origin": "ast",
       "id": "claude_estado_de_la_campa\u00f1a",
       "community": 23,
@@ -7801,7 +7841,7 @@
       "label": "Fases completadas",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L430",
+      "source_location": "L429",
       "_origin": "ast",
       "id": "claude_fases_completadas",
       "community": 23,
@@ -7811,7 +7851,7 @@
       "label": "Sistema de combate y loot (Sesi\u00f3n Live)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L444",
+      "source_location": "L443",
       "_origin": "ast",
       "id": "claude_sistema_de_combate_y_loot_sesi\u00f3n_live",
       "community": 23,
@@ -7821,7 +7861,7 @@
       "label": "Campos de mec\u00e1nica en los hechizos (`db/seed-data/class-presets.js`)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L461",
+      "source_location": "L460",
       "_origin": "ast",
       "id": "claude_campos_de_mec\u00e1nica_en_los_hechizos_db_seed_data_class_presets_js",
       "community": 23,
@@ -7831,7 +7871,7 @@
       "label": "Flujo Narrativa \u2194 Eventos de Campa\u00f1a",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L466",
+      "source_location": "L465",
       "_origin": "ast",
       "id": "claude_flujo_narrativa_eventos_de_campa\u00f1a",
       "community": 23,
@@ -7841,7 +7881,7 @@
       "label": "Stream agrupado por cap\u00edtulos",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L472",
+      "source_location": "L471",
       "_origin": "ast",
       "id": "claude_stream_agrupado_por_cap\u00edtulos",
       "community": 23,
@@ -7851,7 +7891,7 @@
       "label": "Presentes como tarjetas",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L476",
+      "source_location": "L475",
       "_origin": "ast",
       "id": "claude_presentes_como_tarjetas",
       "community": 23,
@@ -7861,7 +7901,7 @@
       "label": "Subida de nivel y mejoras de caracter\u00edstica (ASI)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L482",
+      "source_location": "L481",
       "_origin": "ast",
       "id": "claude_subida_de_nivel_y_mejoras_de_caracter\u00edstica_asi",
       "community": 23,
@@ -7871,7 +7911,7 @@
       "label": "Sistema de condiciones",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L494",
+      "source_location": "L493",
       "_origin": "ast",
       "id": "claude_sistema_de_condiciones",
       "community": 23,
@@ -7881,7 +7921,7 @@
       "label": "Convenciones importantes",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L502",
+      "source_location": "L501",
       "_origin": "ast",
       "id": "claude_convenciones_importantes",
       "community": 23,
@@ -7891,7 +7931,7 @@
       "label": "Notas para editar",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L515",
+      "source_location": "L514",
       "_origin": "ast",
       "id": "claude_notas_para_editar",
       "community": 23,
@@ -8368,7 +8408,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "_socket",
       "id": "js_socketclient_socket"
     },
@@ -8394,7 +8434,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 45,
+      "community": 32,
       "norm_label": "applyhpsync",
       "id": "js_socketclient_applyhpsync"
     },
@@ -8459,7 +8499,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "token-login endpoint",
       "id": "routes_auth_tokenlogin"
     },
@@ -8472,7 +8512,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "player-login endpoint",
       "id": "routes_auth_playerlogin"
     },
@@ -8511,7 +8551,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "socket.io server",
       "id": "server_socketio"
     },
@@ -8524,7 +8564,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "socket.io live session relay pattern",
       "id": "concept_socketio_live_relay"
     },
@@ -8537,7 +8577,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 8,
+      "community": 53,
       "norm_label": "render.com deploy config",
       "id": "render_yaml_deploy"
     },
@@ -11143,9 +11183,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L553",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_countpreparedforlimit",
-      "confidence_score": 1.0
+      "target": "js_abilities_countpreparedforlimit"
     },
     {
       "relation": "contains",
@@ -11233,9 +11273,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L548",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_getpreparedlimit",
-      "confidence_score": 1.0
+      "target": "js_abilities_getpreparedlimit"
     },
     {
       "relation": "contains",
@@ -11243,9 +11283,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L512",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_getunlockedspells",
-      "confidence_score": 1.0
+      "target": "js_abilities_getunlockedspells"
     },
     {
       "relation": "contains",
@@ -11273,9 +11313,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L516",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_isspellunlocked",
-      "confidence_score": 1.0
+      "target": "js_abilities_isspellunlocked"
     },
     {
       "relation": "contains",
@@ -11373,9 +11413,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L543",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_prep_rules",
-      "confidence_score": 1.0
+      "target": "js_abilities_prep_rules"
     },
     {
       "relation": "contains",
@@ -11561,6 +11601,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "public/js/abilities.js",
+      "source_location": "L614",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_spell_group_open",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
       "source_location": "L244",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11603,9 +11653,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L519",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_togglespellunlock",
-      "confidence_score": 1.0
+      "target": "js_abilities_togglespellunlock"
     },
     {
       "relation": "contains",
@@ -11635,9 +11685,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L803",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_rendercharabilities",
-      "target": "js_abilities_fmtmod",
-      "confidence_score": 1.0
+      "target": "js_abilities_fmtmod"
     },
     {
       "relation": "calls",
@@ -11755,9 +11805,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applylevelup",
-      "target": "js_abilities_getmaxspelllevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_getmaxspelllevel"
     },
     {
       "relation": "calls",
@@ -11777,9 +11827,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L517",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_isspellunlocked",
-      "target": "js_abilities_getmaxspelllevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_getmaxspelllevel"
     },
     {
       "relation": "calls",
@@ -11799,9 +11849,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L534",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_togglespellunlock",
-      "target": "js_abilities_getmaxspelllevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_getmaxspelllevel"
     },
     {
       "relation": "calls",
@@ -11843,9 +11893,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L530",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_togglespellunlock",
-      "target": "js_abilities_patchcharstate",
-      "confidence_score": 1.0
+      "target": "js_abilities_patchcharstate"
     },
     {
       "relation": "calls",
@@ -12096,9 +12146,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applylevelup",
-      "target": "js_abilities_getpreparedlimit",
-      "confidence_score": 1.0
+      "target": "js_abilities_getpreparedlimit"
     },
     {
       "relation": "calls",
@@ -13086,9 +13136,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L517",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_isspellunlocked",
-      "target": "js_abilities_getunlockedspells",
-      "confidence_score": 1.0
+      "target": "js_abilities_getunlockedspells"
     },
     {
       "relation": "calls",
@@ -13097,9 +13147,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L523",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_togglespellunlock",
-      "target": "js_abilities_getunlockedspells",
-      "confidence_score": 1.0
+      "target": "js_abilities_getunlockedspells"
     },
     {
       "relation": "calls",
@@ -13108,9 +13158,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L537",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_togglespellunlock",
-      "target": "js_abilities_rendercharabilities",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharabilities"
     },
     {
       "relation": "calls",
@@ -13174,9 +13224,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L784",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_rendercharabilities",
-      "target": "js_abilities_getpreparedlimit",
-      "confidence_score": 1.0
+      "target": "js_abilities_getpreparedlimit"
     },
     {
       "relation": "calls",
@@ -13196,9 +13246,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L785",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_rendercharabilities",
-      "target": "js_abilities_countpreparedforlimit",
-      "confidence_score": 1.0
+      "target": "js_abilities_countpreparedforlimit"
     },
     {
       "relation": "calls",
@@ -13309,6 +13359,17 @@
       "weight": 1.0,
       "source": "js_abilities_rendercharabilities",
       "target": "js_data_getcharprofbonus"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L753",
+      "weight": 1.0,
+      "source": "js_abilities_rendercharabilities",
+      "target": "js_data_getcommittedschool"
     },
     {
       "relation": "calls",
@@ -15512,6 +15573,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "public/js/data.js",
+      "source_location": "L245",
+      "weight": 1.0,
+      "source": "js_data",
+      "target": "js_data_getcommittedschool",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/data.js",
       "source_location": "L45",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -16207,6 +16278,17 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "public/js/live.js",
+      "source_location": "L2836",
+      "weight": 1.0,
+      "source": "js_live_renderownschoolbanner",
+      "target": "js_data_getcharlevel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/live.js",
       "source_location": "L1216",
       "weight": 1.0,
       "source": "js_live_saveclassabilitynote",
@@ -16706,6 +16788,39 @@
       "weight": 1.0,
       "source": "js_live_selectcantrip",
       "target": "js_data_getcantripdamagedice"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/data.js",
+      "source_location": "L247",
+      "weight": 1.0,
+      "source": "js_data_getcommittedschool",
+      "target": "js_storage_load"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/live.js",
+      "source_location": "L2616",
+      "weight": 1.0,
+      "source": "js_live_renderactionform",
+      "target": "js_data_getcommittedschool"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/live.js",
+      "source_location": "L2834",
+      "weight": 1.0,
+      "source": "js_live_renderownschoolbanner",
+      "target": "js_data_getcommittedschool"
     },
     {
       "relation": "calls",
@@ -19457,6 +19572,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "public/js/live.js",
+      "source_location": "L2833",
+      "weight": 1.0,
+      "source": "js_live",
+      "target": "js_live_renderownschoolbanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/live.js",
       "source_location": "L3176",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -19752,6 +19877,16 @@
       "confidence_score": 1.0,
       "source": "js_live",
       "target": "js_live_scheduleliveserversave"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/live.js",
+      "source_location": "L2831",
+      "weight": 1.0,
+      "source": "js_live",
+      "target": "js_live_school_es",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -27390,6 +27525,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "public/js/live.js",
+      "source_location": "L2671",
+      "weight": 1.0,
+      "source": "js_live_renderactionform",
+      "target": "js_live_renderownschoolbanner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/live.js",
       "source_location": "L2690",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -31313,5 +31459,5 @@
       "source_file": "server.js"
     }
   ],
-  "built_at_commit": "ca94cdd78454f600a6ae15ef6f1449ab91944d58"
+  "built_at_commit": "7ba0dd3d381ea473cc3cb6018bafeeefa8e70b76"
 }

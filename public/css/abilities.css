@@ -288,3 +288,22 @@ body:not(.dm-mode) .spell-item.no-disponible .badge-no-disponible { display:inli
 .spell-prep-count{font-size:0.85rem;color:var(--cream)}
 .spell-prep-count strong{color:var(--gold);font-family:var(--font-title)}
 .spell-prep-count.over strong{color:var(--red-bright)}
+
+/* Hechizos agrupados por nivel (todos visibles), escuela propia y bloqueados por nivel */
+.spell-groups{display:flex;flex-direction:column;gap:0.6rem}
+.spell-level-group > summary{
+  cursor:pointer;font-family:var(--font-title);font-size:0.8rem;letter-spacing:0.08em;color:var(--gold);
+  padding:0.4rem 0.2rem;border-bottom:1px solid var(--border);list-style-position:inside;
+}
+.spell-level-group.is-locked-level > summary{color:var(--muted)}
+.spell-level-group > .spells-list{margin-top:0.5rem}
+.spell-group-meta{font-family:var(--font-body);font-size:0.75rem;letter-spacing:0;color:var(--muted)}
+.own-school-badge{
+  font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.08em;
+  color:#fbbf24;border:1px solid #fbbf24;padding:0.1rem 0.45rem;
+}
+.spell-item.is-own-school{border-left-color:#fbbf24}
+.badge-locked{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.1rem 0.5rem;color:var(--muted);border:1px solid var(--border2);
+}

@@ -2613,8 +2613,9 @@ function renderActionForm(){
 
   // Spell options (solo preparados)
   const preparedSpells = (preset.spellList||[]).filter(s=>isSpellPrepared(c, s.name));
+  const ownSchool = getCommittedSchool(c);
   const spellOpts = preparedSpells.map(s=>
-    `<option value="${liveEscape(s.name)}" ${d.spellName===s.name?'selected':''}>${s.name} / ${s.nameEs} (Nv ${s.level})</option>`
+    `<option value="${liveEscape(s.name)}" ${d.spellName===s.name?'selected':''}>${s.school===ownSchool?'★ ':''}${s.name} / ${s.nameEs} (Nv ${s.level})</option>`
   ).join('');
   // Cantrip options (solo activos)
   const activeCantrips = (preset.cantripsData||[]).filter(cn=>isCantripActive(c, cn.name));
@@ -2667,6 +2668,7 @@ function renderActionForm(){
         </div>
         <div class="form-row"><label>Lanzamiento</label><div>${castingTag(sp)}</div></div>
       </div>` : ''}
+      ${renderOwnSchoolBanner(c, sp, d)}
       ${sustaining ? `<div class="form-checkbox-row"><label><input type="checkbox" ${d.sustained?'checked':''} onchange="updateFormField('sustained', this.checked)"> ◎ Efecto sostenido — ${liveEscape(sp.name)} ya está activo: no gasta slot (${sustainedCastingTime(sp)==='bonus'?'Bonus Action':'Action'})</label></div>` : ''}
       ${spellInfoPreview(sp)}`;
   } else if(d.actionType === 'cantrip'){
@@ -2822,6 +2824,19 @@ function renderActionForm(){
       </div>
     </div>
   `;
+}
+
+/* Aviso para el DM cuando el hechizo es de la escuela del personaje (Esdas: Adivinación).
+   Desde Nv 6, Adivinación Experta: lanzarlo con slot de Nv 2+ devuelve un slot gastado de nivel menor. */
+const SCHOOL_ES = { abjuration:'Abjuración', conjuration:'Conjuración', divination:'Adivinación', enchantment:'Encantamiento',
+  evocation:'Evocación', illusion:'Ilusión', necromancy:'Nigromancia', transmutation:'Transmutación' };
+function renderOwnSchoolBanner(c, sp, d){
+  const school = getCommittedSchool(c);
+  if(!sp || !school || sp.school !== school) return '';
+  const expert = school === 'divination' && getCharLevel(c) >= 6 && (parseInt(d.spellLevel) || sp.level) >= 2 && !d.sustained;
+  return `<div class="action-buff-banner buff-holy">★ <strong>Hechizo de su escuela (${SCHOOL_ES[school] || school})</strong>${expert
+    ? ` — Adivinación Experta: al lanzarlo recupera un slot gastado de nivel menor a ${parseInt(d.spellLevel) || sp.level} (máx. Nv 5). Marcalo en la hoja.`
+    : ''}</div>`;
 }
 
 /* Limpia lo que depende del hechizo/arma elegido (para no arrastrar tiradas de otra selección) */

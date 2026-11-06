@@ -105,8 +105,8 @@
     "semantic_hash": "e53fec257db03fdf4e77c324c19c8968"
   },
   "public/js/abilities.js": {
-    "mtime": 1793421027.1368685,
-    "ast_hash": "608807c8223954cbe5ca671d485bda86",
+    "mtime": 1794003221.7527773,
+    "ast_hash": "47606870d47170b78e3bdceea4c84321",
     "semantic_hash": ""
   },
   "public/js/bestiary.js": {
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "public/js/data.js": {
-    "mtime": 1793412961.9463303,
-    "ast_hash": "9cbd767be7b236109fc9b5878213f589",
+    "mtime": 1794003221.7520552,
+    "ast_hash": "229c07d1bd9a23d575b515e98c870250",
     "semantic_hash": ""
   },
   "public/js/dm-auth.js": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "public/js/live.js": {
-    "mtime": 1793421035.8577158,
-    "ast_hash": "e393e64c3e2e38a9e3c47fa16c0e1a88",
+    "mtime": 1794003239.0410116,
+    "ast_hash": "ffe80a49266a61084b62bdef8c37c2d0",
     "semantic_hash": ""
   },
   "public/js/money.js": {
@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793421088.0264196,
-    "ast_hash": "4c236cf5409ad9686662786e2e9cad98",
+    "mtime": 1794003306.2659576,
+    "ast_hash": "9167b002261ae0f6de84f1fb98a82f8f",
     "semantic_hash": ""
   },
   "public/CLAUDE.md": {
@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1793412635.4403236,
-    "ast_hash": "37968478cbb85cc76aef3bef5e602cbc",
+    "mtime": 1794002663.7866852,
+    "ast_hash": "b34ee5d3c2b5faa67afd81e8122cdde7",
     "semantic_hash": ""
   },
   "db/seed-data/campaign-events.js": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "db/seed-data/class-presets.js": {
-    "mtime": 1793405737.1427395,
-    "ast_hash": "a60b4a7cbde33a11879d7dd09bac7c36",
+    "mtime": 1794003197.270944,
+    "ast_hash": "bafb0b74768c36bc6c5e08cad74b7174",
     "semantic_hash": ""
   },
   "db/seed-data/conditions.js": {

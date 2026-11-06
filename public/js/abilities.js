@@ -610,6 +610,9 @@ function schoolBadge(school){
 }
 
 /* ── RENDER ── */
+/* Grupos de hechizos plegados/abiertos por 'charId:nivel' (estado de UI, no se guarda) */
+const SPELL_GROUP_OPEN = {};
+
 function renderCharAbilities(c){
   renderCharStats(c);   // atributos, CA, iniciativa y mejoras pendientes (siempre al día con los datos)
   const container = document.getElementById('abilities-'+c);
@@ -745,8 +748,10 @@ function renderCharAbilities(c){
       </div>`;
     }).join('');
 
-    // Spells: lockear los de nivel mayor al accesible
-    const spellListHTML = preset.spellList.map(s=>{
+    // Spells: todos visibles (también para los jugadores, para que vean lo que viene).
+    // Agrupados por nivel de hechizo; los niveles todavía bloqueados arrancan plegados.
+    const ownSchool = getCommittedSchool(c);
+    const renderSpellItem = s=>{
       const prepared = isSpellPrepared(c, s.name);
       const esc = s.name.replace(/'/g,'\\\'');
       const dmUnlocked = s.level > maxSpellLevel && getUnlockedSpells(c).includes(s.name);
@@ -754,31 +759,51 @@ function renderCharAbilities(c){
       const charLvl = getCharLevel(c);
       const alwaysActive = s.alwaysPrepared && charLvl >= (s.alwaysPreparedAt || 1);
       const alwaysPending = s.alwaysPrepared && !alwaysActive;
+      const unlockAt = getSpellUnlockLevel(c, s.level);
       let prepBtn;
       if(isLocked){
-        prepBtn = `<button class="spell-prep-btn spell-unlock-btn" onclick="toggleSpellUnlock('${c}','${esc}')" title="Bloqueado — se desbloquea solo con slots de Nv ${s.level}. Click para desbloquearlo ya (decisión del DM)">🔒</button>`;
+        prepBtn = `<button class="spell-prep-btn spell-unlock-btn" onclick="toggleSpellUnlock('${c}','${esc}')" title="Se habilita en nivel ${unlockAt || '?'} del personaje (slots de Nv ${s.level}). DM: click para habilitarlo ya">🔒</button>`;
       } else if(alwaysActive){
         prepBtn = `<span class="spell-prep-btn always-prep" title="Siempre preparado (${s.circleSpell||'Subclass'}) — no cuenta al límite">★</span>`;
       } else {
-        prepBtn = `<button class="spell-prep-btn ${prepared?'on':''}" onclick="toggleSpellPrepared('${c}','${s.name.replace(/'/g,'\\\'')}')" title="${prepared?'Preparado (click para olvidar)':'No preparado (click para preparar)'}">${prepared?'✓':'○'}</button>`;
+        prepBtn = `<button class="spell-prep-btn ${prepared?'on':''}" onclick="toggleSpellPrepared('${c}','${esc}')" title="${prepared?'Preparado (click para olvidar)':'No preparado (click para preparar)'}">${prepared?'✓':'○'}</button>`;
       }
       const circleBadge = s.circleSpell
         ? `<span class="circle-spell-badge" title="${alwaysActive?'Siempre preparado':'Se desbloqueará como siempre preparado a Nv '+(s.alwaysPreparedAt||'?')}">${s.circleSpell}${alwaysPending?' 🔒 Nv '+(s.alwaysPreparedAt||'?'):' ★'}</span>`
         : '';
+      const schoolMark = ownSchool && s.school === ownSchool
+        ? `<span class="own-school-badge" title="Hechizo de su escuela${ownSchool==='divination' ? ' — Divination Savant: copiarlo al spellbook cuesta la mitad; desde Nv 6, Adivinación Experta' : ''}">★ Su escuela</span>`
+        : '';
       const noDisponible = !prepared && !alwaysActive && !isLocked;
-      return `<div class="spell-item ${prepared?'is-prepared':''} ${isLocked?'is-locked':''} ${isLocked?'dm-only':''} ${alwaysActive?'is-always-prep':''} ${noDisponible?'no-disponible':''}">
+      return `<div class="spell-item ${prepared?'is-prepared':''} ${isLocked?'is-locked':''} ${alwaysActive?'is-always-prep':''} ${noDisponible?'no-disponible':''} ${schoolMark?'is-own-school':''}">
         <div class="spell-header">
           ${prepBtn}
           <span class="spell-name">${s.name}<em> / ${s.nameEs||''}</em></span>
           ${schoolBadge(s.school)}
+          ${schoolMark}
           ${circleBadge}
-          ${dmUnlocked ? `<button class="dm-unlock-badge dm-only" onclick="toggleSpellUnlock('${c}','${esc}')" title="Desbloqueado por el DM antes de tener slots de Nv ${s.level} — click para volver a bloquearlo">🔓 DM</button>` : ''}
+          ${dmUnlocked ? `<button class="dm-unlock-badge dm-only" onclick="toggleSpellUnlock('${c}','${esc}')" title="Habilitado por el DM antes de tener slots de Nv ${s.level} — click para volver a bloquearlo">🔓 DM</button>` : ''}
           ${s.shape?`<span class="spell-shape">${s.shape}</span>`:''}
-          <span class="spell-level" ${isLocked ? `title="Se desbloquea cuando el personaje es nivel ${getSpellUnlockLevel(c, s.level) || '?'}"` : ''}>Nivel ${s.level}${isLocked?' 🔒':''}</span>
-          <span class="badge-no-disponible">No disponible</span>
+          <span class="spell-level">Nivel ${s.level}</span>
+          ${isLocked ? `<span class="badge-locked">🔒 Nivel ${unlockAt || '?'} del personaje</span>` : '<span class="badge-no-disponible">No disponible</span>'}
         </div>
         <div class="spell-desc">${s.desc}</div>
       </div>`;
+    };
+    const spellLevels = [...new Set(preset.spellList.map(s=>s.level))].sort((a,b)=>a-b);
+    const spellListHTML = spellLevels.map(L => {
+      const inLevel = preset.spellList.filter(s=>s.level===L);
+      const lockedLevel = L > maxSpellLevel;
+      const key = c+':'+L;
+      const open = (key in SPELL_GROUP_OPEN) ? SPELL_GROUP_OPEN[key] : !lockedLevel;
+      const prepN = inLevel.filter(s=>isSpellPrepared(c, s.name)).length;
+      const ownN = ownSchool ? inLevel.filter(s=>s.school===ownSchool).length : 0;
+      return `<details class="spell-level-group${lockedLevel?' is-locked-level':''}" ${open?'open':''} ontoggle="SPELL_GROUP_OPEN['${key}']=this.open">
+        <summary>Nivel ${L}
+          <span class="spell-group-meta">· ${inLevel.length} hechizos${lockedLevel ? ` · 🔒 se habilitan en nivel ${getSpellUnlockLevel(c, L) || '?'} del personaje` : ` · ${prepN} preparados`}${ownN ? ` · ★ ${ownN} de su escuela` : ''}</span>
+        </summary>
+        <div class="spells-list">${inLevel.map(renderSpellItem).join('')}</div>
+      </details>`;
     }).join('');
 
     const prepLimit = getPreparedLimit(c);
@@ -805,7 +830,7 @@ function renderCharAbilities(c){
       <div class="slots-block">${slotsHTML}</div>
       ${cantripsHTML ? `<h3 class="sub-head" style="margin-top:1rem">Cantrips</h3><div class="cantrips-list">${cantripsHTML}</div>` : ''}
       <h3 class="sub-head" style="margin-top:1rem">Hechizos disponibles para la clase</h3>
-      <div class="spells-list">${spellListHTML}</div>
+      <div class="spell-groups">${spellListHTML}</div>
     `;
   }
 
