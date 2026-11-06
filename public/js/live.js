@@ -4285,7 +4285,9 @@ function groupLevelUp(){
 
   // Mismo camino que el botón de la hoja (applyLevelUp en abilities.js)
   const results = targets.map(x => Object.assign({ c: x.c }, applyLevelUp(x.c)));
-  const newLevels = results.map(r => `${label(r.c)} → Nv ${r.newLevel} (HP máx ${r.newMax})`);
+  const newLevels = results.map(r => `${label(r.c)} → Nv ${r.newLevel} (HP máx ${r.newMax})` +
+    (r.spellLevelAfter > r.spellLevelBefore ? ` · ✨ hechizos de Nv ${r.spellLevelAfter}` : '') +
+    (r.prepAfter != null && r.prepAfter > r.prepBefore ? ` · prepara ${r.prepAfter} (antes ${r.prepBefore})` : ''));
   const withASI = results.filter(r => r.asi).map(r => label(r.c));
   const asiLine = withASI.length ? `\n\n⬆ Mejora de característica pendiente: ${withASI.join(', ')} — +2 a uno, +1 a dos o una dote. Se elige en cada hoja, debajo de los atributos.` : '';
 

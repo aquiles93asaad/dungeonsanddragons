@@ -52,6 +52,7 @@ _socket.on('char:update', ({ charId, data }) => {
   if(data.committedSchool !== undefined) _ls('committed_school_'+charId, data.committedSchool);
   if(data.abilityScores)                _ls('ability_scores_'+charId,   data.abilityScores);
   if(data.asi)                          _ls('asi_'+charId,              data.asi);
+  if(data.unlockedSpells)               _ls('unlocked_spells_'+charId,  data.unlockedSpells);
   if(data.slots)     Object.entries(data.slots).forEach(([lvl, v]) => _ls('slots_'+charId+'_'+lvl, v));
   if(data.resources) Object.entries(data.resources).forEach(([k, v])  => _ls('resource_'+charId+'_'+k, v));
 

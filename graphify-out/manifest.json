@@ -105,8 +105,8 @@
     "semantic_hash": "e53fec257db03fdf4e77c324c19c8968"
   },
   "public/js/abilities.js": {
-    "mtime": 1793413043.1590354,
-    "ast_hash": "3b58eb82c66e6792fc1564bc9b205bf8",
+    "mtime": 1793421027.1368685,
+    "ast_hash": "608807c8223954cbe5ca671d485bda86",
     "semantic_hash": ""
   },
   "public/js/bestiary.js": {
@@ -140,8 +140,8 @@
     "semantic_hash": "0ed53fed05aff8a891c489a5e354387e"
   },
   "public/js/init.js": {
-    "mtime": 1793412949.9403317,
-    "ast_hash": "23baf455cf8f85605d67d3210063f0c0",
+    "mtime": 1793421001.4305196,
+    "ast_hash": "6009a1df69b60f001080706ba3705a3a",
     "semantic_hash": ""
   },
   "public/js/items.js": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "public/js/live.js": {
-    "mtime": 1793413056.4526072,
-    "ast_hash": "0cea66aa0ce12989d2e1d34a07681716",
+    "mtime": 1793421035.8577158,
+    "ast_hash": "e393e64c3e2e38a9e3c47fa16c0e1a88",
     "semantic_hash": ""
   },
   "public/js/money.js": {
@@ -180,13 +180,13 @@
     "semantic_hash": "0630234e1ee34350d2622a767547c780"
   },
   "public/js/socket-client.js": {
-    "mtime": 1793412949.9414299,
-    "ast_hash": "b3d062a6470f5a4e238140fba2aa5c53",
+    "mtime": 1793421001.4315495,
+    "ast_hash": "5d6b08a79fc50584eb28970d2c6c07d8",
     "semantic_hash": ""
   },
   "public/js/storage.js": {
-    "mtime": 1793412949.9399176,
-    "ast_hash": "c14312d4f324c7830d35118ce40338e5",
+    "mtime": 1793421001.4300156,
+    "ast_hash": "a37991bb1db690b8a726a1ff2cf402dc",
     "semantic_hash": ""
   },
   "routes/api.js": {
@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1793413145.3312023,
-    "ast_hash": "535233856f07d47a8e636ef9e8e20c73",
+    "mtime": 1793421088.0264196,
+    "ast_hash": "4c236cf5409ad9686662786e2e9cad98",
     "semantic_hash": ""
   },
   "public/CLAUDE.md": {

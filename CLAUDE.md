@@ -486,6 +486,7 @@ El modal mueve el nodo real del DOM (no clona) → cualquier edición es la fuen
 - **Panel en la hoja** (debajo de los atributos, DM): +2 a uno · +1 a dos · dote (con +1 opcional para medias dotes). Muestra qué cambia (CA, HP máx retroactivo por CON, iniciativa, DC de hechizos). Tope 20 con override del DM; "Resuelta sin cambios" para lo aplicado a mano. Los jugadores ven el aviso de pendiente.
 - **✎ Editar características** (DM): edición libre para bonus narrativos/correcciones; queda en el historial como `manual` y no consume mejoras.
 - Los **atributos, la CA y la iniciativa** de la hoja se pintan desde los datos (`renderCharStats`, llamado por `renderCharAbilities`) — el HTML de `index.html` es solo el valor inicial.
+- **Hechizos:** se desbloquean solos cuando el personaje tiene slots de ese nivel (`getMaxSpellLevel`). El DM puede desbloquear uno antes con el 🔒 de la hoja (queda "🔓 DM", lista `unlockedSpells` sincronizada; se vuelve a bloquear tocando el badge). Lanzarlo sin slot de ese nivel pide confirmación en la Sesión Live. La hoja muestra **Preparados X/Y** (Paladín CHA + ½ nivel, Druida WIS + nivel, Wizard INT + nivel; los ★ no cuentan) — informativo, no bloquea. Los jugadores solo ven los hechizos preparados.
 - **CA** = `getCharAC(c)` en `data.js` (fórmula por armadura/feature: Unarmored Defense de Rac/Relyo, cuero+escudo de Boyd, Mage Armor de Esdas, Tyrell fija 18). La usan la hoja y el combat tracker; el DM la puede pisar por combatiente en el tracker.
 
 ---
@@ -503,7 +504,7 @@ Duración: `turnsLeft` baja en `advanceRound()`. 1 minuto = 10 rounds. Lo que du
 - **Sin `import/export`** en frontend — todo scope global.
 - **Prefijo `ard_`** en localStorage para datos del cliente (HP, inventario, notas, retratos).
 - El **estado del servidor** (levels, slots, money) persiste en MongoDB via API.
-- **`save()` con claves de personaje** (`hp_`, `hp_max_`, `char_level_`, `slots_`, `resource_`, `inv_`, `ability_scores_`, `asi_`, etc.) actualiza `CHAR_STATE` automáticamente (`_CHAR_STATE_FIELDS` en `storage.js`). `syncCharState()` y los getters leen `CHAR_STATE`: escribir esas claves por fuera de `save()` hace que el cambio no llegue a MongoDB y se pierda al recargar.
+- **`save()` con claves de personaje** (`hp_`, `hp_max_`, `char_level_`, `slots_`, `resource_`, `inv_`, `ability_scores_`, `asi_`, `unlocked_spells_`, etc.) actualiza `CHAR_STATE` automáticamente (`_CHAR_STATE_FIELDS` en `storage.js`). `syncCharState()` y los getters leen `CHAR_STATE`: escribir esas claves por fuera de `save()` hace que el cambio no llegue a MongoDB y se pierda al recargar.
 - **`dm-only` con CSS**, no con JS condicional — el estado de rol es reactivo sin re-renders.
 - **`body.app-locked` en el HTML** antes de que cargue JS — no hay flash de contenido sin auth.
 - **Tokens sin expiración** — la sesión del servidor (cookie) sí expira en 8h.

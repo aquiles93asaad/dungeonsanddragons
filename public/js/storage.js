@@ -39,6 +39,7 @@ const _CHAR_STATE_FIELDS = [
   { prefix:'committed_school_', field:'committedSchool' },
   { prefix:'ability_scores_',   field:'abilityScores' },
   { prefix:'asi_',              field:'asi' },
+  { prefix:'unlocked_spells_',  field:'unlockedSpells' },
   { prefix:'slots_',            field:'slots',     sub:true },
   { prefix:'resource_',         field:'resources', sub:true }
 ];
@@ -78,7 +79,7 @@ function showSaved(){
 const _CHAR_SYNC_PREFIXES = [
   'hp_', 'char_level_', 'cond_', 'inv_', 'notes_',
   'prepared_', 'active_cantrips_', 'committed_school_', 'slots_', 'resource_',
-  'ability_scores_', 'asi_'
+  'ability_scores_', 'asi_', 'unlocked_spells_'
 ];
 
 function _charFromStateKey(key){
@@ -120,6 +121,7 @@ function syncCharState(c){
       committedSchool:cs.committedSchool || null,
       abilityScores:  (typeof getAbilityScores !== 'undefined') ? getAbilityScores(c) : (cs.abilityScores || null),
       asi:            cs.asi || null,   // historial de mejoras de característica / dotes
+      unlockedSpells: cs.unlockedSpells || [],   // hechizos desbloqueados por el DM antes de tener slots
       slots:          {},
       resources:      {}
     };

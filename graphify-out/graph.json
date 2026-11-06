@@ -844,7 +844,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_campaignlocation",
-      "community": 16,
+      "community": 7,
       "norm_label": "campaignlocation.js"
     },
     {
@@ -854,7 +854,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_campaignlocation_schema_model",
-      "community": 16,
+      "community": 7,
       "norm_label": "{ schema, model }"
     },
     {
@@ -864,7 +864,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "models_campaignlocation_campaignlocationschema",
-      "community": 16,
+      "community": 7,
       "norm_label": "campaignlocationschema"
     },
     {
@@ -904,7 +904,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_campaignthread",
-      "community": 49,
+      "community": 16,
       "norm_label": "campaignthread.js"
     },
     {
@@ -914,7 +914,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_campaignthread_schema_model",
-      "community": 49,
+      "community": 16,
       "norm_label": "{ schema, model }"
     },
     {
@@ -924,7 +924,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "models_campaignthread_campaignthreadschema",
-      "community": 49,
+      "community": 16,
       "norm_label": "campaignthreadschema"
     },
     {
@@ -934,7 +934,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_classpreset",
-      "community": 16,
+      "community": 13,
       "norm_label": "classpreset.js"
     },
     {
@@ -944,7 +944,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_classpreset_schema_model",
-      "community": 16,
+      "community": 13,
       "norm_label": "{ schema, model }"
     },
     {
@@ -954,7 +954,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "models_classpreset_classpresetschema",
-      "community": 16,
+      "community": 13,
       "norm_label": "classpresetschema"
     },
     {
@@ -964,7 +964,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_condition",
-      "community": 16,
+      "community": 31,
       "norm_label": "condition.js"
     },
     {
@@ -974,7 +974,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_condition_schema_model",
-      "community": 16,
+      "community": 31,
       "norm_label": "{ schema, model }"
     },
     {
@@ -984,7 +984,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "models_condition_conditionschema",
-      "community": 16,
+      "community": 31,
       "norm_label": "conditionschema"
     },
     {
@@ -1054,7 +1054,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_npc",
-      "community": 35,
+      "community": 16,
       "norm_label": "npc.js"
     },
     {
@@ -1064,7 +1064,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "models_npc_schema_model",
-      "community": 35,
+      "community": 16,
       "norm_label": "{ schema, model }"
     },
     {
@@ -1074,7 +1074,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "models_npc_npcschema",
-      "community": 35,
+      "community": 16,
       "norm_label": "npcschema"
     },
     {
@@ -1444,7 +1444,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "js_abilities",
-      "community": 31,
+      "community": 32,
       "norm_label": "abilities.js"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "js_abilities_getmaxspelllevel",
-      "community": 31,
+      "community": 33,
       "norm_label": "getmaxspelllevel()"
     },
     {
@@ -1504,7 +1504,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "js_abilities_patchcharstate",
-      "community": 31,
+      "community": 33,
       "norm_label": "_patchcharstate()"
     },
     {
@@ -1514,7 +1514,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "js_abilities_patchcharstateslot",
-      "community": 31,
+      "community": 45,
       "norm_label": "_patchcharstateslot()"
     },
     {
@@ -1524,7 +1524,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "js_abilities_patchcharstateresource",
-      "community": 31,
+      "community": 32,
       "norm_label": "_patchcharstateresource()"
     },
     {
@@ -1534,7 +1534,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "js_abilities_togglespellslot",
-      "community": 31,
+      "community": 45,
       "norm_label": "togglespellslot()"
     },
     {
@@ -1544,7 +1544,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "js_abilities_consumespellslot",
-      "community": 46,
+      "community": 45,
       "norm_label": "consumespellslot()"
     },
     {
@@ -1554,7 +1554,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "js_abilities_loadresourcestate",
-      "community": 31,
+      "community": 32,
       "norm_label": "loadresourcestate()"
     },
     {
@@ -1564,7 +1564,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "js_abilities_toggleresourceuse",
-      "community": 31,
+      "community": 32,
       "norm_label": "toggleresourceuse()"
     },
     {
@@ -1574,7 +1574,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "js_abilities_changeresourcepool",
-      "community": 31,
+      "community": 32,
       "norm_label": "changeresourcepool()"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "js_abilities_setresourcepool",
-      "community": 31,
+      "community": 32,
       "norm_label": "setresourcepool()"
     },
     {
@@ -1601,7 +1601,7 @@
       "label": "levelUpCharacter()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L146",
+      "source_location": "L148",
       "_origin": "ast",
       "id": "js_abilities_levelupcharacter",
       "community": 33,
@@ -1611,47 +1611,47 @@
       "label": "ABILITY_KEYS",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L201",
+      "source_location": "L205",
       "_origin": "ast",
       "id": "js_abilities_ability_keys",
-      "community": 31,
+      "community": 32,
       "norm_label": "ability_keys"
     },
     {
       "label": "ASI_LEVELS",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L202",
+      "source_location": "L206",
       "_origin": "ast",
       "id": "js_abilities_asi_levels",
-      "community": 31,
+      "community": 32,
       "norm_label": "asi_levels"
     },
     {
       "label": "ASI_FORM",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L203",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "js_abilities_asi_form",
-      "community": 31,
+      "community": 32,
       "norm_label": "asi_form"
     },
     {
       "label": "SCORES_EDIT",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L204",
+      "source_location": "L208",
       "_origin": "ast",
       "id": "js_abilities_scores_edit",
-      "community": 31,
+      "community": 32,
       "norm_label": "scores_edit"
     },
     {
       "label": "getASIState()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L206",
+      "source_location": "L210",
       "_origin": "ast",
       "id": "js_abilities_getasistate",
       "community": 32,
@@ -1661,7 +1661,7 @@
       "label": "usedASIs()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L211",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "js_abilities_usedasis",
       "community": 32,
@@ -1671,7 +1671,7 @@
       "label": "getPendingASI()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L212",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "js_abilities_getpendingasi",
       "community": 32,
@@ -1681,7 +1681,7 @@
       "label": "nextASILevel()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L217",
+      "source_location": "L221",
       "_origin": "ast",
       "id": "js_abilities_nextasilevel",
       "community": 32,
@@ -1691,7 +1691,7 @@
       "label": "getASIForm()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L219",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "js_abilities_getasiform",
       "community": 32,
@@ -1701,7 +1701,7 @@
       "label": "setASIForm()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L223",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "js_abilities_setasiform",
       "community": 32,
@@ -1711,7 +1711,7 @@
       "label": "asiChanges()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L233",
+      "source_location": "L237",
       "_origin": "ast",
       "id": "js_abilities_asichanges",
       "community": 32,
@@ -1721,7 +1721,7 @@
       "label": "scoresWith()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L239",
+      "source_location": "L243",
       "_origin": "ast",
       "id": "js_abilities_scoreswith",
       "community": 32,
@@ -1731,7 +1731,7 @@
       "label": "setAbilityScores()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L248",
+      "source_location": "L252",
       "_origin": "ast",
       "id": "js_abilities_setabilityscores",
       "community": 33,
@@ -1741,7 +1741,7 @@
       "label": "applyASI()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L267",
+      "source_location": "L271",
       "_origin": "ast",
       "id": "js_abilities_applyasi",
       "community": 32,
@@ -1751,7 +1751,7 @@
       "label": "resolveASIWithoutChanges()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L288",
+      "source_location": "L292",
       "_origin": "ast",
       "id": "js_abilities_resolveasiwithoutchanges",
       "community": 32,
@@ -1761,7 +1761,7 @@
       "label": "openScoresEditor()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L297",
+      "source_location": "L301",
       "_origin": "ast",
       "id": "js_abilities_openscoreseditor",
       "community": 32,
@@ -1771,7 +1771,7 @@
       "label": "closeScoresEditor()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L298",
+      "source_location": "L302",
       "_origin": "ast",
       "id": "js_abilities_closescoreseditor",
       "community": 32,
@@ -1781,17 +1781,17 @@
       "label": "setScoreDraft()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L299",
+      "source_location": "L303",
       "_origin": "ast",
       "id": "js_abilities_setscoredraft",
-      "community": 31,
+      "community": 32,
       "norm_label": "setscoredraft()"
     },
     {
       "label": "saveManualScores()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L300",
+      "source_location": "L304",
       "_origin": "ast",
       "id": "js_abilities_savemanualscores",
       "community": 32,
@@ -1801,17 +1801,17 @@
       "label": "asiHistoryLabel()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L316",
+      "source_location": "L320",
       "_origin": "ast",
       "id": "js_abilities_asihistorylabel",
-      "community": 31,
+      "community": 32,
       "norm_label": "asihistorylabel()"
     },
     {
       "label": "renderASIPreview()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L325",
+      "source_location": "L329",
       "_origin": "ast",
       "id": "js_abilities_renderasipreview",
       "community": 32,
@@ -1821,7 +1821,7 @@
       "label": "renderASIPicker()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L352",
+      "source_location": "L356",
       "_origin": "ast",
       "id": "js_abilities_renderasipicker",
       "community": 32,
@@ -1831,7 +1831,7 @@
       "label": "renderScoresEditor()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L380",
+      "source_location": "L384",
       "_origin": "ast",
       "id": "js_abilities_renderscoreseditor",
       "community": 32,
@@ -1841,7 +1841,7 @@
       "label": "renderASIPanel()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L389",
+      "source_location": "L393",
       "_origin": "ast",
       "id": "js_abilities_renderasipanel",
       "community": 32,
@@ -1851,7 +1851,7 @@
       "label": "renderCharStats()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L404",
+      "source_location": "L408",
       "_origin": "ast",
       "id": "js_abilities_rendercharstats",
       "community": 32,
@@ -1861,87 +1861,147 @@
       "label": "longRest()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L431",
+      "source_location": "L435",
       "_origin": "ast",
       "id": "js_abilities_longrest",
-      "community": 31,
+      "community": 33,
       "norm_label": "longrest()"
     },
     {
       "label": "shortRest()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L456",
+      "source_location": "L460",
       "_origin": "ast",
       "id": "js_abilities_shortrest",
-      "community": 31,
+      "community": 32,
       "norm_label": "shortrest()"
     },
     {
       "label": "toggleSpellPrepared()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L470",
+      "source_location": "L474",
       "_origin": "ast",
       "id": "js_abilities_togglespellprepared",
-      "community": 31,
+      "community": 33,
       "norm_label": "togglespellprepared()"
     },
     {
       "label": "isSpellPrepared()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L488",
+      "source_location": "L492",
       "_origin": "ast",
       "id": "js_abilities_isspellprepared",
       "community": 46,
       "norm_label": "isspellprepared()"
     },
     {
+      "label": "getUnlockedSpells()",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L512",
+      "_origin": "ast",
+      "id": "js_abilities_getunlockedspells",
+      "community": 33,
+      "norm_label": "getunlockedspells()"
+    },
+    {
+      "label": "isSpellUnlocked()",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L516",
+      "_origin": "ast",
+      "id": "js_abilities_isspellunlocked",
+      "community": 33,
+      "norm_label": "isspellunlocked()"
+    },
+    {
+      "label": "toggleSpellUnlock()",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L519",
+      "_origin": "ast",
+      "id": "js_abilities_togglespellunlock",
+      "community": 33,
+      "norm_label": "togglespellunlock()"
+    },
+    {
+      "label": "PREP_RULES",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L543",
+      "_origin": "ast",
+      "id": "js_abilities_prep_rules",
+      "community": 32,
+      "norm_label": "prep_rules"
+    },
+    {
+      "label": "getPreparedLimit()",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L548",
+      "_origin": "ast",
+      "id": "js_abilities_getpreparedlimit",
+      "community": 32,
+      "norm_label": "getpreparedlimit()"
+    },
+    {
+      "label": "countPreparedForLimit()",
+      "file_type": "code",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L553",
+      "_origin": "ast",
+      "id": "js_abilities_countpreparedforlimit",
+      "community": 32,
+      "norm_label": "countpreparedforlimit()"
+    },
+    {
       "label": "isCantripActive()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L505",
+      "source_location": "L560",
       "_origin": "ast",
       "id": "js_abilities_iscantripactive",
-      "community": 31,
+      "community": 33,
       "norm_label": "iscantripactive()"
     },
     {
       "label": "toggleCantripActive()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L515",
+      "source_location": "L570",
       "_origin": "ast",
       "id": "js_abilities_togglecantripactive",
-      "community": 31,
+      "community": 33,
       "norm_label": "togglecantripactive()"
     },
     {
       "label": "getActiveCantrips()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L535",
+      "source_location": "L590",
       "_origin": "ast",
       "id": "js_abilities_getactivecantrips",
-      "community": 31,
+      "community": 32,
       "norm_label": "getactivecantrips()"
     },
     {
       "label": "SCHOOL_LABELS",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L540",
+      "source_location": "L595",
       "_origin": "ast",
       "id": "js_abilities_school_labels",
-      "community": 31,
+      "community": 32,
       "norm_label": "school_labels"
     },
     {
       "label": "schoolBadge()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L551",
+      "source_location": "L606",
       "_origin": "ast",
       "id": "js_abilities_schoolbadge",
       "community": 11,
@@ -1951,17 +2011,17 @@
       "label": "renderCharAbilities()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L558",
+      "source_location": "L613",
       "_origin": "ast",
       "id": "js_abilities_rendercharabilities",
-      "community": 31,
+      "community": 32,
       "norm_label": "rendercharabilities()"
     },
     {
       "label": "renderAllAbilities()",
       "file_type": "code",
       "source_file": "public/js/abilities.js",
-      "source_location": "L794",
+      "source_location": "L856",
       "_origin": "ast",
       "id": "js_abilities_renderallabilities",
       "community": 0,
@@ -3084,7 +3144,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "js_data_getcharac",
-      "community": 32,
+      "community": 1,
       "norm_label": "getcharac()"
     },
     {
@@ -3134,7 +3194,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "js_data_getspellslotsforlevel",
-      "community": 31,
+      "community": 46,
       "norm_label": "getspellslotsforlevel()"
     },
     {
@@ -3184,7 +3244,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "js_data_getunarmoredmovementbonus",
-      "community": 1,
+      "community": 46,
       "norm_label": "getunarmoredmovementbonus()"
     },
     {
@@ -3604,7 +3664,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "js_live_loadlivesession",
-      "community": 53,
+      "community": 30,
       "norm_label": "loadlivesession()"
     },
     {
@@ -3614,7 +3674,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "js_live_migratenarrativelinks",
-      "community": 53,
+      "community": 30,
       "norm_label": "migratenarrativelinks()"
     },
     {
@@ -3624,7 +3684,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "js_live_getcurrentnarrativeid",
-      "community": 54,
+      "community": 4,
       "norm_label": "getcurrentnarrativeid()"
     },
     {
@@ -3644,7 +3704,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "js_live_scheduleliveserversave",
-      "community": 53,
+      "community": 30,
       "norm_label": "scheduleliveserversave()"
     },
     {
@@ -3664,7 +3724,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "js_live_liveescape",
-      "community": 13,
+      "community": 10,
       "norm_label": "liveescape()"
     },
     {
@@ -3674,7 +3734,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "js_live_newid",
-      "community": 55,
+      "community": 30,
       "norm_label": "newid()"
     },
     {
@@ -3684,7 +3744,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "js_live_nowtime",
-      "community": 54,
+      "community": 4,
       "norm_label": "nowtime()"
     },
     {
@@ -3694,7 +3754,7 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "js_live_nowiso",
-      "community": 54,
+      "community": 4,
       "norm_label": "nowiso()"
     },
     {
@@ -3754,7 +3814,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "js_live_getalivemonsters",
-      "community": 47,
+      "community": 11,
       "norm_label": "getalivemonsters()"
     },
     {
@@ -3774,7 +3834,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "js_live_pcstate",
-      "community": 7,
+      "community": 30,
       "norm_label": "pcstate()"
     },
     {
@@ -3784,7 +3844,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "js_live_stateof",
-      "community": 7,
+      "community": 30,
       "norm_label": "stateof()"
     },
     {
@@ -3794,7 +3854,7 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "js_live_getbuffs",
-      "community": 7,
+      "community": 30,
       "norm_label": "getbuffs()"
     },
     {
@@ -3804,7 +3864,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "js_live_gettemphp",
-      "community": 7,
+      "community": 30,
       "norm_label": "gettemphp()"
     },
     {
@@ -3814,7 +3874,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "js_live_settemphp",
-      "community": 7,
+      "community": 30,
       "norm_label": "settemphp()"
     },
     {
@@ -3824,7 +3884,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "js_live_getdeath",
-      "community": 7,
+      "community": 4,
       "norm_label": "getdeath()"
     },
     {
@@ -3834,7 +3894,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "js_live_isdead",
-      "community": 7,
+      "community": 4,
       "norm_label": "isdead()"
     },
     {
@@ -3844,7 +3904,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "js_live_isdying",
-      "community": 7,
+      "community": 30,
       "norm_label": "isdying()"
     },
     {
@@ -3854,7 +3914,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "js_live_getcombatanthp",
-      "community": 7,
+      "community": 15,
       "norm_label": "getcombatanthp()"
     },
     {
@@ -3864,7 +3924,7 @@
       "source_location": "L232",
       "_origin": "ast",
       "id": "js_live_getcombatanthpmax",
-      "community": 10,
+      "community": 15,
       "norm_label": "getcombatanthpmax()"
     },
     {
@@ -3874,7 +3934,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "js_live_getcombatantbaseac",
-      "community": 32,
+      "community": 1,
       "norm_label": "getcombatantbaseac()"
     },
     {
@@ -3884,7 +3944,7 @@
       "source_location": "L251",
       "_origin": "ast",
       "id": "js_live_getcombatantac",
-      "community": 10,
+      "community": 15,
       "norm_label": "getcombatantac()"
     },
     {
@@ -3904,7 +3964,7 @@
       "source_location": "L266",
       "_origin": "ast",
       "id": "js_live_getcombatantname",
-      "community": 7,
+      "community": 30,
       "norm_label": "getcombatantname()"
     },
     {
@@ -3964,7 +4024,7 @@
       "source_location": "L304",
       "_origin": "ast",
       "id": "js_live_getmaxattacks",
-      "community": 15,
+      "community": 11,
       "norm_label": "getmaxattacks()"
     },
     {
@@ -3984,7 +4044,7 @@
       "source_location": "L316",
       "_origin": "ast",
       "id": "js_live_rendereconomychips",
-      "community": 15,
+      "community": 11,
       "norm_label": "rendereconomychips()"
     },
     {
@@ -3994,7 +4054,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "js_live_sortbyinitiative",
-      "community": 55,
+      "community": 30,
       "norm_label": "sortbyinitiative()"
     },
     {
@@ -4004,7 +4064,7 @@
       "source_location": "L331",
       "_origin": "ast",
       "id": "js_live_cantaketurn",
-      "community": 7,
+      "community": 4,
       "norm_label": "cantaketurn()"
     },
     {
@@ -4014,7 +4074,7 @@
       "source_location": "L336",
       "_origin": "ast",
       "id": "js_live_getturnorder",
-      "community": 53,
+      "community": 30,
       "norm_label": "getturnorder()"
     },
     {
@@ -4024,7 +4084,7 @@
       "source_location": "L337",
       "_origin": "ast",
       "id": "js_live_getcurrentcombatant",
-      "community": 53,
+      "community": 30,
       "norm_label": "getcurrentcombatant()"
     },
     {
@@ -4034,7 +4094,7 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "js_live_startturn",
-      "community": 7,
+      "community": 30,
       "norm_label": "startturn()"
     },
     {
@@ -4044,7 +4104,7 @@
       "source_location": "L365",
       "_origin": "ast",
       "id": "js_live_beginturn",
-      "community": 53,
+      "community": 30,
       "norm_label": "beginturn()"
     },
     {
@@ -4054,7 +4114,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "js_live_endturn",
-      "community": 53,
+      "community": 30,
       "norm_label": "endturn()"
     },
     {
@@ -4064,7 +4124,7 @@
       "source_location": "L388",
       "_origin": "ast",
       "id": "js_live_giveturn",
-      "community": 53,
+      "community": 30,
       "norm_label": "giveturn()"
     },
     {
@@ -4084,7 +4144,7 @@
       "source_location": "L418",
       "_origin": "ast",
       "id": "js_live_confirmstartcombat",
-      "community": 53,
+      "community": 30,
       "norm_label": "confirmstartcombat()"
     },
     {
@@ -4094,7 +4154,7 @@
       "source_location": "L431",
       "_origin": "ast",
       "id": "js_live_cancelstartcombat",
-      "community": 30,
+      "community": 4,
       "norm_label": "cancelstartcombat()"
     },
     {
@@ -4134,7 +4194,7 @@
       "source_location": "L508",
       "_origin": "ast",
       "id": "js_live_advanceround",
-      "community": 53,
+      "community": 30,
       "norm_label": "advanceround()"
     },
     {
@@ -4144,7 +4204,7 @@
       "source_location": "L560",
       "_origin": "ast",
       "id": "js_live_forcenextround",
-      "community": 53,
+      "community": 4,
       "norm_label": "forcenextround()"
     },
     {
@@ -4154,7 +4214,7 @@
       "source_location": "L565",
       "_origin": "ast",
       "id": "js_live_newplayercombatant",
-      "community": 55,
+      "community": 30,
       "norm_label": "newplayercombatant()"
     },
     {
@@ -4164,7 +4224,7 @@
       "source_location": "L573",
       "_origin": "ast",
       "id": "js_live_addplayertocombat",
-      "community": 55,
+      "community": 30,
       "norm_label": "addplayertocombat()"
     },
     {
@@ -4174,7 +4234,7 @@
       "source_location": "L581",
       "_origin": "ast",
       "id": "js_live_addallplayerstocombat",
-      "community": 55,
+      "community": 30,
       "norm_label": "addallplayerstocombat()"
     },
     {
@@ -4184,7 +4244,7 @@
       "source_location": "L591",
       "_origin": "ast",
       "id": "js_live_openplayerpicker",
-      "community": 55,
+      "community": 4,
       "norm_label": "openplayerpicker()"
     },
     {
@@ -4194,7 +4254,7 @@
       "source_location": "L600",
       "_origin": "ast",
       "id": "js_live_openmonsterpicker",
-      "community": 53,
+      "community": 4,
       "norm_label": "openmonsterpicker()"
     },
     {
@@ -4204,7 +4264,7 @@
       "source_location": "L606",
       "_origin": "ast",
       "id": "js_live_closemonsterpicker",
-      "community": 55,
+      "community": 30,
       "norm_label": "closemonsterpicker()"
     },
     {
@@ -4214,7 +4274,7 @@
       "source_location": "L611",
       "_origin": "ast",
       "id": "js_live_addmonsterfrombestiary",
-      "community": 55,
+      "community": 30,
       "norm_label": "addmonsterfrombestiary()"
     },
     {
@@ -4224,7 +4284,7 @@
       "source_location": "L629",
       "_origin": "ast",
       "id": "js_live_addadhocmonster",
-      "community": 55,
+      "community": 30,
       "norm_label": "addadhocmonster()"
     },
     {
@@ -4244,7 +4304,7 @@
       "source_location": "L670",
       "_origin": "ast",
       "id": "js_live_endwildshapebtn",
-      "community": 30,
+      "community": 4,
       "norm_label": "endwildshapebtn()"
     },
     {
@@ -4274,7 +4334,7 @@
       "source_location": "L687",
       "_origin": "ast",
       "id": "js_live_endragebtn",
-      "community": 53,
+      "community": 30,
       "norm_label": "endragebtn()"
     },
     {
@@ -4284,7 +4344,7 @@
       "source_location": "L698",
       "_origin": "ast",
       "id": "js_live_combatantcardclick",
-      "community": 4,
+      "community": 8,
       "norm_label": "combatantcardclick()"
     },
     {
@@ -4294,7 +4354,7 @@
       "source_location": "L706",
       "_origin": "ast",
       "id": "js_live_removecombatant",
-      "community": 53,
+      "community": 30,
       "norm_label": "removecombatant()"
     },
     {
@@ -4304,7 +4364,7 @@
       "source_location": "L725",
       "_origin": "ast",
       "id": "js_live_setcharhp",
-      "community": 33,
+      "community": 30,
       "norm_label": "setcharhp()"
     },
     {
@@ -4314,7 +4374,7 @@
       "source_location": "L732",
       "_origin": "ast",
       "id": "js_live_applydamage",
-      "community": 7,
+      "community": 30,
       "norm_label": "applydamage()"
     },
     {
@@ -4324,7 +4384,7 @@
       "source_location": "L766",
       "_origin": "ast",
       "id": "js_live_applypcdamage",
-      "community": 7,
+      "community": 30,
       "norm_label": "applypcdamage()"
     },
     {
@@ -4334,7 +4394,7 @@
       "source_location": "L784",
       "_origin": "ast",
       "id": "js_live_applyhealing",
-      "community": 33,
+      "community": 30,
       "norm_label": "applyhealing()"
     },
     {
@@ -4354,7 +4414,7 @@
       "source_location": "L809",
       "_origin": "ast",
       "id": "js_live_setcombatanthp",
-      "community": 33,
+      "community": 30,
       "norm_label": "setcombatanthp()"
     },
     {
@@ -4364,7 +4424,7 @@
       "source_location": "L829",
       "_origin": "ast",
       "id": "js_live_quickhp",
-      "community": 7,
+      "community": 30,
       "norm_label": "quickhp()"
     },
     {
@@ -4374,7 +4434,7 @@
       "source_location": "L844",
       "_origin": "ast",
       "id": "js_live_startdying",
-      "community": 7,
+      "community": 30,
       "norm_label": "startdying()"
     },
     {
@@ -4384,7 +4444,7 @@
       "source_location": "L850",
       "_origin": "ast",
       "id": "js_live_killchar",
-      "community": 7,
+      "community": 30,
       "norm_label": "killchar()"
     },
     {
@@ -4394,7 +4454,7 @@
       "source_location": "L855",
       "_origin": "ast",
       "id": "js_live_adddeathfailures",
-      "community": 7,
+      "community": 30,
       "norm_label": "adddeathfailures()"
     },
     {
@@ -4404,7 +4464,7 @@
       "source_location": "L864",
       "_origin": "ast",
       "id": "js_live_rolldeathsave",
-      "community": 53,
+      "community": 30,
       "norm_label": "rolldeathsave()"
     },
     {
@@ -4414,7 +4474,7 @@
       "source_location": "L894",
       "_origin": "ast",
       "id": "js_live_stabilizechar",
-      "community": 7,
+      "community": 30,
       "norm_label": "stabilizechar()"
     },
     {
@@ -4424,7 +4484,7 @@
       "source_location": "L905",
       "_origin": "ast",
       "id": "js_live_promptconcentrationsave",
-      "community": 7,
+      "community": 30,
       "norm_label": "promptconcentrationsave()"
     },
     {
@@ -4454,7 +4514,7 @@
       "source_location": "L951",
       "_origin": "ast",
       "id": "js_live_checkmonsterthresholds",
-      "community": 4,
+      "community": 30,
       "norm_label": "checkmonsterthresholds()"
     },
     {
@@ -4464,7 +4524,7 @@
       "source_location": "L959",
       "_origin": "ast",
       "id": "js_live_setcombatantinit",
-      "community": 55,
+      "community": 30,
       "norm_label": "setcombatantinit()"
     },
     {
@@ -4554,7 +4614,7 @@
       "source_location": "L1056",
       "_origin": "ast",
       "id": "js_live_pushnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "pushnote()"
     },
     {
@@ -4564,7 +4624,7 @@
       "source_location": "L1074",
       "_origin": "ast",
       "id": "js_live_deletenote",
-      "community": 2,
+      "community": 30,
       "norm_label": "deletenote()"
     },
     {
@@ -4574,7 +4634,7 @@
       "source_location": "L1104",
       "_origin": "ast",
       "id": "js_live_isnat20",
-      "community": 10,
+      "community": 15,
       "norm_label": "isnat20()"
     },
     {
@@ -4584,7 +4644,7 @@
       "source_location": "L1105",
       "_origin": "ast",
       "id": "js_live_isnat1",
-      "community": 10,
+      "community": 15,
       "norm_label": "isnat1()"
     },
     {
@@ -4614,7 +4674,7 @@
       "source_location": "L1124",
       "_origin": "ast",
       "id": "js_live_closenoteform",
-      "community": 54,
+      "community": 30,
       "norm_label": "closenoteform()"
     },
     {
@@ -4644,7 +4704,7 @@
       "source_location": "L1201",
       "_origin": "ast",
       "id": "js_live_updateformfield",
-      "community": 10,
+      "community": 15,
       "norm_label": "updateformfield()"
     },
     {
@@ -4654,7 +4714,7 @@
       "source_location": "L1223",
       "_origin": "ast",
       "id": "js_live_updateformassistance",
-      "community": 10,
+      "community": 15,
       "norm_label": "updateformassistance()"
     },
     {
@@ -4714,7 +4774,7 @@
       "source_location": "L1374",
       "_origin": "ast",
       "id": "js_live_abilityeconomykind",
-      "community": 46,
+      "community": 4,
       "norm_label": "abilityeconomykind()"
     },
     {
@@ -4724,7 +4784,7 @@
       "source_location": "L1379",
       "_origin": "ast",
       "id": "js_live_renderabilityinfobox",
-      "community": 46,
+      "community": 4,
       "norm_label": "renderabilityinfobox()"
     },
     {
@@ -4884,7 +4944,7 @@
       "source_location": "L1813",
       "_origin": "ast",
       "id": "js_live_setsingletarget",
-      "community": 10,
+      "community": 15,
       "norm_label": "setsingletarget()"
     },
     {
@@ -4894,7 +4954,7 @@
       "source_location": "L1821",
       "_origin": "ast",
       "id": "js_live_syncdamagetotal",
-      "community": 10,
+      "community": 15,
       "norm_label": "syncdamagetotal()"
     },
     {
@@ -4914,7 +4974,7 @@
       "source_location": "L1848",
       "_origin": "ast",
       "id": "js_live_rendercharbuffbanners",
-      "community": 7,
+      "community": 30,
       "norm_label": "rendercharbuffbanners()"
     },
     {
@@ -4974,7 +5034,7 @@
       "source_location": "L1889",
       "_origin": "ast",
       "id": "js_live_diceonly",
-      "community": 20,
+      "community": 15,
       "norm_label": "diceonly()"
     },
     {
@@ -5164,7 +5224,7 @@
       "source_location": "L2014",
       "_origin": "ast",
       "id": "js_live_rendertargetconditionwarnings",
-      "community": 15,
+      "community": 30,
       "norm_label": "rendertargetconditionwarnings()"
     },
     {
@@ -5174,7 +5234,7 @@
       "source_location": "L2039",
       "_origin": "ast",
       "id": "js_live_getcombatantsavemod",
-      "community": 7,
+      "community": 46,
       "norm_label": "getcombatantsavemod()"
     },
     {
@@ -5224,7 +5284,7 @@
       "source_location": "L2111",
       "_origin": "ast",
       "id": "js_live_getattackca",
-      "community": 10,
+      "community": 30,
       "norm_label": "getattackca()"
     },
     {
@@ -5234,7 +5294,7 @@
       "source_location": "L2118",
       "_origin": "ast",
       "id": "js_live_attackoutcome",
-      "community": 10,
+      "community": 15,
       "norm_label": "attackoutcome()"
     },
     {
@@ -5244,7 +5304,7 @@
       "source_location": "L2127",
       "_origin": "ast",
       "id": "js_live_ishitoutcome",
-      "community": 11,
+      "community": 15,
       "norm_label": "ishitoutcome()"
     },
     {
@@ -5254,7 +5314,7 @@
       "source_location": "L2130",
       "_origin": "ast",
       "id": "js_live_attackdamagebreakdown",
-      "community": 30,
+      "community": 57,
       "norm_label": "attackdamagebreakdown()"
     },
     {
@@ -5264,7 +5324,7 @@
       "source_location": "L2144",
       "_origin": "ast",
       "id": "js_live_rageresists",
-      "community": 30,
+      "community": 57,
       "norm_label": "rageresists()"
     },
     {
@@ -5274,7 +5334,7 @@
       "source_location": "L2147",
       "_origin": "ast",
       "id": "js_live_deflectreduction",
-      "community": 46,
+      "community": 57,
       "norm_label": "deflectreduction()"
     },
     {
@@ -5284,7 +5344,7 @@
       "source_location": "L2152",
       "_origin": "ast",
       "id": "js_live_renderattacksummary",
-      "community": 10,
+      "community": 15,
       "norm_label": "renderattacksummary()"
     },
     {
@@ -5314,7 +5374,7 @@
       "source_location": "L2244",
       "_origin": "ast",
       "id": "js_live_toggletarget",
-      "community": 10,
+      "community": 15,
       "norm_label": "toggletarget()"
     },
     {
@@ -5324,7 +5384,7 @@
       "source_location": "L2255",
       "_origin": "ast",
       "id": "js_live_rendersaveblock",
-      "community": 15,
+      "community": 11,
       "norm_label": "rendersaveblock()"
     },
     {
@@ -5334,7 +5394,7 @@
       "source_location": "L2324",
       "_origin": "ast",
       "id": "js_live_updatetargetsaveroll",
-      "community": 7,
+      "community": 46,
       "norm_label": "updatetargetsaveroll()"
     },
     {
@@ -5394,7 +5454,7 @@
       "source_location": "L2394",
       "_origin": "ast",
       "id": "js_live_updatedarts",
-      "community": 10,
+      "community": 15,
       "norm_label": "updatedarts()"
     },
     {
@@ -5454,7 +5514,7 @@
       "source_location": "L2442",
       "_origin": "ast",
       "id": "js_live_rayoutcome",
-      "community": 10,
+      "community": 15,
       "norm_label": "rayoutcome()"
     },
     {
@@ -5574,7 +5634,7 @@
       "source_location": "L2553",
       "_origin": "ast",
       "id": "js_live_renderbuffblock",
-      "community": 47,
+      "community": 11,
       "norm_label": "renderbuffblock()"
     },
     {
@@ -5594,7 +5654,7 @@
       "source_location": "L2584",
       "_origin": "ast",
       "id": "js_live_renderrollblock",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderrollblock()"
     },
     {
@@ -5674,7 +5734,7 @@
       "source_location": "L2935",
       "_origin": "ast",
       "id": "js_live_rendernpcform",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendernpcform()"
     },
     {
@@ -5744,7 +5804,7 @@
       "source_location": "L3034",
       "_origin": "ast",
       "id": "js_live_renderconversationform",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderconversationform()"
     },
     {
@@ -5754,7 +5814,7 @@
       "source_location": "L3096",
       "_origin": "ast",
       "id": "js_live_saveconversationnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "saveconversationnote()"
     },
     {
@@ -5764,7 +5824,7 @@
       "source_location": "L3126",
       "_origin": "ast",
       "id": "js_live_updatenpcactionassistance",
-      "community": 10,
+      "community": 15,
       "norm_label": "updatenpcactionassistance()"
     },
     {
@@ -5804,7 +5864,7 @@
       "source_location": "L3274",
       "_origin": "ast",
       "id": "js_live_addbuff",
-      "community": 7,
+      "community": 30,
       "norm_label": "addbuff()"
     },
     {
@@ -5824,7 +5884,7 @@
       "source_location": "L3354",
       "_origin": "ast",
       "id": "js_live_renderskipturnform",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderskipturnform()"
     },
     {
@@ -5834,7 +5894,7 @@
       "source_location": "L3371",
       "_origin": "ast",
       "id": "js_live_saveskipturnnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "saveskipturnnote()"
     },
     {
@@ -5844,7 +5904,7 @@
       "source_location": "L3384",
       "_origin": "ast",
       "id": "js_live_rendercombatform",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendercombatform()"
     },
     {
@@ -5884,7 +5944,7 @@
       "source_location": "L3689",
       "_origin": "ast",
       "id": "js_live_savenpcnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "savenpcnote()"
     },
     {
@@ -5894,7 +5954,7 @@
       "source_location": "L3702",
       "_origin": "ast",
       "id": "js_live_savecombatnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "savecombatnote()"
     },
     {
@@ -5904,7 +5964,7 @@
       "source_location": "L3709",
       "_origin": "ast",
       "id": "js_live_savenarrativenote",
-      "community": 54,
+      "community": 30,
       "norm_label": "savenarrativenote()"
     },
     {
@@ -5944,7 +6004,7 @@
       "source_location": "L3778",
       "_origin": "ast",
       "id": "js_live_renderlootform",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderlootform()"
     },
     {
@@ -5954,7 +6014,7 @@
       "source_location": "L3836",
       "_origin": "ast",
       "id": "js_live_renderlootrollrow",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderlootrollrow()"
     },
     {
@@ -6024,7 +6084,7 @@
       "source_location": "L3995",
       "_origin": "ast",
       "id": "js_live_savelootnote",
-      "community": 54,
+      "community": 30,
       "norm_label": "savelootnote()"
     },
     {
@@ -6034,7 +6094,7 @@
       "source_location": "L4021",
       "_origin": "ast",
       "id": "js_live_renderlive",
-      "community": 53,
+      "community": 30,
       "norm_label": "renderlive()"
     },
     {
@@ -6114,7 +6174,7 @@
       "source_location": "L4138",
       "_origin": "ast",
       "id": "js_live_getpresentchars",
-      "community": 4,
+      "community": 30,
       "norm_label": "getpresentchars()"
     },
     {
@@ -6124,7 +6184,7 @@
       "source_location": "L4145",
       "_origin": "ast",
       "id": "js_live_ischarpresent",
-      "community": 4,
+      "community": 30,
       "norm_label": "ischarpresent()"
     },
     {
@@ -6134,7 +6194,7 @@
       "source_location": "L4149",
       "_origin": "ast",
       "id": "js_live_togglepresentchar",
-      "community": 4,
+      "community": 30,
       "norm_label": "togglepresentchar()"
     },
     {
@@ -6144,7 +6204,7 @@
       "source_location": "L4161",
       "_origin": "ast",
       "id": "js_live_renderpresentsgrid",
-      "community": 54,
+      "community": 30,
       "norm_label": "renderpresentsgrid()"
     },
     {
@@ -6154,7 +6214,7 @@
       "source_location": "L4184",
       "_origin": "ast",
       "id": "js_live_opencharsheetmodal",
-      "community": 4,
+      "community": 8,
       "norm_label": "opencharsheetmodal()"
     },
     {
@@ -6164,7 +6224,7 @@
       "source_location": "L4204",
       "_origin": "ast",
       "id": "js_live_closecharsheetmodal",
-      "community": 4,
+      "community": 8,
       "norm_label": "closecharsheetmodal()"
     },
     {
@@ -6174,7 +6234,7 @@
       "source_location": "L4229",
       "_origin": "ast",
       "id": "js_live_groupshortrest",
-      "community": 54,
+      "community": 30,
       "norm_label": "groupshortrest()"
     },
     {
@@ -6184,7 +6244,7 @@
       "source_location": "L4247",
       "_origin": "ast",
       "id": "js_live_grouplongrest",
-      "community": 54,
+      "community": 30,
       "norm_label": "grouplongrest()"
     },
     {
@@ -6194,44 +6254,44 @@
       "source_location": "L4274",
       "_origin": "ast",
       "id": "js_live_grouplevelup",
-      "community": 54,
+      "community": 30,
       "norm_label": "grouplevelup()"
     },
     {
       "label": "renderCombatantResources()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4302",
+      "source_location": "L4304",
       "_origin": "ast",
       "id": "js_live_rendercombatantresources",
-      "community": 31,
+      "community": 46,
       "norm_label": "rendercombatantresources()"
     },
     {
       "label": "renderCombatantConditions()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4350",
+      "source_location": "L4352",
       "_origin": "ast",
       "id": "js_live_rendercombatantconditions",
-      "community": 7,
+      "community": 30,
       "norm_label": "rendercombatantconditions()"
     },
     {
       "label": "removeBuff()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4392",
+      "source_location": "L4394",
       "_origin": "ast",
       "id": "js_live_removebuff",
-      "community": 7,
+      "community": 30,
       "norm_label": "removebuff()"
     },
     {
       "label": "clearDodge()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4398",
+      "source_location": "L4400",
       "_origin": "ast",
       "id": "js_live_cleardodge",
       "community": 30,
@@ -6241,17 +6301,17 @@
       "label": "renderDeathSaves()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4406",
+      "source_location": "L4408",
       "_origin": "ast",
       "id": "js_live_renderdeathsaves",
-      "community": 7,
+      "community": 4,
       "norm_label": "renderdeathsaves()"
     },
     {
       "label": "STATBLOCK_OPEN",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4427",
+      "source_location": "L4429",
       "_origin": "ast",
       "id": "js_live_statblock_open",
       "community": 4,
@@ -6261,7 +6321,7 @@
       "label": "toggleStatBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4428",
+      "source_location": "L4430",
       "_origin": "ast",
       "id": "js_live_togglestatblock",
       "community": 4,
@@ -6271,7 +6331,7 @@
       "label": "renderMonsterStatBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4429",
+      "source_location": "L4431",
       "_origin": "ast",
       "id": "js_live_rendermonsterstatblock",
       "community": 4,
@@ -6281,7 +6341,7 @@
       "label": "renderCombatTracker()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4448",
+      "source_location": "L4450",
       "_origin": "ast",
       "id": "js_live_rendercombattracker",
       "community": 30,
@@ -6291,17 +6351,17 @@
       "label": "renderNotesStream()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4615",
+      "source_location": "L4617",
       "_origin": "ast",
       "id": "js_live_rendernotesstream",
-      "community": 54,
+      "community": 30,
       "norm_label": "rendernotesstream()"
     },
     {
       "label": "_streamNarratives",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4636",
+      "source_location": "L4638",
       "_origin": "ast",
       "id": "js_live_streamnarratives",
       "community": 4,
@@ -6311,17 +6371,17 @@
       "label": "buildGroupedStream()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4638",
+      "source_location": "L4640",
       "_origin": "ast",
       "id": "js_live_buildgroupedstream",
-      "community": 54,
+      "community": 30,
       "norm_label": "buildgroupedstream()"
     },
     {
       "label": "moveNote()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4709",
+      "source_location": "L4711",
       "_origin": "ast",
       "id": "js_live_movenote",
       "community": 30,
@@ -6331,7 +6391,7 @@
       "label": "moveChapter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4743",
+      "source_location": "L4745",
       "_origin": "ast",
       "id": "js_live_movechapter",
       "community": 30,
@@ -6341,7 +6401,7 @@
       "label": "moveNoteToChapter()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4770",
+      "source_location": "L4772",
       "_origin": "ast",
       "id": "js_live_movenotetochapter",
       "community": 30,
@@ -6351,27 +6411,27 @@
       "label": "renderNarrativeChapterHeader()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4778",
+      "source_location": "L4780",
       "_origin": "ast",
       "id": "js_live_rendernarrativechapterheader",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendernarrativechapterheader()"
     },
     {
       "label": "renderNoteCard()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4804",
+      "source_location": "L4806",
       "_origin": "ast",
       "id": "js_live_rendernotecard",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendernotecard()"
     },
     {
       "label": "speakerLabel()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4865",
+      "source_location": "L4867",
       "_origin": "ast",
       "id": "js_live_speakerlabel",
       "community": 4,
@@ -6381,47 +6441,47 @@
       "label": "renderConversationNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4877",
+      "source_location": "L4879",
       "_origin": "ast",
       "id": "js_live_renderconversationnotebody",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderconversationnotebody()"
     },
     {
       "label": "renderTargetResultsBlock()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4892",
+      "source_location": "L4894",
       "_origin": "ast",
       "id": "js_live_rendertargetresultsblock",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendertargetresultsblock()"
     },
     {
       "label": "renderNpcActionNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4929",
+      "source_location": "L4931",
       "_origin": "ast",
       "id": "js_live_rendernpcactionnotebody",
-      "community": 13,
+      "community": 10,
       "norm_label": "rendernpcactionnotebody()"
     },
     {
       "label": "renderActionNoteBody()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L4951",
+      "source_location": "L4953",
       "_origin": "ast",
       "id": "js_live_renderactionnotebody",
-      "community": 13,
+      "community": 10,
       "norm_label": "renderactionnotebody()"
     },
     {
       "label": "finalizeSession()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5006",
+      "source_location": "L5008",
       "_origin": "ast",
       "id": "js_live_finalizesession",
       "community": 34,
@@ -6431,20 +6491,20 @@
       "label": "resetLiveSession()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5205",
+      "source_location": "L5207",
       "_origin": "ast",
       "id": "js_live_resetlivesession",
-      "community": 53,
+      "community": 30,
       "norm_label": "resetlivesession()"
     },
     {
       "label": "initLive()",
       "file_type": "code",
       "source_file": "public/js/live.js",
-      "source_location": "L5217",
+      "source_location": "L5219",
       "_origin": "ast",
       "id": "js_live_initlive",
-      "community": 53,
+      "community": 30,
       "norm_label": "initlive()"
     },
     {
@@ -6901,7 +6961,7 @@
       "label": "applySessionSync()",
       "file_type": "code",
       "source_file": "public/js/socket-client.js",
-      "source_location": "L80",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "js_socket_client_applysessionsync",
       "community": 28,
@@ -6911,7 +6971,7 @@
       "label": "applyHPSync()",
       "file_type": "code",
       "source_file": "public/js/socket-client.js",
-      "source_location": "L86",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "js_socket_client_applyhpsync",
       "community": 28,
@@ -6921,7 +6981,7 @@
       "label": "isLivePageActive()",
       "file_type": "code",
       "source_file": "public/js/socket-client.js",
-      "source_location": "L100",
+      "source_location": "L101",
       "_origin": "ast",
       "id": "js_socket_client_islivepageactive",
       "community": 28,
@@ -6961,7 +7021,7 @@
       "label": "_patchCharStateFromKey()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L46",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "js_storage_patchcharstatefromkey",
       "community": 45,
@@ -6971,17 +7031,17 @@
       "label": "load()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L64",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "js_storage_load",
-      "community": 46,
+      "community": 33,
       "norm_label": "load()"
     },
     {
       "label": "showSaved()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L68",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "js_storage_showsaved",
       "community": 45,
@@ -6991,7 +7051,7 @@
       "label": "_CHAR_SYNC_PREFIXES",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L78",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "js_storage_char_sync_prefixes",
       "community": 45,
@@ -7001,7 +7061,7 @@
       "label": "_charFromStateKey()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L84",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "js_storage_charfromstatekey",
       "community": 45,
@@ -7011,7 +7071,7 @@
       "label": "_maybeSyncToAPI()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L93",
+      "source_location": "L94",
       "_origin": "ast",
       "id": "js_storage_maybesynctoapi",
       "community": 45,
@@ -7021,7 +7081,7 @@
       "label": "_charSyncTimers",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L104",
+      "source_location": "L105",
       "_origin": "ast",
       "id": "js_storage_charsynctimers",
       "community": 45,
@@ -7031,7 +7091,7 @@
       "label": "syncCharState()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L105",
+      "source_location": "L106",
       "_origin": "ast",
       "id": "js_storage_synccharstate",
       "community": 45,
@@ -7041,7 +7101,7 @@
       "label": "syncMoney()",
       "file_type": "code",
       "source_file": "public/js/storage.js",
-      "source_location": "L151",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "js_storage_syncmoney",
       "community": 45,
@@ -7811,7 +7871,7 @@
       "label": "Sistema de condiciones",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L493",
+      "source_location": "L494",
       "_origin": "ast",
       "id": "claude_sistema_de_condiciones",
       "community": 23,
@@ -7821,7 +7881,7 @@
       "label": "Convenciones importantes",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L501",
+      "source_location": "L502",
       "_origin": "ast",
       "id": "claude_convenciones_importantes",
       "community": 23,
@@ -7831,7 +7891,7 @@
       "label": "Notas para editar",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L514",
+      "source_location": "L515",
       "_origin": "ast",
       "id": "claude_notas_para_editar",
       "community": 23,
@@ -8617,7 +8677,7 @@
       "source_location": "routes/api.js:29",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "get/post/put/delete /api/threads",
       "id": "route_threads"
     },
@@ -8637,7 +8697,7 @@
       "source_location": "routes/api.js:65",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "get /api/story",
       "id": "route_story"
     },
@@ -8667,7 +8727,7 @@
       "source_location": "routes/api.js:76",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "get/put /api/state",
       "id": "route_state"
     },
@@ -8717,7 +8777,7 @@
       "source_location": "routes/api.js:37",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "get /api/presets-map",
       "id": "route_presets_map"
     },
@@ -8887,7 +8947,7 @@
       "source_location": "public/js/campaign.js:261",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "updatethread()",
       "id": "update_thread"
     },
@@ -9057,7 +9117,7 @@
       "source_location": "public/js/campaign.js:488",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "savewildshapeforms()",
       "id": "save_wildshape_forms"
     },
@@ -9067,7 +9127,7 @@
       "source_location": "public/js/story.js:1",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "story.js",
       "id": "story_js"
     },
@@ -9077,7 +9137,7 @@
       "source_location": "public/js/story.js:3",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "loadstory()",
       "id": "load_story"
     },
@@ -9087,7 +9147,7 @@
       "source_location": "public/js/story.js:17",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "renderstory()",
       "id": "render_story"
     },
@@ -9097,7 +9157,7 @@
       "source_location": "public/js/story.js:35",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "story 'capitulo' chapter label",
       "id": "story_capitulo_label"
     },
@@ -9107,7 +9167,7 @@
       "source_location": "public/js/init.js:1",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "init.js",
       "id": "init_js"
     },
@@ -9117,7 +9177,7 @@
       "source_location": "public/js/init.js:7",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "fetchapi()",
       "id": "fetch_api"
     },
@@ -9127,7 +9187,7 @@
       "source_location": "public/js/init.js:27",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "loadreferencedata()",
       "id": "load_reference_data"
     },
@@ -9137,7 +9197,7 @@
       "source_location": "public/js/init.js:62",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 56,
+      "community": 3,
       "norm_label": "initapp()",
       "id": "init_app"
     },
@@ -9147,7 +9207,7 @@
       "source_location": "public/js/init.js:102",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "loadcharstate()",
       "id": "load_char_state"
     },
@@ -9157,7 +9217,7 @@
       "source_location": "public/js/init.js:13",
       "confidence": "EXTRACTED",
       "file_type": "concept",
-      "community": 19,
+      "community": 3,
       "norm_label": "showloadingerror()",
       "id": "show_loading_error"
     },
@@ -10983,9 +11043,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L201",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_ability_keys",
-      "confidence_score": 1.0
+      "target": "js_abilities_ability_keys"
     },
     {
       "relation": "contains",
@@ -10993,9 +11053,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L267",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_applyasi",
-      "confidence_score": 1.0
+      "target": "js_abilities_applyasi"
     },
     {
       "relation": "contains",
@@ -11003,9 +11063,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L117",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_applylevelup",
-      "confidence_score": 1.0
+      "target": "js_abilities_applylevelup"
     },
     {
       "relation": "contains",
@@ -11013,9 +11073,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L203",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_asi_form",
-      "confidence_score": 1.0
+      "target": "js_abilities_asi_form"
     },
     {
       "relation": "contains",
@@ -11023,9 +11083,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L202",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_asi_levels",
-      "confidence_score": 1.0
+      "target": "js_abilities_asi_levels"
     },
     {
       "relation": "contains",
@@ -11033,9 +11093,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L233",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_asichanges",
-      "confidence_score": 1.0
+      "target": "js_abilities_asichanges"
     },
     {
       "relation": "contains",
@@ -11043,9 +11103,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L316",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_asihistorylabel",
-      "confidence_score": 1.0
+      "target": "js_abilities_asihistorylabel"
     },
     {
       "relation": "contains",
@@ -11063,9 +11123,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L298",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_closescoreseditor",
-      "confidence_score": 1.0
+      "target": "js_abilities_closescoreseditor"
     },
     {
       "relation": "contains",
@@ -11076,6 +11136,16 @@
       "confidence_score": 1.0,
       "source": "js_abilities",
       "target": "js_abilities_consumespellslot"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L553",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_countpreparedforlimit",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11103,9 +11173,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L219",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "contains",
@@ -11113,9 +11183,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L206",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "contains",
@@ -11153,8 +11223,28 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L212",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_getpendingasi",
+      "target": "js_abilities_getpendingasi"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L548",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_getpreparedlimit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L512",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_getunlockedspells",
       "confidence_score": 1.0
     },
     {
@@ -11176,6 +11266,16 @@
       "confidence_score": 1.0,
       "source": "js_abilities",
       "target": "js_abilities_isspellprepared"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L516",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_isspellunlocked",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11223,9 +11323,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L217",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_nextasilevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_nextasilevel"
     },
     {
       "relation": "contains",
@@ -11233,9 +11333,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L297",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_openscoreseditor",
-      "confidence_score": 1.0
+      "target": "js_abilities_openscoreseditor"
     },
     {
       "relation": "contains",
@@ -11271,6 +11371,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "public/js/abilities.js",
+      "source_location": "L543",
+      "weight": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_prep_rules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
       "source_location": "L518",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -11283,9 +11393,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L389",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_renderasipanel",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipanel"
     },
     {
       "relation": "contains",
@@ -11293,9 +11403,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L352",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_renderasipicker",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipicker"
     },
     {
       "relation": "contains",
@@ -11303,9 +11413,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L325",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_renderasipreview",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipreview"
     },
     {
       "relation": "contains",
@@ -11323,9 +11433,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L404",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_rendercharstats",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharstats"
     },
     {
       "relation": "contains",
@@ -11333,9 +11443,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L380",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_renderscoreseditor",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderscoreseditor"
     },
     {
       "relation": "contains",
@@ -11343,9 +11453,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L288",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_resolveasiwithoutchanges",
-      "confidence_score": 1.0
+      "target": "js_abilities_resolveasiwithoutchanges"
     },
     {
       "relation": "contains",
@@ -11353,9 +11463,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L300",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_savemanualscores",
-      "confidence_score": 1.0
+      "target": "js_abilities_savemanualscores"
     },
     {
       "relation": "contains",
@@ -11383,9 +11493,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L204",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_scores_edit",
-      "confidence_score": 1.0
+      "target": "js_abilities_scores_edit"
     },
     {
       "relation": "contains",
@@ -11393,9 +11503,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L239",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_scoreswith",
-      "confidence_score": 1.0
+      "target": "js_abilities_scoreswith"
     },
     {
       "relation": "contains",
@@ -11403,9 +11513,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L248",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_setabilityscores",
-      "confidence_score": 1.0
+      "target": "js_abilities_setabilityscores"
     },
     {
       "relation": "contains",
@@ -11413,9 +11523,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L223",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_setasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_setasiform"
     },
     {
       "relation": "contains",
@@ -11433,9 +11543,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L299",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_setscoredraft",
-      "confidence_score": 1.0
+      "target": "js_abilities_setscoredraft"
     },
     {
       "relation": "contains",
@@ -11491,11 +11601,21 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "public/js/abilities.js",
-      "source_location": "L211",
+      "source_location": "L519",
       "weight": 1.0,
       "source": "js_abilities",
-      "target": "js_abilities_usedasis",
+      "target": "js_abilities_togglespellunlock",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L211",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_abilities",
+      "target": "js_abilities_usedasis"
     },
     {
       "relation": "calls",
@@ -11504,7 +11624,18 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L342",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipreview",
+      "target": "js_abilities_fmtmod"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L803",
+      "weight": 1.0,
+      "source": "js_abilities_rendercharabilities",
       "target": "js_abilities_fmtmod",
       "confidence_score": 1.0
     },
@@ -11620,6 +11751,17 @@
     {
       "relation": "calls",
       "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "js_abilities_applylevelup",
+      "target": "js_abilities_getmaxspelllevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "public/js/abilities.js",
@@ -11633,11 +11775,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "public/js/abilities.js",
+      "source_location": "L517",
+      "weight": 1.0,
+      "source": "js_abilities_isspellunlocked",
+      "target": "js_abilities_getmaxspelllevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
       "source_location": "L380",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "js_abilities_rendercharabilities",
       "target": "js_abilities_getmaxspelllevel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L534",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_abilities_getmaxspelllevel",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -11671,6 +11835,17 @@
       "confidence_score": 1.0,
       "source": "js_abilities_togglespellprepared",
       "target": "js_abilities_patchcharstate"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L530",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_abilities_patchcharstate",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -11919,11 +12094,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "public/js/abilities.js",
-      "source_location": "L142",
+      "source_location": "L118",
       "weight": 1.0,
       "source": "js_abilities_applylevelup",
-      "target": "js_abilities_rendercharabilities",
+      "target": "js_abilities_getpreparedlimit",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L142",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "js_abilities_applylevelup",
+      "target": "js_abilities_rendercharabilities"
     },
     {
       "relation": "calls",
@@ -11998,9 +12184,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L173",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_levelupcharacter",
-      "target": "js_abilities_applylevelup",
-      "confidence_score": 1.0
+      "target": "js_abilities_applylevelup"
     },
     {
       "relation": "calls",
@@ -12119,9 +12305,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L277",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "calls",
@@ -12141,9 +12327,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L391",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipanel",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "calls",
@@ -12152,9 +12338,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L290",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_resolveasiwithoutchanges",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "calls",
@@ -12163,9 +12349,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L309",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_savemanualscores",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "calls",
@@ -12174,9 +12360,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L211",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_usedasis",
-      "target": "js_abilities_getasistate",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasistate"
     },
     {
       "relation": "calls",
@@ -12185,9 +12371,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L214",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_getpendingasi",
-      "target": "js_abilities_usedasis",
-      "confidence_score": 1.0
+      "target": "js_abilities_usedasis"
     },
     {
       "relation": "calls",
@@ -12196,9 +12382,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L217",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_nextasilevel",
-      "target": "js_abilities_usedasis",
-      "confidence_score": 1.0
+      "target": "js_abilities_usedasis"
     },
     {
       "relation": "calls",
@@ -12207,9 +12393,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L390",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipanel",
-      "target": "js_abilities_getpendingasi",
-      "confidence_score": 1.0
+      "target": "js_abilities_getpendingasi"
     },
     {
       "relation": "calls",
@@ -12218,9 +12404,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L275",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_nextasilevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_nextasilevel"
     },
     {
       "relation": "calls",
@@ -12240,9 +12426,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L394",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipanel",
-      "target": "js_abilities_nextasilevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_nextasilevel"
     },
     {
       "relation": "calls",
@@ -12251,9 +12437,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L369",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipicker",
-      "target": "js_abilities_nextasilevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_nextasilevel"
     },
     {
       "relation": "calls",
@@ -12262,9 +12448,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L290",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_resolveasiwithoutchanges",
-      "target": "js_abilities_nextasilevel",
-      "confidence_score": 1.0
+      "target": "js_abilities_nextasilevel"
     },
     {
       "relation": "calls",
@@ -12273,9 +12459,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L268",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "calls",
@@ -12284,9 +12470,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L234",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_asichanges",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "calls",
@@ -12295,9 +12481,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L353",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipicker",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "calls",
@@ -12306,9 +12492,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L328",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipreview",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "calls",
@@ -12317,9 +12503,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L224",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_setasiform",
-      "target": "js_abilities_getasiform",
-      "confidence_score": 1.0
+      "target": "js_abilities_getasiform"
     },
     {
       "relation": "calls",
@@ -12328,9 +12514,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L229",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_setasiform",
-      "target": "js_abilities_renderasipreview",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipreview"
     },
     {
       "relation": "calls",
@@ -12339,9 +12525,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L230",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_setasiform",
-      "target": "js_abilities_rendercharstats",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharstats"
     },
     {
       "relation": "calls",
@@ -12350,9 +12536,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L269",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_asichanges",
-      "confidence_score": 1.0
+      "target": "js_abilities_asichanges"
     },
     {
       "relation": "calls",
@@ -12361,9 +12547,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L326",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipreview",
-      "target": "js_abilities_asichanges",
-      "confidence_score": 1.0
+      "target": "js_abilities_asichanges"
     },
     {
       "relation": "calls",
@@ -12372,9 +12558,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L272",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_scoreswith",
-      "confidence_score": 1.0
+      "target": "js_abilities_scoreswith"
     },
     {
       "relation": "calls",
@@ -12383,9 +12569,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L332",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipreview",
-      "target": "js_abilities_scoreswith",
-      "confidence_score": 1.0
+      "target": "js_abilities_scoreswith"
     },
     {
       "relation": "calls",
@@ -12405,9 +12591,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L276",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_setabilityscores",
-      "confidence_score": 1.0
+      "target": "js_abilities_setabilityscores"
     },
     {
       "relation": "calls",
@@ -12416,9 +12602,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L308",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_savemanualscores",
-      "target": "js_abilities_setabilityscores",
-      "confidence_score": 1.0
+      "target": "js_abilities_setabilityscores"
     },
     {
       "relation": "calls",
@@ -12515,9 +12701,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L284",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_applyasi",
-      "target": "js_abilities_rendercharabilities",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharabilities"
     },
     {
       "relation": "calls",
@@ -12537,9 +12723,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L293",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_resolveasiwithoutchanges",
-      "target": "js_abilities_rendercharabilities",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharabilities"
     },
     {
       "relation": "calls",
@@ -12559,9 +12745,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L297",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_openscoreseditor",
-      "target": "js_abilities_rendercharstats",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharstats"
     },
     {
       "relation": "calls",
@@ -12581,9 +12767,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L298",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_closescoreseditor",
-      "target": "js_abilities_rendercharstats",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharstats"
     },
     {
       "relation": "calls",
@@ -12592,9 +12778,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L313",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_savemanualscores",
-      "target": "js_abilities_rendercharabilities",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharabilities"
     },
     {
       "relation": "calls",
@@ -12636,9 +12822,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L372",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipicker",
-      "target": "js_abilities_renderasipreview",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipreview"
     },
     {
       "relation": "calls",
@@ -12702,9 +12888,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L395",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipanel",
-      "target": "js_abilities_renderasipicker",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipicker"
     },
     {
       "relation": "calls",
@@ -12724,9 +12910,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L397",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_renderasipanel",
-      "target": "js_abilities_renderscoreseditor",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderscoreseditor"
     },
     {
       "relation": "calls",
@@ -12735,9 +12921,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L427",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_rendercharstats",
-      "target": "js_abilities_renderasipanel",
-      "confidence_score": 1.0
+      "target": "js_abilities_renderasipanel"
     },
     {
       "relation": "calls",
@@ -12746,9 +12932,9 @@
       "source_file": "public/js/abilities.js",
       "source_location": "L559",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_abilities_rendercharabilities",
-      "target": "js_abilities_rendercharstats",
-      "confidence_score": 1.0
+      "target": "js_abilities_rendercharstats"
     },
     {
       "relation": "calls",
@@ -12888,6 +13074,138 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "public/js/abilities.js",
+      "source_location": "L514",
+      "weight": 1.0,
+      "source": "js_abilities_getunlockedspells",
+      "target": "js_storage_load"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L517",
+      "weight": 1.0,
+      "source": "js_abilities_isspellunlocked",
+      "target": "js_abilities_getunlockedspells",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L523",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_abilities_getunlockedspells",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L537",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_abilities_rendercharabilities",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L527",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_storage_load"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L526",
+      "weight": 1.0,
+      "source": "js_abilities_togglespellunlock",
+      "target": "js_storage_save"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "js_abilities_getpreparedlimit",
+      "target": "js_data_abilitymod"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "js_abilities_getpreparedlimit",
+      "target": "js_data_getabilityscores"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "js_abilities_getpreparedlimit",
+      "target": "js_data_getcharlevel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L784",
+      "weight": 1.0,
+      "source": "js_abilities_rendercharabilities",
+      "target": "js_abilities_getpreparedlimit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L554",
+      "weight": 1.0,
+      "source": "js_abilities_countpreparedforlimit",
+      "target": "js_data_getcharlevel"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "public/js/abilities.js",
+      "source_location": "L785",
+      "weight": 1.0,
+      "source": "js_abilities_rendercharabilities",
+      "target": "js_abilities_countpreparedforlimit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
       "source_location": "L235",
       "weight": 1.0,
       "source": "js_abilities_iscantripactive",
@@ -12958,6 +13276,17 @@
       "weight": 1.0,
       "source": "js_abilities_rendercharabilities",
       "target": "js_data_abilitymod"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "public/js/abilities.js",
+      "source_location": "L803",
+      "weight": 1.0,
+      "source": "js_abilities_rendercharabilities",
+      "target": "js_data_getabilityscores"
     },
     {
       "relation": "calls",
@@ -15005,9 +15334,9 @@
       "source_file": "public/js/data.js",
       "source_location": "L112",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_data",
-      "target": "js_data_ac_formula",
-      "confidence_score": 1.0
+      "target": "js_data_ac_formula"
     },
     {
       "relation": "contains",
@@ -15155,9 +15484,9 @@
       "source_file": "public/js/data.js",
       "source_location": "L119",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_data",
-      "target": "js_data_getcharac",
-      "confidence_score": 1.0
+      "target": "js_data_getcharac"
     },
     {
       "relation": "contains",
@@ -15516,9 +15845,9 @@
       "source_file": "public/js/data.js",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "js_data_getcharac",
-      "target": "js_data_getabilityscores",
-      "confidence_score": 1.0
+      "target": "js_data_getabilityscores"
     },
     {
       "relation": "calls",
@@ -29624,9 +29953,9 @@
       "source_file": "CLAUDE.md",
       "source_location": "L482",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "claude_ardaetheros_compa\u00f1ero_de_campa\u00f1a_d_d_5e",
-      "target": "claude_subida_de_nivel_y_mejoras_de_caracter\u00edstica_asi",
-      "confidence_score": 1.0
+      "target": "claude_subida_de_nivel_y_mejoras_de_caracter\u00edstica_asi"
     },
     {
       "relation": "contains",
@@ -30984,5 +31313,5 @@
       "source_file": "server.js"
     }
   ],
-  "built_at_commit": "1fc24189985c85087046021b813d6916edaf01bd"
+  "built_at_commit": "ca94cdd78454f600a6ae15ef6f1449ab91944d58"
 }

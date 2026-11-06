@@ -115,6 +115,7 @@ function setResourcePool(c, key, val){
 /* Sube un nivel sin diálogos: nivel, HP máx (promedio del dado + CON) y HP actual por el mismo delta.
    La usan el botón de la hoja y el "Subir nivel grupal" de la Sesión Live. */
 function applyLevelUp(c){
+  const spellLevelBefore = getMaxSpellLevel(c), prepBefore = getPreparedLimit(c);
   const oldLevel = getCharLevel(c);
   const newLevel = oldLevel + 1;
   const hpGain = hpGainOnLevelUp(c);
@@ -140,7 +141,8 @@ function applyLevelUp(c){
 
   // Re-render de abilities (prof bonus, saves, skills, slots, panel de mejoras)
   renderCharAbilities(c);
-  return { oldLevel, newLevel, hpGain, oldMax, newMax, asi: ASI_LEVELS.includes(newLevel) };
+  return { oldLevel, newLevel, hpGain, oldMax, newMax, asi: ASI_LEVELS.includes(newLevel),
+    spellLevelBefore, spellLevelAfter: getMaxSpellLevel(c), prepBefore, prepAfter: getPreparedLimit(c) };
 }
 
 function levelUpCharacter(c){
@@ -170,12 +172,14 @@ function levelUpCharacter(c){
   ].filter(Boolean).join('\n');
 
   if(!confirm(confirmMsg)) return;
-  applyLevelUp(c);
+  const r = applyLevelUp(c);
 
   // Aviso de cosas para revisar manualmente
   const hints = [`${charLabel} ahora es ${className} Nivel ${newLevel}.`, ''];
   if(profChange) hints.push(`✓ Proficiency bonus subió a +${newProf}.`);
   if(ASI_LEVELS.includes(newLevel)) hints.push('• ⬆ Mejora de característica pendiente: +2 a una, +1 a dos, o una dote — elegila en la hoja, debajo de los atributos.');
+  if(r.spellLevelAfter > r.spellLevelBefore) hints.push(`• ✨ Desbloquea hechizos de Nv ${r.spellLevelAfter}.`);
+  if(r.prepAfter != null && r.prepAfter > r.prepBefore) hints.push(`• Puede preparar ${r.prepAfter} hechizos (antes ${r.prepBefore}) — marcalos con ○ en la hoja.`);
   if(c==='tyrell' && newLevel===6) hints.push('• Paladín: Aura of Protection (+CHA a los saves propios y de aliados a 10 ft).');
   if(c==='tyrell' && newLevel===3) hints.push('• Paladín: Sacred Oath (subclass). Divine Health. Channel Divinity.');
   if(c==='rac' && newLevel===3) hints.push('• Bárbaro: Primal Path (subclass: Berserker, Totem, etc.).');
@@ -501,6 +505,57 @@ function isSpellPrepared(c, spellName){
   return prepared.includes(spellName);
 }
 
+/* ── DESBLOQUEO POR EL DM ──
+   Un hechizo se desbloquea solo cuando el personaje tiene slots de su nivel. El DM puede
+   desbloquear uno antes (evolución narrativa): queda en unlocked_spells_<c> y se sincroniza.
+   Para lanzarlo sin slot de ese nivel, la Sesión Live pide confirmación. */
+function getUnlockedSpells(c){
+  const cs = window.CHAR_STATE && window.CHAR_STATE[c];
+  return (cs && Array.isArray(cs.unlockedSpells)) ? cs.unlockedSpells : load('unlocked_spells_'+c, []);
+}
+function isSpellUnlocked(c, sp){
+  return sp.level <= getMaxSpellLevel(c) || getUnlockedSpells(c).includes(sp.name);
+}
+function toggleSpellUnlock(c, spellName){
+  const sp = (CLASS_PRESETS[c].spellList||[]).find(s=>s.name===spellName);
+  if(!sp) return;
+  const name = c.charAt(0).toUpperCase()+c.slice(1);
+  const list = getUnlockedSpells(c);
+  if(list.includes(spellName)){
+    if(!confirm(`¿Volver a bloquear ${spellName} para ${name}? Si estaba preparado, se des-prepara.`)) return;
+    save('unlocked_spells_'+c, list.filter(n=>n!==spellName));
+    const prepared = load('prepared_'+c, null);
+    if(prepared && prepared.includes(spellName)){
+      const next = prepared.filter(n=>n!==spellName);
+      _patchCharState(c, { prepared: next });
+      save('prepared_'+c, next);
+    }
+  } else {
+    if(!confirm(`¿Desbloquear ${spellName} (Nv ${sp.level}) para ${name}?\n\nHoy tiene slots hasta Nv ${getMaxSpellLevel(c)}: lo puede preparar, y en la Sesión Live lanzarlo pide confirmar que no hay slot de ese nivel.`)) return;
+    save('unlocked_spells_'+c, [...list, spellName]);
+  }
+  renderCharAbilities(c);
+}
+
+/* ── CUÁNTOS HECHIZOS PUEDE PREPARAR (5E) ──
+   Paladín: CHA + ½ nivel · Druida: WIS + nivel · Wizard: INT + nivel (mínimo 1).
+   Los "siempre preparados" (círculo/juramento) no cuentan. Es informativo: no bloquea. */
+const PREP_RULES = {
+  tyrell: { ab:'cha', lv: l => Math.floor(l/2), label:'CHA + ½ nivel' },
+  boyd:   { ab:'wis', lv: l => l,               label:'WIS + nivel' },
+  esdas:  { ab:'int', lv: l => l,               label:'INT + nivel' }
+};
+function getPreparedLimit(c){
+  const r = PREP_RULES[c];
+  if(!r) return null;
+  return Math.max(1, abilityMod(getAbilityScores(c)[r.ab]) + r.lv(getCharLevel(c)));
+}
+function countPreparedForLimit(c){
+  const lvl = getCharLevel(c);
+  return (CLASS_PRESETS[c].spellList||[]).filter(s =>
+    isSpellPrepared(c, s.name) && !(s.alwaysPrepared && lvl >= (s.alwaysPreparedAt || 1))).length;
+}
+
 /* ── ACTIVE CANTRIPS (house rule: toggle on/off para Sesión Live) ── */
 function isCantripActive(c, name){
   const active = load('active_cantrips_'+c, null);
@@ -693,13 +748,15 @@ function renderCharAbilities(c){
     // Spells: lockear los de nivel mayor al accesible
     const spellListHTML = preset.spellList.map(s=>{
       const prepared = isSpellPrepared(c, s.name);
-      const isLocked = s.level > maxSpellLevel;
+      const esc = s.name.replace(/'/g,'\\\'');
+      const dmUnlocked = s.level > maxSpellLevel && getUnlockedSpells(c).includes(s.name);
+      const isLocked = !isSpellUnlocked(c, s);
       const charLvl = getCharLevel(c);
       const alwaysActive = s.alwaysPrepared && charLvl >= (s.alwaysPreparedAt || 1);
       const alwaysPending = s.alwaysPrepared && !alwaysActive;
       let prepBtn;
       if(isLocked){
-        prepBtn = `<span class="spell-prep-btn" title="Bloqueado — necesita slots de Nv ${s.level}">🔒</span>`;
+        prepBtn = `<button class="spell-prep-btn spell-unlock-btn" onclick="toggleSpellUnlock('${c}','${esc}')" title="Bloqueado — se desbloquea solo con slots de Nv ${s.level}. Click para desbloquearlo ya (decisión del DM)">🔒</button>`;
       } else if(alwaysActive){
         prepBtn = `<span class="spell-prep-btn always-prep" title="Siempre preparado (${s.circleSpell||'Subclass'}) — no cuenta al límite">★</span>`;
       } else {
@@ -715,6 +772,7 @@ function renderCharAbilities(c){
           <span class="spell-name">${s.name}<em> / ${s.nameEs||''}</em></span>
           ${schoolBadge(s.school)}
           ${circleBadge}
+          ${dmUnlocked ? `<button class="dm-unlock-badge dm-only" onclick="toggleSpellUnlock('${c}','${esc}')" title="Desbloqueado por el DM antes de tener slots de Nv ${s.level} — click para volver a bloquearlo">🔓 DM</button>` : ''}
           ${s.shape?`<span class="spell-shape">${s.shape}</span>`:''}
           <span class="spell-level" ${isLocked ? `title="Se desbloquea cuando el personaje es nivel ${getSpellUnlockLevel(c, s.level) || '?'}"` : ''}>Nivel ${s.level}${isLocked?' 🔒':''}</span>
           <span class="badge-no-disponible">No disponible</span>
@@ -722,6 +780,9 @@ function renderCharAbilities(c){
         <div class="spell-desc">${s.desc}</div>
       </div>`;
     }).join('');
+
+    const prepLimit = getPreparedLimit(c);
+    const prepCount = prepLimit != null ? countPreparedForLimit(c) : 0;
 
     // Spell DC y attack dinámicos
     const spellAbility = preset.spellcastingAbility || (c==='tyrell'?'cha':(c==='boyd'?'wis':(c==='esdas'?'int':null)));
@@ -739,6 +800,7 @@ function renderCharAbilities(c){
         <span class="spell-dc">Spell save DC <strong>${dynamicDC}</strong></span>
         <span class="spell-atk">Spell attack <strong>${dynamicAtk}</strong></span>
         <span class="spell-max-level">Hasta hechizos de <strong>Nv ${maxSpellLevel}</strong></span>
+        ${prepLimit != null ? `<span class="spell-prep-count${prepCount > prepLimit ? ' over' : ''}" title="${PREP_RULES[c].label}: ${fmtMod(abilityMod(getAbilityScores(c)[PREP_RULES[c].ab]))} + ${PREP_RULES[c].lv(getCharLevel(c))} (los ★ siempre preparados no cuentan)">Preparados <strong>${prepCount}/${prepLimit}</strong>${prepCount > prepLimit ? ' ⚠' : ''}</span>` : ''}
       </div>
       <div class="slots-block">${slotsHTML}</div>
       ${cantripsHTML ? `<h3 class="sub-head" style="margin-top:1rem">Cantrips</h3><div class="cantrips-list">${cantripsHTML}</div>` : ''}

@@ -277,3 +277,14 @@ body:not(.dm-mode) .spell-item.no-disponible .badge-no-disponible { display:inli
   color:var(--muted);padding:0.1rem 0.45rem;border:1px solid var(--border2);background:var(--bg3);
 }
 .spell-desc{font-size:0.85rem;color:var(--cream);line-height:1.5;padding-left:30px}
+
+/* Desbloqueo de hechizos por el DM + contador de preparados */
+.spell-prep-btn.spell-unlock-btn{cursor:pointer}
+.spell-prep-btn.spell-unlock-btn:hover{border-color:var(--gold);background:var(--gold-dark)}
+.dm-unlock-badge{
+  font-family:var(--font-title);font-size:0.6rem;letter-spacing:0.08em;cursor:pointer;
+  color:#a78bfa;background:transparent;border:1px solid #a78bfa;padding:0.1rem 0.45rem;
+}
+.spell-prep-count{font-size:0.85rem;color:var(--cream)}
+.spell-prep-count strong{color:var(--gold);font-family:var(--font-title)}
+.spell-prep-count.over strong{color:var(--red-bright)}
