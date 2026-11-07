@@ -28,3 +28,10 @@
   color:var(--muted);cursor:pointer;transition:all 0.15s;
 }
 .btn-cancel:hover{border-color:var(--cream);color:var(--cream)}
+/* Acción secundaria (ej: "Guardar + otro ataque", "Guardar en stream"): mismo formato, sin relleno */
+.btn-secondary{
+  font-family:var(--font-title);font-size:0.7rem;letter-spacing:0.1em;
+  padding:0.5rem 1.2rem;background:none;border:1px solid var(--gold-dim);
+  color:var(--gold);cursor:pointer;transition:all 0.15s;
+}
+.btn-secondary:hover{background:var(--gold-dark);border-color:var(--gold)}

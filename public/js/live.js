@@ -419,6 +419,7 @@ function confirmStartCombat(){
   combatStartPending = false;
   sortByInitiative();
   LIVE_SESSION.combat.active = true;
+  LIVE_SESSION.combat.startedAt = nowIso();   // identifica el combate (usos "1 vez por combate", ej. Duro)
   LIVE_SESSION.combat.round = 1;
   LIVE_SESSION.combat.turn = 0;
   LIVE_SESSION.combat.participants.forEach(p => { p.actedThisRound = false; p.turnUse = null; p.reactionUsed = false; });
@@ -1196,7 +1197,7 @@ function getDefaultFormData(type){
    El resto (números que se tipean) solo refresca los resúmenes, para no perder el foco del input. */
 const RERENDER_FIELDS = ['character','actionType','spellName','cantripName','skill','save','abilityKey','windOption','targetId',
   'hitOverride','divineSmite','divineSmiteSlot','divineSmiteUndead','spellLevel','sustained',
-  'useShield','applyResistance','saveType','halfOnSave','slotLevel'];
+  'useShield','applyResistance','saveType','halfOnSave','slotLevel','duroOn','rxCustom','rxHalf'];
 
 function updateFormField(field, value){
   if(!currentForm) return;
@@ -2111,7 +2112,8 @@ function renderHitOverride(d, field, onclickFn){
 function getAttackCA(d){
   const tp = getCombatant((d.targetIds||[])[0]);
   let ac = parseInt(d.targetCA !== '' && d.targetCA != null ? d.targetCA : (tp ? getCombatantAC(tp) : '')) || 0;
-  if(d.useShield && tp && !getBuffs(tp).some(b => b.sourceSpell === 'Shield')) ac += 5;
+  if(d.useShield && shieldAvailable(tp)) ac += 5;   // Shield todavía no aplicado como buff
+  if(d.rxCustom) ac += parseInt(d.rxAC) || 0;          // reacción del DM (Parada, etc.)
   return ac;
 }
 /* nat20 | nat1 | hit | miss | null. El override del DM manda (un 20 forzado a pegar sigue siendo crítico). */
@@ -2133,16 +2135,25 @@ function attackDamageBreakdown(d){
   const riders = getAttackRiders(d).map(r => ({ label:r.label, value: parseInt(d[r.field])||0 })).filter(r => r.value);
   let total = base + riders.reduce((s,r)=>s+r.value, 0);
   const notes = [];
+  let counter = 0;
   const tp = getCombatant((d.targetIds||[])[0]);
-  if(currentForm && currentForm.type === 'npc-action' && tp){
+  if(tp){
+    // Orden: reducciones (Desviar) → resistencia (÷2, no se acumula) → Duro sobre lo que queda
     const deflect = deflectReduction(d, tp);
     if(deflect){ total = Math.max(0, total - deflect); notes.push(`Desviar Proyectiles −${deflect}`); }
-    if(rageResists(d, tp)){ total = Math.floor(total / 2); notes.push('resistencia (Furia) ÷2'); }
+    const halfRage = rageResists(d, tp), halfDM = !!(d.rxCustom && d.rxHalf);
+    if(halfRage || halfDM){ total = Math.floor(total / 2); notes.push(halfRage ? 'resistencia (Furia) ÷2' : `${d.rxLabel || 'reacción'} ÷2`); }
+    const duro = duroActive(d, tp) ? duroOutcome(d.duroRoll) : null;
+    if(duro){
+      counter = duro.counter ? Math.floor(total / 2) : 0;
+      total = Math.floor(total * duro.mult);
+      notes.push(`Duro: ${duro.short}`);
+    }
   }
-  return { base, riders, total, notes };
+  return { base, riders, total, notes, counter };
 }
 function rageResists(d, tp){
-  return !!(d.applyResistance && tp && tp.inRage && PHYSICAL_DMG.includes(d.damageType));
+  return !!(d.applyResistance !== false && tp && tp.inRage && PHYSICAL_DMG.includes(d.damageType));
 }
 function deflectReduction(d, tp){
   if(!tp || tp.refId !== 'relyo' || d.actionType !== 'attack-ranged' || d.deflectRoll === '' || d.deflectRoll == null) return 0;
@@ -2171,6 +2182,8 @@ function renderAttackSummary(d){
   b.riders.forEach(r => parts.push(`${r.value} (${liveEscape(r.label.split(' (')[0])})`));
   html += `<div class="attack-dmg-total">Daño: <strong>${parts.length ? b.total : '—'}</strong>${parts.length > 1 || b.notes.length ? ` <span class="muted">= ${parts.join(' + ')}${b.notes.length ? ' · '+b.notes.join(' · ') : ''}</span>` : ''}</div>`;
   const tp = getCombatant((d.targetIds||[])[0]);
+  if(tp && isHitOutcome(out) && duroActive(d, tp) && !duroOutcome(d.duroRoll)) html += `<div class="crit-hint">💪 ${liveEscape(getCombatantName(tp))} puede amortiguar este golpe con su dote: tirá el d20.</div>`;
+  if(isHitOutcome(out) && b.counter > 0) html += `<div class="crit-hint">↩ Contragolpe al atacante: ${b.counter} de daño.</div>`;
   if(tp && d.applyDamage && b.total > 0 && out){
     if(isHitOutcome(out)){
       const cur = getCombatantHP(tp), max = getCombatantHPMax(tp), temp = getTempHP(tp);
@@ -2228,6 +2241,7 @@ function renderAttackBlock(d){
       </div>
     </div>
     ${renderAttackRiders(d)}
+    ${renderTargetReactions(d, tp)}
     <div class="form-checkbox-row"><label><input type="checkbox" ${d.applyDamage?'checked':''} onchange="updateFormField('applyDamage', this.checked)"> Aplicar daño automáticamente</label></div>
     <div id="attack-summary" class="attack-summary">${renderAttackSummary(d)}</div>`;
 }
@@ -2845,7 +2859,8 @@ function resetResolutionState(d){
     targetIds:[], targetCA:'', roll:'', hitOverride:'', damage:'', damageBonus:'',
     targetSaveRolls:{}, targetSaveOverrides:{}, areaTargetIds:[], areaSaveRolls:{}, areaSaveOverrides:{}, areaDamage:'',
     darts:{}, missileRoll:'', rays:[], sleepRoll:'', sleepTargets:null, buffTargets:[], autoTargets:[], sustained:false,
-    divineSmite:false, divineSmiteDmg:'', pendingSmiteDmg:'', pendingSmiteSaveRoll:''
+    divineSmite:false, divineSmiteDmg:'', pendingSmiteDmg:'', pendingSmiteSaveRoll:'',
+    useShield:false, deflectRoll:'', duroOn:undefined, duroRoll:'', rxCustom:false, rxLabel:'', rxAC:'', rxHalf:false
   });
 }
 
@@ -3143,24 +3158,110 @@ function updateNpcActionAssistance(){ updateFormAssistance(); }
 /* Habilidad especial / hechizo de monstruo = salvación (ej: aura que pide CON DC 11 a los cercanos) */
 function isNpcSaveMode(d){ return d.actionType === 'ability' || d.actionType === 'spell'; }
 
-/* Reacciones del objetivo que cambian el ataque: Shield (Esdas), Desviar Proyectiles (Relyo); y la resistencia de Furia */
-function renderNpcReactions(d, tp){
-  if(!tp || tp.kind !== 'player') return '';
+/* ── REACCIONES Y DEFENSAS DEL OBJETIVO ──
+   Al resolver un ataque se ofrecen las del objetivo y se aplican solas al guardar: gastan reacción,
+   slot o uso por combate, cambian CA o daño y quedan en la misma nota del ataque (no se pierde el hilo).
+   · Shield (PJ que lo tenga preparado): +5 CA en este ataque y hasta su próximo turno, gasta el slot más bajo libre.
+   · Desviar Proyectiles (Relyo, Nv 3+): resta 1d10 + DEX + nivel a un ataque a distancia.
+   · Duro (dote marcada con reaction:'duro', regla de la casa): 1 vez por combate, el primer golpe físico:
+     d20 → 1 daño completo · 2–10 mitad · 11–19 nada · 20 nada + contragolpe al atacante con la mitad.
+   · Furia: resistencia a daño físico.
+   · Otra reacción (cualquiera, ej. Parada de un monstruo): nombre + CA extra y/o mitad de daño, a criterio del DM. */
+function lowestFreeSlot(c, minLevel){
+  const o = getSlotOptions(c, minLevel).find(x => x.max - x.used > 0);
+  return o ? o.level : null;
+}
+function shieldAvailable(tp){
+  if(!tp || tp.kind !== 'player') return false;
+  const knows = (CLASS_PRESETS[tp.refId] && (CLASS_PRESETS[tp.refId].spellList||[]).some(s => s.name === 'Shield'));
+  return !!(knows && isSpellPrepared(tp.refId, 'Shield') && !getBuffs(tp).some(b => b.sourceSpell === 'Shield'));
+}
+function combatKey(){ return LIVE_SESSION.combat.active ? (LIVE_SESSION.combat.startedAt || 'combate') : null; }
+/* La dote con reacción automática 'duro' del PJ, si todavía no la usó en este combate */
+function duroAvailable(tp){
+  if(!tp || tp.kind !== 'player' || typeof getASIState !== 'function') return null;
+  const feat = getASIState(tp.refId).history.find(h => h.kind === 'feat' && h.reaction === 'duro');
+  if(!feat) return null;
+  const key = combatKey();
+  return (key && pcState(tp.refId).duroUsed === key) ? null : feat;
+}
+function duroActive(d, tp){ return !!(duroAvailable(tp) && PHYSICAL_DMG.includes(d.damageType) && d.duroOn !== false); }
+function duroOutcome(roll){
+  const r = parseInt(roll);
+  if(!(r >= 1 && r <= 20)) return null;
+  if(r === 1)  return { mult:1,   counter:false, short:'1 natural, daño completo', label:'1 natural: recibe el daño completo' };
+  if(r <= 10)  return { mult:0.5, counter:false, short:`${r}, mitad`,             label:`${r}: recibe la mitad del daño` };
+  if(r <= 19)  return { mult:0,   counter:false, short:`${r}, sin daño`,          label:`${r}: no recibe daño` };
+  return { mult:0, counter:true, short:'20 natural, sin daño + contragolpe', label:'20 natural: no recibe daño y contragolpea con la mitad' };
+}
+function rxToggle(field, on, label){
+  return `<label class="rider-toggle"><input type="checkbox" ${on?'checked':''} onchange="updateFormField('${field}', this.checked)"> ${label}</label>`;
+}
+function renderTargetReactions(d, tp){
+  if(!tp) return '';
   const parts = [];
-  const reactionWarn = tp.reactionUsed ? ' · <span class="form-warn">ya usó su reacción este round</span>' : '';
-  if(tp.refId === 'esdas' && isSpellPrepared('esdas', 'Shield') && !getBuffs(tp).some(b => b.sourceSpell === 'Shield')){
-    const slot = loadSlotState('esdas', 1);
-    parts.push(`<div class="rider-toggle"><label><input type="checkbox" ${d.useShield?'checked':''} onchange="updateFormField('useShield', this.checked)"> 🛡 Esdas lanza <strong>Shield</strong> (reacción · slot Nv 1: ${slot.max-slot.used}/${slot.max}) → +5 CA hasta su próximo turno</label>${reactionWarn}</div>`);
+  const rxWarn = tp.reactionUsed ? ' <span class="form-warn">· ya usó su reacción este round</span>' : '';
+  if(shieldAvailable(tp)){
+    const lv = lowestFreeSlot(tp.refId, 1);
+    parts.push(rxToggle('useShield', !!d.useShield, `🛡 <strong>Shield</strong> (reacción) — +5 CA en este ataque y hasta su próximo turno · gasta ${lv ? 'slot Nv ' + lv : 'un slot (no le quedan)'}${rxWarn}`));
   }
-  if(tp.refId === 'relyo' && d.actionType === 'attack-ranged' && getCharLevel('relyo') >= 3){
+  if(tp.kind === 'player' && tp.refId === 'relyo' && d.actionType === 'attack-ranged' && getCharLevel('relyo') >= 3){
     const red = abilityMod((ABILITY_SCORES.relyo||{}).dex || 10) + getCharLevel('relyo');
-    parts.push(`<div class="rider-row"><span class="rider-label">🤚 Desviar Proyectiles (reacción): reduce 1d10 + ${red}${reactionWarn}</span>
+    parts.push(`<div class="rider-row"><span class="rider-label">🤚 <strong>Desviar Proyectiles</strong> (reacción) — reduce 1d10 + ${red}${rxWarn}</span>
       <input type="number" class="form-input rider-input" min="1" max="10" placeholder="d10" value="${liveEscape(d.deflectRoll||'')}" oninput="updateFormField('deflectRoll', this.value)"></div>`);
   }
-  if(tp.inRage){
-    parts.push(`<div class="rider-toggle"><label><input type="checkbox" ${d.applyResistance?'checked':''} onchange="updateFormField('applyResistance', this.checked)"> 😠 Resistencia de Furia: daño físico (B/P/S) ÷2</label></div>`);
+  const duro = duroAvailable(tp);
+  if(duro && PHYSICAL_DMG.includes(d.damageType)){
+    parts.push(`<div class="rider-row">${rxToggle('duroOn', d.duroOn !== false, `💪 <strong>${liveEscape(duro.feat)}</strong> (dote, 1 vez por combate) — si el golpe pega, tirá el d20`)}
+      ${d.duroOn !== false ? `<input type="number" class="form-input rider-input" min="1" max="20" placeholder="d20" value="${liveEscape(d.duroRoll||'')}" oninput="updateFormField('duroRoll', this.value)">` : ''}</div>`);
   }
-  return parts.length ? `<div class="attack-riders">${parts.join('')}</div>` : '';
+  if(tp.inRage) parts.push(rxToggle('applyResistance', d.applyResistance !== false, '😠 Resistencia de Furia: daño físico (B/P/S) ÷2'));
+  parts.push(`<div class="rider-row">${rxToggle('rxCustom', !!d.rxCustom, `⟲ Otra reacción${tp.kind === 'monster' ? ' del monstruo' : ''}`)}
+    ${d.rxCustom ? `<input class="form-input rx-name" placeholder="Nombre (ej: Parada)" value="${liveEscape(d.rxLabel||'')}" oninput="updateFormField('rxLabel', this.value)">
+      <input type="number" class="form-input rider-input" placeholder="+CA" value="${liveEscape(d.rxAC||'')}" oninput="updateFormField('rxAC', this.value)">
+      <label class="rx-half"><input type="checkbox" ${d.rxHalf?'checked':''} onchange="updateFormField('rxHalf', this.checked)"> mitad de daño</label>` : ''}</div>`);
+  return `<div class="attack-riders reactions-block"><div class="rx-title">Reacciones y defensas de ${liveEscape(getCombatantName(tp))}</div>${parts.join('')}</div>`;
+}
+/* Antes de resolver el golpe: lo que cambia la CA (Shield, reacción del DM). Devuelve líneas para la nota. */
+function applyPreHitReactions(d, tp){
+  const lines = [];
+  if(!tp) return lines;
+  if(d.useShield && shieldAvailable(tp)){
+    const lv = lowestFreeSlot(tp.refId, 1);
+    if(lv) consumeSpellSlot(tp.refId, lv);
+    addBuff(tp, { name:'Shield', sourceSpell:'Shield', casterKey: buffCasterKey(tp), acBonus:5, untilNextTurn:true, desc:'+5 CA hasta su próximo turno' });
+    recordEconomy(tp, 'reaction');
+    lines.push(`🛡 ${getCombatantName(tp)} lanza Shield (reacción${lv ? `, slot Nv ${lv}` : ', sin slot disponible'}): +5 CA hasta su próximo turno.`);
+  }
+  if(d.rxCustom){
+    recordEconomy(tp, 'reaction');
+    lines.push(`⟲ ${getCombatantName(tp)} reacciona: ${d.rxLabel || 'reacción'}${parseInt(d.rxAC) ? ` (+${parseInt(d.rxAC)} CA)` : ''}${d.rxHalf ? ' (mitad de daño)' : ''}.`);
+  }
+  return lines;
+}
+/* Después de saber si pegó: Desviar Proyectiles, Furia, Duro y su contragolpe al atacante. */
+function applyPostHitReactions(d, tp, hit, b, attacker){
+  const lines = [];
+  if(!tp) return lines;
+  const deflect = deflectReduction(d, tp);
+  if(deflect){
+    recordEconomy(tp, 'reaction');
+    lines.push(`🤚 ${getCombatantName(tp)} desvía el proyectil: −${deflect} de daño${hit && b.total === 0 ? ' — lo atrapa (puede lanzarlo gastando 1 ki)' : ''}.`);
+  }
+  if(hit && rageResists(d, tp)) lines.push('😠 Resistencia de Furia: daño físico a la mitad.');
+  if(hit && duroActive(d, tp)){
+    const feat = duroAvailable(tp);
+    const o = duroOutcome(d.duroRoll);
+    if(o){
+      pcState(tp.refId).duroUsed = combatKey() || 'fuera de combate';
+      lines.push(`💪 ${feat.feat}: ${o.label}.`);
+      if(o.counter && b.counter > 0 && attacker && attacker.id !== tp.id){
+        changeCombatantHP(attacker.id, -b.counter);
+        lines.push(`↩ Contragolpe: ${b.counter} de daño a ${getCombatantName(attacker)}.`);
+      }
+    }
+  }
+  return lines;
 }
 
 function renderNpcActionForm(){
@@ -3229,7 +3330,7 @@ function renderNpcActionForm(){
           <select class="form-input" onchange="updateFormField('damageType', this.value)">${dmgTypeOptions(d.damageType)}</select>
         </div>
       </div>
-      ${renderNpcReactions(d, tp)}
+      ${renderTargetReactions(d, tp)}
       <div class="form-checkbox-row"><label><input type="checkbox" ${d.applyDamage?'checked':''} onchange="updateFormField('applyDamage', this.checked)"> Aplicar daño al objetivo</label></div>
       <div id="attack-summary" class="attack-summary">${renderAttackSummary(d)}</div>`;
   } else if(saveMode){
@@ -3297,7 +3398,7 @@ function saveNpcActionNote(repeat){
   const actor = getCombatant(d.combatantId);
   let targetResults = [];
   let outcomeGlobal = null;
-  const extra = [];
+  const reactions = [];
   const attackMode = d.actionType === 'attack-melee' || d.actionType === 'attack-ranged';
 
   if(isNpcSaveMode(d)){
@@ -3305,23 +3406,12 @@ function saveNpcActionNote(repeat){
   } else if(attackMode){
     const tid = (d.targetIds||[])[0];
     const tp = tid ? getCombatant(tid) : null;
-    // Reacción de Esdas: Shield antes de resolver (la CA del ataque ya la contemplaba)
-    if(tp && tp.refId === 'esdas' && d.useShield && !getBuffs(tp).some(b => b.sourceSpell === 'Shield')){
-      if(consumeSpellSlot('esdas', 1) || confirm('Esdas no tiene slots de Nv 1. ¿Aplicar Shield igual?')){
-        addBuff(tp, { name:'Shield', sourceSpell:'Shield', casterKey:'pc:esdas', acBonus:5, untilNextTurn:true, desc:'+5 CA hasta su próximo turno' });
-        recordEconomy(tp, 'reaction');
-        extra.push('🛡 Esdas lanza Shield: +5 CA hasta su próximo turno.');
-      }
-    }
+    // Reacciones del objetivo: primero las que cambian la CA (Shield), después las del daño (Desviar, Furia, Duro)
+    reactions.push(...applyPreHitReactions(d, tp));
     const ac = getAttackCA(d);
     const out = attackOutcome(d.roll, d.modifier, ac, d.hitOverride);
     const b = attackDamageBreakdown(d);
-    const deflect = tp ? deflectReduction(d, tp) : 0;
-    if(deflect){
-      recordEconomy(tp, 'reaction');
-      extra.push(`🤚 Relyo desvía el proyectil: −${deflect} de daño${b.total === 0 && isHitOutcome(out) ? ' — lo atrapa (puede lanzarlo gastando 1 ki)' : ''}.`);
-    }
-    if(tp && rageResists(d, tp)) extra.push('😠 Resistencia de Furia: daño físico a la mitad.');
+    reactions.push(...applyPostHitReactions(d, tp, isHitOutcome(out), b, actor));
     if(tp){
       const hpBefore = getCombatantHP(tp);
       const dmgApplied = !!(d.applyDamage && b.total > 0 && isHitOutcome(out));
@@ -3347,15 +3437,17 @@ function saveNpcActionNote(repeat){
     targetResults,
     outcome: outcomeGlobal,
     damageDice: d.damageDice,
-    damage: isNpcSaveMode(d) ? (parseInt(d.damage)||0) : attackDamageBreakdown(d).total,
+    damage: isNpcSaveMode(d) ? (parseInt(d.damage)||0) : (targetResults[0] ? targetResults[0].damage : 0),
     damageType: d.damageType,
-    notes: [...extra, d.notes].filter(Boolean).join('\n')
+    reactions,
+    notes: d.notes
   });
   recordEconomy(actor, attackMode ? 'attack' : isNpcSaveMode(d) ? 'action' : 'none');
 
   if(repeat && attackMode){
     // Multiattack: mismo monstruo, ataque y objetivo; se limpian tiradas y reacciones
-    Object.assign(d, { roll:'', damage:'', hitOverride:'', useShield:false, deflectRoll:'', targetCA:'', notes:'' });
+    Object.assign(d, { roll:'', damage:'', hitOverride:'', targetCA:'', notes:'',
+      useShield:false, deflectRoll:'', duroOn:undefined, duroRoll:'', rxCustom:false, rxLabel:'', rxAC:'', rxHalf:false });
     saveLiveSession();
     renderLive();
     return;
@@ -3522,16 +3614,19 @@ function saveActionNote(repeat){
   let targetResults = [];
   let outcomeGlobal = null;
   let riders = [];
+  const reactions = [];
   const casterKey = buffCasterKey(caster);
 
   if(mode === 'attack'){
     const tid = (d.targetIds||[])[0];
     const tp = tid ? getCombatant(tid) : null;
+    reactions.push(...applyPreHitReactions(d, tp));
     const ac = getAttackCA(d);
     const out = attackOutcome(d.roll, d.modifier, ac, d.hitOverride);
     const hit = isHitOutcome(out);
     const b = attackDamageBreakdown(d);
     riders = b.riders;
+    reactions.push(...applyPostHitReactions(d, tp, hit, b, caster));
     // Castigo Divino: el slot se gasta solo si pega
     if(hit && d.divineSmite && c === 'tyrell' && isWeaponAttack(d)){
       const lv = parseInt(d.divineSmiteSlot) || 1;
@@ -3678,6 +3773,7 @@ function saveActionNote(repeat){
     damageType: mode === 'heal' ? 'healing' : d.damageType,
     damageDice: d.damageDice,
     riders,
+    reactions,
     notes: [...extra, d.notes].filter(Boolean).join('\n')
   });
 
@@ -3690,7 +3786,8 @@ function saveActionNote(repeat){
   if(repeat && mode === 'attack'){
     // Ataque Extra / segundo ataque: mismo personaje, arma y objetivo; se limpian las tiradas
     Object.assign(d, { roll:'', damage:'', hitOverride:'', targetCA:'', divineSmite:false, divineSmiteDmg:'', pendingSmiteDmg:'', pendingSmiteSaveRoll:'',
-      areaTargetIds:[], areaSaveRolls:{}, areaSaveOverrides:{}, areaDamage:'', notes:'' });
+      areaTargetIds:[], areaSaveRolls:{}, areaSaveOverrides:{}, areaDamage:'', notes:'',
+      useShield:false, deflectRoll:'', duroOn:undefined, duroRoll:'', rxCustom:false, rxLabel:'', rxAC:'', rxHalf:false });
     d.sustained = isSustainingSpell(d, sp);
     saveLiveSession();
     renderLive();
@@ -4943,6 +5040,12 @@ function renderTargetResultsBlock(targetResults, damage, damageType, damageDice)
   </div>`;
 }
 
+/* Reacciones que se resolvieron dentro de un ataque (Shield, Desviar, Duro, contragolpe…) */
+function renderNoteReactions(n){
+  if(!Array.isArray(n.reactions) || !n.reactions.length) return '';
+  return `<div class="note-reactions">${n.reactions.map(r => `<div>${liveEscape(r)}</div>`).join('')}</div>`;
+}
+
 function renderNpcActionNoteBody(n){
   const actionLabels = {'attack-melee':'ataque cuerpo a cuerpo','attack-ranged':'ataque a distancia','ability':'habilidad especial','spell':'hechizo/efecto','other':'acción'};
   const what = actionLabels[n.actionType] || n.actionType || 'acción';
@@ -4954,12 +5057,14 @@ function renderNpcActionNoteBody(n){
     </div>`;
   }
   const targetsBlock = renderTargetResultsBlock(n.targetResults, n.damage, n.damageType, n.damageDice);
+  const reactionsLine = renderNoteReactions(n);
   // Legacy: notas viejas con targetName/outcome directo
   const legacyOutcome = !n.targetResults && n.outcome
     ? `<span class="outcome-badge ${n.outcome}">${{hit:'HIT!',miss:'MISS',nat20:'★ NAT 20',nat1:'✗ NAT 1'}[n.outcome]||n.outcome}</span>` : '';
   return `
     <div class="note-title">${weaponLabel}<strong>${liveEscape(n.monsterName||'NPC')}</strong> ${what}</div>
     ${rollLine}${legacyOutcome}
+    ${reactionsLine}
     ${targetsBlock}
     ${n.notes ? `<div class="note-sub" style="white-space:pre-line">${liveEscape(n.notes)}</div>` : ''}
   `;
@@ -5008,6 +5113,7 @@ function renderActionNoteBody(n){
   return `
     <div class="note-title"><strong>${charLabel}</strong> ${what}</div>
     ${rollLine}
+    ${renderNoteReactions(n)}
     ${targetsBlock}${legacyBlock}
     ${ridersLine}
     ${n.notes ? `<div class="note-sub" style="white-space:pre-line">${liveEscape(n.notes)}</div>` : ''}

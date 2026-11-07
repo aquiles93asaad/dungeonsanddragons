@@ -858,3 +858,10 @@
   .ray-head{display:none}
   .ray-row{grid-template-columns:1fr 1fr;}
 }
+
+/* ── Reacciones y defensas del objetivo (forms de ataque) y su registro en el stream ── */
+.reactions-block{border-style:solid;border-color:var(--border2)}
+.rx-title{font-family:var(--font-title);font-size:0.62rem;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase}
+.rx-name{flex:1 1 140px;max-width:200px}
+.rx-half{font-size:0.78rem;color:var(--muted);white-space:nowrap}
+.note-reactions{font-size:0.8rem;color:var(--cream);border-left:2px solid var(--gold-dim);padding:0.2rem 0.5rem;margin:0.3rem 0;background:var(--bg3)}

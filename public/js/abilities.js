@@ -610,6 +610,57 @@ function schoolBadge(school){
 }
 
 /* ── RENDER ── */
+/* Texto escrito por el DM (dotes) → HTML seguro, con saltos de línea */
+function escHTML(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── DOTES EN LA HOJA ──
+   Una dote es un rasgo permanente (puede ser regla de la casa): se muestra entre los rasgos de clase,
+   visible para el jugador. El DM edita nombre y descripción desde la tarjeta (queda en el historial asi_<c>). */
+const FEAT_EDIT = {};   // { [charId]: { idx, name, desc, reaction } } edición abierta (no se guarda)
+/* Comportamientos automáticos que se le pueden asignar a una dote (se resuelven en los ataques de la Sesión Live) */
+const FEAT_REACTIONS = [
+  { key:'',     label:'Sin reacción automática' },
+  { key:'duro', label:'Duro (casa): amortiguar el primer golpe físico de cada combate con un d20' }
+];
+function renderFeatCard(c, f){
+  const ed = FEAT_EDIT[c] && FEAT_EDIT[c].idx === f.idx ? FEAT_EDIT[c] : null;
+  if(ed){
+    return `<div class="ability-item is-feat dm-only">
+      <div class="ability-header"><span class="level-badge lvl-unlocked">Nv ${f.level}</span><span class="feat-badge">Dote</span></div>
+      <input class="form-input feat-edit-name" value="${escHTML(ed.name)}" oninput="FEAT_EDIT['${c}'].name=this.value" placeholder="Nombre de la dote">
+      <textarea class="form-input feat-edit-desc" oninput="FEAT_EDIT['${c}'].desc=this.value" placeholder="Qué hace">${escHTML(ed.desc)}</textarea>
+      <select class="form-input feat-edit-reaction" onchange="FEAT_EDIT['${c}'].reaction=this.value" title="Si la marcás, la Sesión Live la ofrece y la resuelve sola en los ataques contra este personaje">
+        ${FEAT_REACTIONS.map(r => `<option value="${r.key}" ${(ed.reaction||'')===r.key?'selected':''}>${r.label}</option>`).join('')}
+      </select>
+      <div class="asi-btns"><button class="btn-small" onclick="closeFeatEditor('${c}')">Cancelar</button><button class="btn-rest btn-levelup" onclick="saveFeatEdit('${c}')">Guardar</button></div>
+    </div>`;
+  }
+  return `<div class="ability-item is-feat">
+    <div class="ability-header">
+      <span class="level-badge lvl-unlocked">Nv ${f.level}</span>
+      <span class="ability-name">${escHTML(f.name)}</span>
+      <span class="feat-badge">Dote</span>
+      ${f.reaction ? `<span class="feat-badge feat-badge-auto" title="La Sesión Live la ofrece y la resuelve sola en los ataques contra este personaje">⟲ automática en combate</span>` : ''}
+      <button class="asi-edit-link dm-only" onclick="openFeatEditor('${c}', ${f.idx})">✎ editar</button>
+    </div>
+    <div class="ability-desc">${f.desc ? escHTML(f.desc).replace(/\n/g,'<br>') : '<span class="muted">Sin descripción.</span>'}</div>
+  </div>`;
+}
+function openFeatEditor(c, idx){
+  const h = getASIState(c).history[idx]; if(!h) return;
+  FEAT_EDIT[c] = { idx, name: h.feat || '', desc: h.featDesc || '', reaction: h.reaction || '' };
+  renderCharAbilities(c);
+}
+function closeFeatEditor(c){ delete FEAT_EDIT[c]; renderCharAbilities(c); }
+function saveFeatEdit(c){
+  const ed = FEAT_EDIT[c]; if(!ed) return;
+  if(!ed.name.trim()){ alert('La dote necesita un nombre.'); return; }
+  const history = getASIState(c).history.map((h, i) => i === ed.idx ? Object.assign({}, h, { feat: ed.name.trim(), featDesc: ed.desc.trim(), reaction: ed.reaction || null }) : h);
+  save('asi_'+c, { history });
+  delete FEAT_EDIT[c];
+  renderCharAbilities(c);
+}
+
 /* Grupos de hechizos plegados/abiertos por 'charId:nivel' (estado de UI, no se guarda) */
 const SPELL_GROUP_OPEN = {};
 
@@ -689,8 +740,12 @@ function renderCharAbilities(c){
   // Class features por nivel — todos visibles, lockeados grisados
   const features = preset.levelFeatures || preset.abilities || [];
   // Ordenar por nivel
-  const sortedFeatures = [...features].sort((a,b)=>(a.level||1)-(b.level||1));
+  // Las dotes elegidas en una mejora de característica se suman como tarjetas, en su nivel
+  const feats = getASIState(c).history.map((h, idx) => ({ h, idx })).filter(x => x.h.kind === 'feat')
+    .map(x => ({ level: x.h.level || 1, isFeat: true, idx: x.idx, name: x.h.feat, desc: x.h.featDesc, reaction: x.h.reaction }));
+  const sortedFeatures = [...features, ...feats].sort((a,b)=>(a.level||1)-(b.level||1));
   const abilitiesHTML = sortedFeatures.map(a=>{
+    if(a.isFeat) return renderFeatCard(c, a);
     const featureLevel = a.level || 1;
     const isLocked = featureLevel > charLevel;
     return `<div class="ability-item ${isLocked?'is-locked':''} ${isLocked?'dm-only':''}">

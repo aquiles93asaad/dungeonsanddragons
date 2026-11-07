@@ -307,3 +307,14 @@ body:not(.dm-mode) .spell-item.no-disponible .badge-no-disponible { display:inli
   font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;
   padding:0.1rem 0.5rem;color:var(--muted);border:1px solid var(--border2);
 }
+
+/* Dotes en la hoja (entre los rasgos de clase) */
+.ability-item.is-feat{border-left-color:#a78bfa}
+.feat-badge{
+  font-family:var(--font-title);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:#a78bfa;border:1px solid #a78bfa;padding:0.1rem 0.45rem;
+}
+.feat-edit-name{margin:0.4rem 0}
+.feat-edit-desc{width:100%;min-height:110px;margin-bottom:0.4rem}
+.feat-badge.feat-badge-auto{color:var(--gold);border-color:var(--gold-dim)}
+.feat-edit-reaction{margin-bottom:0.4rem}
