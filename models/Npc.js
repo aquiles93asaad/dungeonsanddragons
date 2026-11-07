@@ -10,6 +10,7 @@ const NpcSchema = new Schema({
   statusLabel: String,
   desc:        String,
   extra:       String,
+  locationIds: [String], // lugares donde se lo puede encontrar (CampaignLocation.id)
 }, { timestamps: true });
 
 module.exports = model('Npc', NpcSchema);

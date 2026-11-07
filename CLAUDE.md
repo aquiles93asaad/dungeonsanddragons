@@ -311,7 +311,7 @@ crud(Model, { idField='id', protect=null, playerFilter=null })
 | Monsters | `/api/monsters` | |
 | Events | `/api/events` | |
 | Threads | `/api/threads` | |
-| Locations | `/api/locations` | |
+| Locations | `/api/locations` | `parentId` = lugar que lo contiene |
 | Class Presets | `/api/presets` | idField: `charId` |
 | Presets map | GET `/api/presets-map` | Devuelve `{rac:{...}, relyo:{...}}` |
 | Sessions | `/api/sessions` | idField: `number` |
@@ -489,6 +489,15 @@ El modal mueve el nodo real del DOM (no clona) → cualquier edición es la fuen
 - Los **atributos, la CA y la iniciativa** de la hoja se pintan desde los datos (`renderCharStats`, llamado por `renderCharAbilities`) — el HTML de `index.html` es solo el valor inicial.
 - **Hechizos:** se desbloquean solos cuando el personaje tiene slots de ese nivel (`getMaxSpellLevel`). El DM puede desbloquear uno antes con el 🔒 de la hoja (queda "🔓 DM", lista `unlockedSpells` sincronizada; se vuelve a bloquear tocando el badge). Lanzarlo sin slot de ese nivel pide confirmación en la Sesión Live. La hoja muestra **Preparados X/Y** (Paladín CHA + ½ nivel, Druida WIS + nivel, Wizard INT + nivel; los ★ no cuentan) — informativo, no bloquea. **Todos los hechizos se ven (DM y jugadores)**, agrupados por nivel de hechizo: preparados normal, sin preparar con "No disponible", de nivel superior con "🔒 Nivel N del personaje" (esos grupos arrancan plegados). Los de la escuela del personaje (`getCommittedSchool`, Esdas = Adivinación) llevan "★ Su escuela" en la hoja y en el form de la Sesión Live, que además avisa Adivinación Experta desde Nv 6.
 - **CA** = `getCharAC(c)` en `data.js` (fórmula por armadura/feature: Unarmored Defense de Rac/Relyo, cuero+escudo de Boyd, Mage Armor de Esdas, Tyrell fija 18). La usan la hoja y el combat tracker; el DM la puede pisar por combatiente en el tracker.
+
+---
+
+## Lugares: jerarquía, NPCs y eventos asociados (Campaña → Lugares)
+
+- **Jerarquía:** `CampaignLocation.parentId` ubica un lugar dentro de otro (la Taverna de Rollo, el Dar al-Mizan, el Hall Sunbound y la Alcaldía → Solmira; el camino directo → Valle Aethon; la torre vieja → el camino). Se edita con el select «Dentro de» de cada tarjeta (no ofrece el propio lugar ni sus sub-lugares, así no hay ciclos) y se guarda con 💾 como el resto de la tarjeta.
+- **Asociaciones:** `Npc.locationIds` y `CampaignEvent.locationIds` (arrays de `CampaignLocation.id`; un NPC puede estar en varios lugares, ej. Sakura). Se cargaron el 2026-11-06 a partir del texto de cada NPC/evento; backup previo en `documentos/backups/` (gitignored).
+- **Modal del lugar** (botón 🔎 de la tarjeta, con contador 👤 NPCs · 📜 posibles): migas con los lugares padre, chips de los sub-lugares, NPCs (vivos primero, los † atenuados al final), eventos posibles (en curso / planificados / idea), «Ya ocurrió aquí» plegado y «Sin lugar fijo» (NPCs y eventos pendientes sin lugar: pueden pasar en cualquier lado, con «📍 Aquí» para asociarlos). Incluye lo de los sub-lugares, marcado «en <sub-lugar>» (clickeable). El DM asocia con «+ Asociar NPC/evento…» y quita con ✕ (solo lo directo); se guarda al instante con un PUT parcial `{locationIds}`.
+- Todo vive en `campaign.js` (`locGather`, `renderLocationModal`, `locAssociate`/`locDissociate`). La sección Campaña es solo DM, así que el modal puede mostrar eventos planificados.
 
 ---
 

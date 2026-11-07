@@ -6,6 +6,7 @@ const CampaignEventSchema = new Schema({
   status:      { type: String, default: 'planned' }, // 'planned' | 'done'
   session:     String,
   description: String,
+  locationIds: [String], // lugares donde ocurre / puede ocurrir (CampaignLocation.id)
   order:       { type: Number, default: 0 },
 }, { timestamps: true });
 

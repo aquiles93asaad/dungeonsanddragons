@@ -296,6 +296,12 @@ function renderLocations(){
       <div class="cmp-body">
         <input class="cmp-title" value="${escapeAttr(l.name)}"
           oninput="onLocationField('${l.id}','name',this.value)" placeholder="Nombre del lugar">
+        <div class="loc-row">
+          <label class="loc-parent-label">Dentro de
+            <select class="loc-parent-select" onchange="onLocationParent('${l.id}',this.value)">${locParentOptions(l)}</select>
+          </label>
+          <button class="loc-open-btn" onclick="openLocationModal('${l.id}')" title="Ver NPCs y eventos de este lugar">🔎 ${locCountsLabel(l.id)}</button>
+        </div>
         <textarea class="cmp-desc"
           oninput="onLocationField('${l.id}','description',this.value)"
           placeholder="Descripción del lugar...">${escapeAttr(l.description||'')}</textarea>
@@ -322,6 +328,10 @@ function onLocationField(id, field, value){
   l[field] = value;
   _markDirty(id);
 }
+function onLocationParent(id, parentId){
+  onLocationField(id, 'parentId', parentId || null);
+  renderLocations();   // refresca opciones y contadores (incluyen sub-lugares)
+}
 // legacy
 function updateLocation(id, field, value){
   const l = CAMPAIGN.locations.find(x=>x.id===id);
@@ -341,6 +351,225 @@ function addCampaignLocation(){
     const card = document.querySelector(`.location-card[data-id="${id}"]`);
     if(card) card.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }, 50);
+}
+
+/* ── LUGARES: jerarquía (parentId) + NPCs y eventos asociados (locationIds) ─────
+   Un lugar puede estar dentro de otro (la Taverna de Rollo → Solmira). NPCs y eventos
+   guardan locationIds; el modal de un lugar muestra lo asociado a él y a sus sub-lugares,
+   así el DM ve de un vistazo quién puede aparecer y qué puede pasar ahí. */
+const EVENT_STATUS_LABEL = { 'in-progress':'En curso', planned:'Planificado', idea:'Idea', done:'Hecho' };
+const LOC_POSSIBLE_ORDER = ['in-progress', 'planned', 'idea'];
+let LOC_MODAL_ID = null;
+
+function locById(id){ return CAMPAIGN.locations.find(l => l.id === id) || null; }
+function locIdsOf(x){ return Array.isArray(x && x.locationIds) ? x.locationIds : []; }
+function locAncestors(l){
+  const out = [], seen = new Set([l.id]);
+  let p = l.parentId ? locById(l.parentId) : null;
+  while(p && !seen.has(p.id)){ out.unshift(p); seen.add(p.id); p = p.parentId ? locById(p.parentId) : null; }
+  return out;
+}
+function locChildren(id){ return CAMPAIGN.locations.filter(l => l.parentId === id && l.id !== id); }
+// Sub-lugares a cualquier profundidad (protegido contra ciclos)
+function locDescendantIds(id){
+  const out = [], seen = new Set([id]), stack = [id];
+  while(stack.length){
+    const cur = stack.shift();
+    locChildren(cur).forEach(c => { if(!seen.has(c.id)){ seen.add(c.id); out.push(c.id); stack.push(c.id); } });
+  }
+  return out;
+}
+// Opciones del select "Dentro de": todos menos el propio lugar y sus sub-lugares (evita ciclos)
+function locParentOptions(l){
+  const banned = new Set([l.id, ...locDescendantIds(l.id)]);
+  const opts = CAMPAIGN.locations.filter(o => !banned.has(o.id))
+    .map(o => `<option value="${escapeAttr(o.id)}" ${o.id===l.parentId?'selected':''}>${escapeAttr(o.name||o.id)}</option>`).join('');
+  return `<option value="" ${!l.parentId||!locById(l.parentId)?'selected':''}>— Lugar principal —</option>${opts}`;
+}
+
+// NPCs/eventos del lugar y sus sub-lugares. via = id del lugar por el que entran (el propio si es directo).
+function locGather(id){
+  const scope = [id, ...locDescendantIds(id)];
+  const viaOf = x => { const ids = locIdsOf(x); return ids.includes(id) ? id : scope.find(s => ids.includes(s)); };
+  const npcs = (typeof NPCS !== 'undefined' ? NPCS : []).map(n => ({ n, via: viaOf(n) })).filter(x => x.via);
+  const events = CAMPAIGN.events.map(e => ({ e, via: viaOf(e) })).filter(x => x.via);
+  return { npcs, events };
+}
+function locCountsLabel(id){
+  const { npcs, events } = locGather(id);
+  const possible = events.filter(x => x.e.status !== 'done').length;
+  return `👤 ${npcs.length} · 📜 ${possible} posible${possible===1?'':'s'}`;
+}
+const npcIsDead = n => /†/.test(n.statusLabel || '');
+// "Sin lugar fijo": NPCs sin ningún lugar válido y eventos pendientes sin lugar (pueden pasar en cualquier lado)
+function locUnplaced(){
+  const valid = x => locIdsOf(x).some(id => locById(id));
+  return {
+    npcs: (typeof NPCS !== 'undefined' ? NPCS : []).filter(n => !valid(n) && !npcIsDead(n)),
+    events: CAMPAIGN.events.filter(e => e.status !== 'done' && !valid(e))
+  };
+}
+
+function _ensureLocModal(){
+  if(document.getElementById('locModal')) return;
+  const m = document.createElement('div');
+  m.className = 'loc-modal'; m.id = 'locModal';
+  m.innerHTML = '<div class="loc-modal-box" id="locModalBox"></div>';
+  m.addEventListener('click', e => { if(e.target === m) closeLocationModal(); });
+  document.body.appendChild(m);
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && document.getElementById('locModal')?.classList.contains('show')) closeLocationModal();
+  });
+}
+function openLocationModal(id){
+  if(!locById(id)) return;
+  LOC_MODAL_ID = id;
+  _ensureLocModal();
+  renderLocationModal();
+  const m = document.getElementById('locModal');
+  m.classList.add('show');
+  const box = document.getElementById('locModalBox'); if(box) box.scrollTop = 0;
+}
+function closeLocationModal(){
+  LOC_MODAL_ID = null;
+  document.getElementById('locModal')?.classList.remove('show');
+}
+
+function _locViaTag(via){
+  if(via === LOC_MODAL_ID) return '';
+  const v = locById(via);
+  return v ? `<button class="loc-via" onclick="openLocationModal('${v.id}')" title="Ver ese lugar">en ${escapeAttr(v.name)}</button>` : '';
+}
+function _locNpcCard({ n, via }, unplaced){
+  const text = [n.desc, n.extra].filter(Boolean).join('\n\n');
+  const action = unplaced
+    ? `<button class="loc-here-btn" onclick="locAssociate('npc','${n.id}')" title="Asociar a este lugar">📍 Aquí</button>`
+    : (via === LOC_MODAL_ID ? `<button class="loc-x" onclick="locDissociate('npc','${n.id}')" title="Quitar de este lugar">✕</button>` : '');
+  return `<div class="loc-npc${npcIsDead(n)?' is-dead':''}">
+    <div class="loc-npc-top">
+      <span class="loc-npc-icon">${escapeAttr(n.icon||'✦')}</span>
+      <span class="loc-npc-name">${escapeAttr(n.name)}</span>
+      ${action}
+    </div>
+    ${n.role ? `<div class="loc-npc-role">${escapeAttr(n.role)}</div>` : ''}
+    <div class="loc-npc-tags">
+      <span class="npc-status ${escapeAttr(n.status||'neutral')}">${escapeAttr(n.statusLabel||n.status||'')}</span>
+      ${unplaced ? '' : _locViaTag(via)}
+    </div>
+    ${text ? `<div class="loc-text clamp" onclick="this.classList.toggle('clamp')" title="Click para ver todo">${escapeAttr(text)}</div>` : ''}
+  </div>`;
+}
+function _locEventItem({ e, via }, unplaced){
+  const ses = e.session ? (/^\d+$/.test(String(e.session)) ? 'S'+e.session : e.session) : '';
+  const action = unplaced
+    ? `<button class="loc-here-btn" onclick="locAssociate('event','${e.id}')" title="Asociar a este lugar">📍 Aquí</button>`
+    : (via === LOC_MODAL_ID ? `<button class="loc-x" onclick="locDissociate('event','${e.id}')" title="Quitar de este lugar">✕</button>` : '');
+  return `<div class="loc-evt">
+    <div class="loc-evt-head">
+      <span class="cmp-status loc-pill status-${escapeAttr(e.status)}">${EVENT_STATUS_LABEL[e.status]||escapeAttr(e.status||'')}</span>
+      <span class="loc-evt-title">${escapeAttr(e.title||'')}</span>
+      ${ses ? `<span class="loc-evt-ses">${escapeAttr(ses)}</span>` : ''}
+      ${unplaced ? '' : _locViaTag(via)}
+      ${action}
+    </div>
+    ${e.description ? `<div class="loc-text clamp" onclick="this.classList.toggle('clamp')" title="Click para ver todo">${escapeAttr(e.description)}</div>` : ''}
+  </div>`;
+}
+
+function renderLocationModal(){
+  const box = document.getElementById('locModalBox');
+  const l = LOC_MODAL_ID && locById(LOC_MODAL_ID);
+  if(!box || !l) return;
+  const ancestors = locAncestors(l);
+  const children = locChildren(l.id);
+  const { npcs, events } = locGather(l.id);
+  // Vivos primero; los muertos quedan al final, atenuados (siguen siendo parte de la historia del lugar)
+  npcs.sort((a, b) => (npcIsDead(a.n) - npcIsDead(b.n)) || ((a.via === l.id ? 0 : 1) - (b.via === l.id ? 0 : 1)));
+  const possible = events.filter(x => x.e.status !== 'done')
+    .sort((a, b) => LOC_POSSIBLE_ORDER.indexOf(a.e.status) - LOC_POSSIBLE_ORDER.indexOf(b.e.status));
+  const done = events.filter(x => x.e.status === 'done');
+  const un = locUnplaced();
+
+  const directNpcIds = new Set(npcs.filter(x => x.via === l.id).map(x => x.n.id));
+  const npcOpts = (typeof NPCS !== 'undefined' ? NPCS : []).filter(n => !directNpcIds.has(n.id))
+    .slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'es'))
+    .map(n => `<option value="${escapeAttr(n.id)}">${escapeAttr(n.name)}${locIdsOf(n).length ? '' : ' (sin lugar)'}</option>`).join('');
+  const directEvtIds = new Set(events.filter(x => x.via === l.id).map(x => x.e.id));
+  const evtOpts = CAMPAIGN.events.filter(e => !directEvtIds.has(e.id))
+    .map(e => `<option value="${escapeAttr(e.id)}">${e.status==='done'?'✓ ':''}${escapeAttr(e.title||e.id)}</option>`).join('');
+
+  const childChips = children.map(c => {
+    const g = locGather(c.id);
+    const p = g.events.filter(x => x.e.status !== 'done').length;
+    return `<button class="loc-sub-chip" onclick="openLocationModal('${c.id}')">${escapeAttr(c.name)} <span>👤 ${g.npcs.length} · 📜 ${p}</span></button>`;
+  }).join('');
+
+  box.innerHTML = `
+    <div class="loc-modal-head">
+      <div>
+        ${ancestors.length ? `<div class="loc-crumbs">${ancestors.map(a => `<button onclick="openLocationModal('${a.id}')">${escapeAttr(a.name)}</button>`).join('<span>›</span>')}<span>›</span></div>` : ''}
+        <div class="loc-modal-title">${escapeAttr(l.name)}</div>
+      </div>
+      <button class="loc-modal-close" onclick="closeLocationModal()" title="Cerrar (Esc)">✕</button>
+    </div>
+    ${l.state ? `<div class="loc-modal-state">${escapeAttr(l.state)}</div>` : ''}
+    ${children.length ? `<div class="loc-sec"><div class="loc-sec-title">Lugares dentro</div><div class="loc-sub-chips">${childChips}</div></div>` : ''}
+
+    <div class="loc-sec">
+      <div class="loc-sec-head">
+        <span class="loc-sec-title">NPCs (${npcs.length})</span>
+        <select class="loc-add-select" onchange="locAssociate('npc',this.value)"><option value="">+ Asociar NPC…</option>${npcOpts}</select>
+      </div>
+      ${npcs.length ? `<div class="loc-npc-grid">${npcs.map(x => _locNpcCard(x)).join('')}</div>` : '<p class="loc-empty">Ningún NPC asociado todavía.</p>'}
+    </div>
+
+    <div class="loc-sec">
+      <div class="loc-sec-head">
+        <span class="loc-sec-title">Eventos posibles (${possible.length})</span>
+        <select class="loc-add-select" onchange="locAssociate('event',this.value)"><option value="">+ Asociar evento…</option>${evtOpts}</select>
+      </div>
+      ${possible.length ? possible.map(x => _locEventItem(x)).join('') : '<p class="loc-empty">No hay eventos planificados para este lugar.</p>'}
+    </div>
+
+    ${done.length ? `<details class="loc-sec loc-details">
+      <summary class="loc-sec-title">Ya ocurrió aquí (${done.length})</summary>
+      ${done.map(x => _locEventItem(x)).join('')}
+    </details>` : ''}
+
+    ${(un.npcs.length || un.events.length) ? `<details class="loc-sec loc-details">
+      <summary class="loc-sec-title">Sin lugar fijo (${un.npcs.length + un.events.length}) — pueden aparecer en cualquier lado</summary>
+      ${un.npcs.length ? `<div class="loc-npc-grid">${un.npcs.map(n => _locNpcCard({ n }, true)).join('')}</div>` : ''}
+      ${un.events.map(e => _locEventItem({ e }, true)).join('')}
+    </details>` : ''}
+  `;
+}
+
+function _locTarget(kind, id){
+  return kind === 'npc' ? (typeof NPCS !== 'undefined' ? NPCS : []).find(n => n.id === id) : CAMPAIGN.events.find(e => e.id === id);
+}
+function _locPersist(kind, item){
+  const body = { locationIds: item.locationIds };
+  if(kind === 'npc') return _put(`/api/npcs/${item.id}`, body);
+  if(_isNew[item.id]) return Promise.resolve();   // evento sin guardar: viaja con su primer POST
+  return _put(`${API.events}/${item.id}`, body);
+}
+function locAssociate(kind, id){
+  const item = id && _locTarget(kind, id);
+  if(!item || !LOC_MODAL_ID) return;
+  const ids = locIdsOf(item).filter(x => locById(x));   // limpia ids de lugares borrados
+  if(!ids.includes(LOC_MODAL_ID)) ids.push(LOC_MODAL_ID);
+  item.locationIds = ids;
+  _locPersist(kind, item);
+  renderLocationModal();
+  renderLocations();
+}
+function locDissociate(kind, id){
+  const item = _locTarget(kind, id);
+  if(!item || !LOC_MODAL_ID) return;
+  item.locationIds = locIdsOf(item).filter(x => x !== LOC_MODAL_ID);
+  _locPersist(kind, item);
+  renderLocationModal();
+  renderLocations();
 }
 
 /* ── COMUNES: mover / eliminar / drag&drop ────────────────────────────────── */
